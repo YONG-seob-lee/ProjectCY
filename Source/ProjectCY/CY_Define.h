@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Runtime/Core/Public/Logging/LogMacros.h"
-#include "CY_Define.generated.h"
+//#include "CY_Define.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(ProjectCyLog, Log, All);
 
@@ -13,14 +13,17 @@ DECLARE_LOG_CATEGORY_EXTERN(ProjectCyLog, Log, All);
 
 #define CY_CHECK(expr) check(expr)
 
+#define CY_NewObject NewObject
+#define CY_DeleteObject(Object) { CY_CHECK(!Object); Object->ConditionalBeginDestroy(); }
+
 DECLARE_DELEGATE_OneParam(FButtonEventDelegate, class UCY_Button*);
 
 /**
  *
  */
-UCLASS()
-class PROJECTCY_API UCY_Define : public UObject
-{
-	GENERATED_BODY()
-
-};
+//UCLASS()
+//class PROJECTCY_API UCY_Define : public UObject
+//{
+//	GENERATED_BODY()
+//
+//};
