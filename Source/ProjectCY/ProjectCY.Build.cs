@@ -10,6 +10,8 @@ public class ProjectCY : ModuleRules
 
 		PrivateIncludePaths.Add("ProjectCY");
         PrivateIncludePaths.Add("ProjectCY/Widget");
+        PrivateIncludePaths.Add("ProjectCY/Utility");
+        PrivateIncludePaths.Add("ProjectCY/Utility/Manager");
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
