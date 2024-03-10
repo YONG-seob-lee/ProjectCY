@@ -30,5 +30,11 @@ private:
 	void DestroyManagers();
 	void DestroyGameCore();
 
+	void RegistState();
+
+	void LoadBaseWorld();
+
 	FDelegateHandle TickDelegateHandle;
+
+	#define	gSceneMng (*UCY_SceneManager::GetInstance())
 };

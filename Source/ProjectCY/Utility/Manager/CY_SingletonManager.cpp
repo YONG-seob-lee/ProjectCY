@@ -59,6 +59,21 @@ void UCY_SingletonManager::RemoveSingletons()
     UCY_WidgetManager::RemoveInstance();
 }
 
+void UCY_SingletonManager::FinalizeSingletons()
+{
+    if (bInitialized == false)
+    {
+        return;
+    }
+
+    for (TObjectPtr<ISingleton> Singleton : Singletons)
+    {
+        Singleton->PreFinalize();
+        Singleton->Finalize();
+        Singleton->BuiltInFinalize();
+    }
+}
+
 void UCY_SingletonManager::RegisterSingletons()
 {
     Singletons.Reset();
@@ -71,6 +86,6 @@ void UCY_SingletonManager::RegisterSingletonsForTick()
 {
     SingletonsForTick.Reset();
 
-    SingletonsForTick.Emplace(UCY_ContentsProcessManager::MakeInstance());
-    SingletonsForTick.Emplace(UCY_WidgetManager::MakeInstance());
+    SingletonsForTick.Emplace(UCY_ContentsProcessManager::GetInstance());
+    SingletonsForTick.Emplace(UCY_WidgetManager::GetInstance());
 }

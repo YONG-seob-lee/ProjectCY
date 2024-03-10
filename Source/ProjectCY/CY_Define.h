@@ -18,6 +18,27 @@ DECLARE_LOG_CATEGORY_EXTERN(ProjectCyLog, Log, All);
 
 DECLARE_DELEGATE_OneParam(FButtonEventDelegate, class UCY_Button*);
 
+UENUM(BlueprintType)
+enum class ECY_LaunchProcessType : uint8
+{
+	None = 0,
+
+	CreateViewport,
+	CreateManager,
+	RegistState,
+	LoadBaseWorld,
+	
+	ProcessFinished
+};
+
+UENUM(BlueprintType)
+enum class ECY_GameSceneType : uint8
+{
+	None = 0	UMETA(DisplayName = "None"),
+	
+	Title		UMETA(DisplayName = "Title"),
+};
+
 /**
  *
  */

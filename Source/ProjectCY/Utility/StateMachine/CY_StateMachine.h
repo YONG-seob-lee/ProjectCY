@@ -19,6 +19,9 @@ public:
 	void Destroy();
 	void Tick(float _fDeltaTime);
 
-	void RegistState(int8 _nIndex, const FName& _name, TSubclassOf<class UPV_StateBase> _SceneType, UObject* _pOuter = nullptr);
+	void RegistState(int8 Index, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType, UObject* Outer = nullptr);
 	void UnregistStates();
+
+	UPROPERTY()
+	TMap<int8, TObjectPtr<class UCY_StateBase>> EntireState;
 };
