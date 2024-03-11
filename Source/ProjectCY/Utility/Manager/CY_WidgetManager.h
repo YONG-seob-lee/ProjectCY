@@ -15,4 +15,17 @@ class PROJECTCY_API UCY_WidgetManager : public UObject, public UCY_Singleton<UCY
 {
 	GENERATED_BODY()
 	
+public:
+	UCY_WidgetManager();
+	~UCY_WidgetManager();
+
+	virtual void Initialize() override;
+	virtual void Finalize() override;
+	virtual void Tick(float DeltaTime) override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
+
+#define gWidgetMng (*UCY_StateMachine::GetInstance())
 };

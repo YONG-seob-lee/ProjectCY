@@ -14,7 +14,10 @@ DECLARE_LOG_CATEGORY_EXTERN(ProjectCyLog, Log, All);
 #define CY_CHECK(expr) check(expr)
 
 #define CY_NewObject NewObject
-#define CY_DeleteObject(Object) { CY_CHECK(!Object); Object->ConditionalBeginDestroy(); }
+#define CY_DeleteObject(Object) {										\
+									CY_CHECK(Object != nullptr);					\
+									Object->ConditionalBeginDestroy();	\
+								};
 
 DECLARE_DELEGATE_OneParam(FButtonEventDelegate, class UCY_Button*);
 

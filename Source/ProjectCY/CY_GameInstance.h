@@ -36,5 +36,5 @@ private:
 
 	FDelegateHandle TickDelegateHandle;
 
-	#define	gSceneMng (*UCY_SceneManager::GetInstance())
+	#define	gInstanceMng (TObjectPtr<UCY_GameInstance::GetInstance()>)
 };

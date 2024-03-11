@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Scene/CY_SceneBase.h"
+#include "CY_SceneBase.h"
 #include "CY_SceneTitle.generated.h"
 
 /**

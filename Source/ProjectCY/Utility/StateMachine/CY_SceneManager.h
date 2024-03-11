@@ -29,4 +29,6 @@ public:
 private:
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> SceneStateMachine = nullptr;
+
+#define	gSceneMng (*UCY_SceneManager::GetInstance())
 };

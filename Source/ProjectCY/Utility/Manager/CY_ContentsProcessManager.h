@@ -25,4 +25,6 @@ public:
 private:
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> StateMachine = nullptr;
+
+#define gContentProcessMng (*UCY_ContentsProcessManager::GetInstance())
 };

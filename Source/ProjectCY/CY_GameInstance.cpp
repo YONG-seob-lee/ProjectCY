@@ -4,6 +4,7 @@
 #include "CY_GameInstance.h"
 #include "CY_Define.h"
 #include "CY_SingletonManager.h"
+#include "CY_SceneTitle.h"
 #include "CY_SceneManager.h"
 
 
@@ -76,6 +77,12 @@ void UCY_GameInstance::DestroyManagers()
 
 void UCY_GameInstance::DestroyGameCore()
 {
+	if (TObjectPtr<UCY_SingletonManager> SingletonManager = UCY_SingletonManager::GetInstance())
+	{
+		SingletonManager->FinalizeSingletons();
+	}
+
+	UCY_SingletonManager::DestroyInstance();
 }
 
 void UCY_GameInstance::RegistState()
@@ -86,7 +93,7 @@ void UCY_GameInstance::RegistState()
 		return;
 	}
 
-	//gSceneMng.RegisterSceneState(static_cast<uint8>(EGameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
+	gSceneMng.RegisterSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
 }
 
 void UCY_GameInstance::LoadBaseWorld()
