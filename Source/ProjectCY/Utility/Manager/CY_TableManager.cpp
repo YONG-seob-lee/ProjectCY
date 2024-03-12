@@ -20,11 +20,15 @@ UCY_TableManager::~UCY_TableManager()
 
 void UCY_TableManager::Initialize()
 {
-
+	MakeTableStructData();
 }
 
 void UCY_TableManager::Finalize()
 {
+	for (const auto& TableMapper : TableMappers)
+	{
+		TableMapper.Value.~FCY_TableMapperData();
+	}
 }
 
 void UCY_TableManager::Tick(float DeltaTime)
@@ -49,6 +53,52 @@ void UCY_TableManager::GetRowDataMap(ECY_TableDataType TableType, TMap<FName, ui
 	}
 
 	OutMapper = TableData->GetRowMap();
+}
+
+TObjectPtr<FCY_TableMapperData> UCY_TableManager::GetTableMapperData(ECY_TableDataType TableType)
+{
+	TObjectPtr<FCY_TableMapperData> TableMapper = TableMappers.Find(TableType);
+	if (TableMapper == nullptr)
+	{
+		const FString& TableName = CY_Utility::ConvertEnumToString<ECY_TableDataType>("ECY_TableDataType", TableType);
+		CY_LOG(TEXT("Wrong Table Type. Please Check (%s) Table Type"), *TableName);
+		return nullptr;
+	}
+
+	return TableMapper;
+}
+
+FString UCY_TableManager::GetPath(ECY_TableDataType TableType)
+{
+	TObjectPtr<FCY_TableMapperData> TableMapper = GetTableMapperData(TableType);
+	if (TableMapper == nullptr)
+	{
+		return FString();
+	}
+
+	return TableMapper->GetTablePath();
+}
+
+const TObjectPtr<UDataTable> UCY_TableManager::GetTableData(ECY_TableDataType TableType)
+{
+	TObjectPtr<FCY_TableMapperData> TableMapper = GetTableMapperData(TableType);
+	if (TableMapper == nullptr)
+	{
+		return nullptr;
+	}
+
+	return TableMapper->GetTableData();
+}
+
+const TObjectPtr<class UCY_TableMapper> UCY_TableManager::GetTableMapper(ECY_TableDataType TableType)
+{
+	TObjectPtr<FCY_TableMapperData> TableMapper = GetTableMapperData(TableType);
+	if (TableMapper == nullptr)
+	{
+		return nullptr;
+	}
+
+	return TableMapper->GetTableMapper();
 }
 
 void UCY_TableManager::ResetData()
@@ -84,18 +134,14 @@ void UCY_TableManager::CreateTableData(ECY_TableDataType TableType, TSubclassOf<
 	TableMappers.Emplace(TableType, FCY_TableMapperData(Path, TableObject, TableMapper));
 }
 
-void UCY_TableManager::MakeTableStructAndPath()
+void UCY_TableManager::MakeTableStructData()
 {
 	ResetData();
 
 	CreateTableData(ECY_TableDataType::Pal_Character, UCY_Mapper_PalCharacter::StaticClass(), "/Game/TableData/Pal_Character.Pal_Character");
 }
 
-void UCY_TableManager::LoadGameTable()
-{
-
-}
-
 void UCY_TableManager::LoadComplate(const FString& TableName, TObjectPtr<UDataTable> TableData)
 {
+
 }

@@ -25,6 +25,7 @@ struct FCY_TableMapperData
 public:
 	FCY_TableMapperData(const FString& _TablePath, TObjectPtr<UDataTable> _TableData, TObjectPtr<class UCY_TableMapper> _TableMapper) 
 							: TablePath(_TablePath), TableData(_TableData), TableMapper(_TableMapper) {}
+	~FCY_TableMapperData() { TableData = nullptr; TableMapper = nullptr; }
 
 	FORCEINLINE const FString& GetTablePath() { return TablePath; }
 	FORCEINLINE TObjectPtr<UDataTable> GetTableData() { return TableData; }

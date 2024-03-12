@@ -26,8 +26,8 @@ enum class ECY_LaunchProcessType : uint8
 {
 	None = 0,
 
-	CreateViewport,
 	CreateManager,
+	RegistTick,
 	RegistState,
 	LoadBaseWorld,
 	

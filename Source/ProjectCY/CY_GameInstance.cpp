@@ -21,10 +21,14 @@ void UCY_GameInstance::Init()
 {
 	Super::Init();
 
-	CreateGameCore();
-	CreateManagers();
+	uint8 ProcessType;
+	ProcessInitialize(ProcessType);
 
-	TickDelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UCY_GameInstance::Tick));
+	if (static_cast<ECY_LaunchProcessType>(ProcessType) != ECY_LaunchProcessType::ProcessFinished)
+	{
+		CY_CHECK(false);
+		RestartGame();
+	}
 }
 
 void UCY_GameInstance::Shutdown()
@@ -52,17 +56,30 @@ bool UCY_GameInstance::Tick(float DeltaSeconds)
 	return true;
 }
 
-void UCY_GameInstance::CreateGameCore()
+void UCY_GameInstance::ProcessInitialize(uint8& CurrentProcessType)
 {
-	// custom kernel
+	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::CreateManager);
+
+	if (CreateManagers() == false)	return;
+	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::RegistTick);
+
+	if (RegistTick() == false)	return;
+	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::RegistState);
+	
+	if (RegistState() == false) return;
+	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::LoadBaseWorld);
+	
+	if (LoadBaseWorld() == false) return;
+	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::ProcessFinished);
 }
 
-void UCY_GameInstance::CreateManagers()
+bool UCY_GameInstance::CreateManagers()
 {
 	if (TObjectPtr<UCY_SingletonManager> SingletonManager = UCY_SingletonManager::CreateInstance())
 	{
 		SingletonManager->BuiltInInitializeSingletons();
 	}
+	return true;
 }
 
 void UCY_GameInstance::DestroyManagers()
@@ -85,18 +102,38 @@ void UCY_GameInstance::DestroyGameCore()
 	UCY_SingletonManager::DestroyInstance();
 }
 
-void UCY_GameInstance::RegistState()
+bool UCY_GameInstance::RegistTick()
+{
+	TickDelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UCY_GameInstance::Tick));
+	return true;
+}
+
+bool UCY_GameInstance::RegistState()
 {
 	if (UCY_SceneManager::HasInstance == nullptr)
 	{
 		CY_CHECK(false);
-		return;
+		return false;
 	}
 
 	gSceneMng.RegisterSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
+
+	return true;
 }
 
-void UCY_GameInstance::LoadBaseWorld()
+bool UCY_GameInstance::LoadBaseWorld()
 {
+	return true;
+}
 
+void UCY_GameInstance::RestartGame()
+{
+	/*for (TActorIterator<ALevelSequenceActor> AIt(UCY_FunctionLibrary::GetGameWorld(), ALevelSequenceActor::StaticClass()); AIt; ++AIt)
+	{
+		ALevelSequenceActor* LevelSequenceActor = *AIt;
+		if (LevelSequenceActor->GetSequence())
+		{
+			LevelSequenceActor->Destroy();
+		}
+	}*/
 }

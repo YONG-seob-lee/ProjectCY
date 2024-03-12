@@ -25,16 +25,20 @@ class PROJECTCY_API UCY_GameInstance : public UGameInstance
 
 	bool Tick(float DeltaSeconds);
 private:
-	void CreateGameCore();
-	void CreateManagers();
+	void ProcessInitialize(uint8& CurrentProcessType);
+
+	bool CreateManagers();
 	void DestroyManagers();
 	void DestroyGameCore();
 
-	void RegistState();
+	bool RegistTick();
+	bool RegistState();
 
-	void LoadBaseWorld();
+	bool LoadBaseWorld();
+
+	void RestartGame();
 
 	FDelegateHandle TickDelegateHandle;
 
-	#define	gInstanceMng (TObjectPtr<UCY_GameInstance::GetInstance()>)
+	#define	gInstanceMng (this)
 };

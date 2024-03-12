@@ -26,12 +26,16 @@ public:
 
 	virtual void GetRowDataMap(ECY_TableDataType TableType, TMap<FName, uint8*>& OutMapper);
 
+	TObjectPtr<FCY_TableMapperData> GetTableMapperData(ECY_TableDataType TableType);
+	FString GetPath(ECY_TableDataType TableType);
+	const TObjectPtr<UDataTable> GetTableData(ECY_TableDataType TableType);
+	const TObjectPtr<class UCY_TableMapper> GetTableMapper(ECY_TableDataType TableType);
+
 private:
 	void ResetData();
 	void CreateTableData(ECY_TableDataType TableType, TSubclassOf<UCY_TableMapper> MapperType, const FString& Path);
-	void MakeTableStructAndPath();
+	void MakeTableStructData();
 
-	void LoadGameTable();
 	void LoadComplate(const FString& TableName, TObjectPtr<UDataTable> TableData);
 
 	TMap<ECY_TableDataType, FCY_TableMapperData> TableMappers;
