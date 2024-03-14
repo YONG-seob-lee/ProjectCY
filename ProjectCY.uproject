@@ -13,6 +13,16 @@
 				"CoreUObject",
 				"Engine"
 			]
+		},
+		{
+			"Name": "ProjectCYEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
+			"AdditionalDependencies": [
+				"CoreUObject",
+				"Engine",
+				"Blutility"
+			]
 		}
 	],
 	"Plugins": [

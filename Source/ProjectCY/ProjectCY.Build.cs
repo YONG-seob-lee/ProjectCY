@@ -17,9 +17,9 @@ public class ProjectCY : ModuleRules
         PrivateIncludePaths.Add("ProjectCY/Table");
         PrivateIncludePaths.Add("ProjectCY/Table/Mapper");
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Sequencer", "MessageLog" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
