@@ -2,7 +2,6 @@
 
 
 #include "CY_TableManager.h"
-#include "CY_StateMachine.h"
 #include "CY_Utility.h"
 #include "Engine/DataTable.h"
 #include "CY_TableDefine.h"
@@ -116,14 +115,14 @@ void UCY_TableManager::CreateTableData(ECY_TableDataType TableType, TSubclassOf<
 	}
 
 	// 테이블 데이터 오브젝트 생성
-	TObjectPtr<UDataTable> TableObject = CY_Utility::LoadTableObjectFromFile(Path, TableName, FCY_LoadResourceDelegate::CreateUObject(this, &UCY_TableManager::LoadComplate));
+	const TObjectPtr<UDataTable> TableObject = CY_Utility::LoadTableObjectFromFile(Path, TableName, FCY_LoadResourceDelegate::CreateUObject(this, &UCY_TableManager::LoadComplate));
 	if (TableObject == nullptr)
 	{
 		return;
 	}
 
 	// 매퍼 생성 및 초기화
-	TObjectPtr<UCY_TableMapper> TableMapper = CY_NewObject<UCY_TableMapper>(this, MapperType);
+	const TObjectPtr<UCY_TableMapper> TableMapper = CY_NewObject<UCY_TableMapper>(this, MapperType);
 	if (TableMapper == nullptr)
 	{
 		return;
@@ -141,7 +140,7 @@ void UCY_TableManager::MakeTableStructData()
 	CreateTableData(ECY_TableDataType::Pal_Character, UCY_Mapper_PalCharacter::StaticClass(), "/Game/TableData/Pal_Character.Pal_Character");
 }
 
-void UCY_TableManager::LoadComplate(const FString& TableName, TObjectPtr<UDataTable> TableData)
+void UCY_TableManager::LoadComplate(const FString& TableName, TObjectPtr<UObject> TableData)
 {
 
 }

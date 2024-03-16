@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(config = game)
 class PROJECTCY_API UCY_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
@@ -38,7 +38,13 @@ private:
 
 	void RestartGame();
 
+	UPROPERTY(Category = UCY_GameInstance, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TSoftObjectPtr<UWorld> BaseWorld;
+	
+	UPROPERTY(Category = UCY_GameInstance, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UBehaviorTree> SceneBTAsset = nullptr;
 	FDelegateHandle TickDelegateHandle;
 
-	#define	gInstanceMng (this)
+	#define	gInstancePtr (this)	
+	#define	gInstance (*this)
 };

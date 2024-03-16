@@ -19,6 +19,9 @@ DECLARE_LOG_CATEGORY_EXTERN(ProjectCyLog, Log, All);
 									Object->ConditionalBeginDestroy();	\
 								};
 
+typedef int32 CY_Handle;
+constexpr int32 InvalidUnitHandle = 0;
+
 DECLARE_DELEGATE_OneParam(FButtonEventDelegate, class UCY_Button*);
 
 UENUM(BlueprintType)
@@ -34,13 +37,8 @@ enum class ECY_LaunchProcessType : uint8
 	ProcessFinished
 };
 
-UENUM(BlueprintType)
-enum class ECY_GameSceneType : uint8
-{
-	None = 0	UMETA(DisplayName = "None"),
-	
-	Title		UMETA(DisplayName = "Title"),
-};
+DECLARE_DELEGATE_TwoParams(FBindAllKeysDelegate, const FKey&, bool);
+
 
 /**
  *

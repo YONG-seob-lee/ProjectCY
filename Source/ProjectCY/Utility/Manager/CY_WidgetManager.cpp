@@ -4,6 +4,7 @@
 #include "CY_WidgetManager.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
+#include "CY_WidgetDefine.h"
 
 UCY_WidgetManager::UCY_WidgetManager()
 {
@@ -29,5 +30,20 @@ void UCY_WidgetManager::Tick(float DeltaTime)
 	if (WidgetMachine)
 	{
 		WidgetMachine->Tick(DeltaTime);
+	}
+}
+
+void UCY_WidgetManager::ClearExclusiveLayer()
+{
+	constexpr uint8 Top = static_cast<uint8>(ECY_ExclusiveGroup::TopMenu);
+	constexpr uint8 Content = static_cast<uint8>(ECY_ExclusiveGroup::ContentMenu);
+
+	if(ExclusiveLayers.IsValidIndex(Top))
+	{
+		ExclusiveLayers[Top] = nullptr;
+	}
+	if(ExclusiveLayers.IsValidIndex(Content))
+	{
+		ExclusiveLayers[Content] = nullptr;
 	}
 }

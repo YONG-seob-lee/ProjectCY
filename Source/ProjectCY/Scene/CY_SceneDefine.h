@@ -4,11 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-//#include "CY_SceneDefine.generated.h"
+#include "CY_SceneDefine.generated.h"
 
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class ECY_GameSceneType : uint8
+{
+	None = 0	UMETA(DisplayName = "None"),
+	
+	Title		UMETA(DisplayName = "Title"),
+};
 
 enum class ECY_FadeType
 {
@@ -46,7 +54,28 @@ enum class ECY_LoadingPageType
 	EnterFirst,
 };
 
+enum class ECY_ChangeSceneStep
+{
+	Ready,
+	LoadLevel,
+	PrepareSceneState,
+	Complete,
+};
 
+USTRUCT()
+struct FCY_ChangeSceneData
+{
+	GENERATED_USTRUCT_BODY()
+
+	ECY_GameSceneType SceneType;
+	ECY_ChangeSceneStep Step;
+	FName LevelPackagePath;
+};
+
+DECLARE_DELEGATE_OneParam(FCY_LoadLevelInitialized, const FString&);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCY_ChangeSceneDelegate, ECY_GameSceneType);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCY_LoadLevelDelegate, const FString&);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCY_ChangeSceneState, uint8);
 // UCLASS()
 // class PROJECTCY_API UCY_SceneDefine : public UObject
 // {

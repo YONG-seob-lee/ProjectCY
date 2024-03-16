@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "CY_Singleton.h"
 #include "CY_TableDefine.h"
 #include "CY_TableManager.generated.h"
@@ -36,9 +35,9 @@ private:
 	void CreateTableData(ECY_TableDataType TableType, TSubclassOf<UCY_TableMapper> MapperType, const FString& Path);
 	void MakeTableStructData();
 
-	void LoadComplate(const FString& TableName, TObjectPtr<UDataTable> TableData);
+	void LoadComplate(const FString& TableName, TObjectPtr<UObject> TableData);
 
 	TMap<ECY_TableDataType, FCY_TableMapperData> TableMappers;
 
-#define gTableMng (TObjectPtr<UCY_TableManager::GetInseance()>)
+#define gTableMng (*UCY_TableManager::GetInseance())
 };

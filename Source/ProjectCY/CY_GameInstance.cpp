@@ -116,14 +116,25 @@ bool UCY_GameInstance::RegistState()
 		return false;
 	}
 
-	gSceneMng.RegisterSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
+	gSceneMng.RegistSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
 
 	return true;
 }
 
 bool UCY_GameInstance::LoadBaseWorld()
 {
-	return true;
+	if(BaseWorld.IsValid())
+	{
+		gSceneMng.LoadLevelBySoftObjectPtr(BaseWorld, FCY_LoadLevelInitialized::CreateWeakLambda(this, [this](const FString& Value)
+		{
+			gSceneMng.ChangeScene(ECY_GameSceneType::Title);
+			gSceneMng.SetSceneBehaviorTreeAsset(SceneBTAsset);
+			gSceneMng.RegistSceneBehaviorTree();
+		}));
+		return true;
+	}
+
+	return false;
 }
 
 void UCY_GameInstance::RestartGame()

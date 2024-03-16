@@ -11,7 +11,7 @@
  * 
  */
 
-DECLARE_DELEGATE_TwoParams(FCY_LoadResourceDelegate, const FString&, TObjectPtr<UDataTable>);
+DECLARE_DELEGATE_TwoParams(FCY_LoadResourceDelegate, const FString&, TObjectPtr<UObject>);
 
 UENUM()
 enum class ECY_TableDataType : uint8

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "CY_TableDefine.h"
+#include "Engine/StreamableManager.h"
 /**
  * 
  */
@@ -25,4 +26,6 @@ namespace CY_Utility
 	}
 
 	TObjectPtr<UDataTable> LoadTableObjectFromFile(const FString& ResourcePath, const FString& TableName, FCY_LoadResourceDelegate Delegate);
+	TObjectPtr<UObject> LoadObjectFromFile(const FString& ResourcePath, const FCY_LoadResourceDelegate& Delegate, const FString& SubName = TEXT("SubName"), int32 Index = 0, bool SubBool = false);
+	
 }

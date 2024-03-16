@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "CY_Singleton.h"
 #include "CY_WidgetManager.generated.h"
 
@@ -23,12 +22,17 @@ public:
 	virtual void Finalize() override;
 	virtual void Tick(float DeltaTime) override;
 
-	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() { return BuiltInTool; }
+	void ClearExclusiveLayer();
+	
+	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
 private:
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
 	UPROPERTY()
 	TObjectPtr<class UCY_BuiltInWidgetTool> BuiltInTool = nullptr;
+
+	UPROPERTY()
+	TArray<TObjectPtr<class UCY_Widget>> ExclusiveLayers;
 	
 #define gWidgetMng (*UCY_WidgetManager::GetInstance())
 };

@@ -6,10 +6,10 @@
 
 UWorld* UCY_BasicGameUtility::GetGameWorld()
 {
-	if (gInstanceMng == nullptr)
+	if (gInstancePtr == nullptr)
 	{
 		return nullptr;
 	}
 
-	return gInstanceMng->GetWorld();
+	return gInstance.GetWorld();
 }
