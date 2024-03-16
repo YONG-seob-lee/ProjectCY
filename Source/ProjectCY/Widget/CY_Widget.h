@@ -21,6 +21,7 @@ public:
 
 	void MakeButtonPool();
 
+	void PlayAnimationByName(FName Name, float StartTime = 0.f, int32 LoopCount = 1, EUMGSequencePlayMode::Type PlayType = EUMGSequencePlayMode::Forward, float Speed = 1.f);
 	UPROPERTY()
 	TArray<class UCY_Button*> Buttons;
 };

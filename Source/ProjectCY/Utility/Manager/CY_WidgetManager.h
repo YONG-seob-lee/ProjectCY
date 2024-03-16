@@ -23,9 +23,12 @@ public:
 	virtual void Finalize() override;
 	virtual void Tick(float DeltaTime) override;
 
+	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() { return BuiltInTool; }
 private:
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
-
-#define gWidgetMng (*UCY_StateMachine::GetInstance())
+	UPROPERTY()
+	TObjectPtr<class UCY_BuiltInWidgetTool> BuiltInTool = nullptr;
+	
+#define gWidgetMng (*UCY_WidgetManager::GetInstance())
 };

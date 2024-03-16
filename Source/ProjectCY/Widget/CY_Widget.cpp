@@ -35,3 +35,8 @@ void UCY_Widget::MakeButtonPool()
 			});
 	}
 }
+
+void UCY_Widget::PlayAnimationByName(FName Name, float StartTime /* = 0.f */, int32 LoopCount /* = 1 */, EUMGSequencePlayMode::Type PlayType /* = EUMGSequencePlayMode::Forward */,float Speed /* = 1.f */)
+{
+	
+}

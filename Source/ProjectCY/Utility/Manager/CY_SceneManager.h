@@ -30,5 +30,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> SceneStateMachine = nullptr;
 
+	TWeakObjectPtr<class UCY_FadeSceneTool> FadeTool = nullptr;
 #define	gSceneMng (*UCY_SceneManager::GetInstance())
 };

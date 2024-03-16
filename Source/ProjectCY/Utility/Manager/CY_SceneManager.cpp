@@ -4,10 +4,11 @@
 #include "CY_SceneManager.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
+#include "CY_FadeSceneTool.h"
 
 UCY_SceneManager::UCY_SceneManager()
 {
-
+	
 }
 
 UCY_SceneManager::~UCY_SceneManager()
@@ -19,6 +20,13 @@ void UCY_SceneManager::Initialize()
 	SceneStateMachine = CY_NewObject<UCY_StateMachine>(this, UCY_SceneManager::StaticClass());
 	SceneStateMachine->AddToRoot();
 	SceneStateMachine->Create();
+
+	FadeTool = MakeWeakObjectPtr(CY_NewObject<UCY_FadeSceneTool>());
+	
+	if(!FadeTool.IsValid())
+	{
+		return;
+	}
 }
 
 void UCY_SceneManager::Finalize()
@@ -30,6 +38,11 @@ void UCY_SceneManager::Tick(float DeltaTime)
 	if (SceneStateMachine)
 	{
 		SceneStateMachine->Tick(DeltaTime);
+	}
+
+	if(FadeTool.IsValid())
+	{
+		FadeTool->Tick(DeltaTime);
 	}
 }
 
