@@ -40,5 +40,5 @@ private:
 
 	TMap<ECY_TableDataType, FCY_TableMapperData> TableMappers;
 
-#define gTableMng (TObjectPtr<UCY_TableManager::GetInseance()>)
+#define gTableMng (*UCY_TableManager::GetInseance())
 };

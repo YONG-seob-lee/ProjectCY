@@ -17,6 +17,9 @@ public class ProjectCY : ModuleRules
         PrivateIncludePaths.Add("ProjectCY/Scene");
         PrivateIncludePaths.Add("ProjectCY/Table");
         PrivateIncludePaths.Add("ProjectCY/Table/Mapper");
+        PrivateIncludePaths.Add("ProjectCY/Actor");
+        PrivateIncludePaths.Add("ProjectCY/Actor/Statue");
+        PrivateIncludePaths.Add("ProjectCY/Unit");
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Sequencer", "MessageLog" });
 

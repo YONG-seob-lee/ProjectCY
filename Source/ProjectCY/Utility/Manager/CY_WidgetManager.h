@@ -23,7 +23,7 @@ public:
 	virtual void Finalize() override;
 	virtual void Tick(float DeltaTime) override;
 
-	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() { return BuiltInTool; }
+	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
 private:
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
