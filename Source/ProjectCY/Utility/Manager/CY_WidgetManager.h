@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
 #include "CY_Singleton.h"
 #include "CY_WidgetManager.generated.h"
 
@@ -30,7 +31,7 @@ private:
 	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
 	UPROPERTY()
 	TObjectPtr<class UCY_BuiltInWidgetTool> BuiltInTool = nullptr;
-
+	
 	UPROPERTY()
 	TArray<TObjectPtr<class UCY_Widget>> ExclusiveLayers;
 	
