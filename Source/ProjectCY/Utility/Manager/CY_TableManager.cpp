@@ -11,6 +11,7 @@
 #include "CY_TableMapper.h"
 #include "CY_Mapper_PalCharacter.h"
 #include "CY_Define.h"
+#include "CY_Mapper_Resource_Widget.h"
 
 UCY_TableManager::UCY_TableManager()
 {
@@ -134,7 +135,7 @@ void UCY_TableManager::ResetData()
 	TableMappers.Empty();
 }
 
-void UCY_TableManager::CreateTableData(ECY_TableDataType TableType, TSubclassOf<UCY_TableMapper> MapperType, const FString& Path)
+void UCY_TableManager::CreateTableData(ECY_TableDataType TableType, const FString& Path, TSubclassOf<UCY_TableMapper> MapperType /* = nullptr */)
 {
 	const FString& TableName = CY_Utility::ConvertEnumToString<ECY_TableDataType>("ECY_TableDataType", TableType);
 
@@ -151,22 +152,32 @@ void UCY_TableManager::CreateTableData(ECY_TableDataType TableType, TSubclassOf<
 	}
 
 	// 매퍼 생성 및 초기화
-	const TObjectPtr<UCY_TableMapper> TableMapper = CY_NewObject<UCY_TableMapper>(this, MapperType);
-	if (TableMapper == nullptr)
+	if(MapperType)
 	{
-		return;
-	}
-	TableMapper->Initialize(this);
+		const TObjectPtr<UCY_TableMapper> TableMapper = CY_NewObject<UCY_TableMapper>(this, MapperType);
+		if (TableMapper == nullptr)
+		{
+			return;
+		}
+		TableMapper->Initialize(this);
 
-	// 추가.
-	TableMappers.Emplace(TableType, FCY_TableMapperData(Path, TableObject, TableMapper));
+		// 추가.
+		TableMappers.Emplace(TableType, FCY_TableMapperData(Path, TableObject, TableMapper));
+	}
+	else
+	{
+		TableMappers.Emplace(TableType, FCY_TableMapperData(Path, TableObject, nullptr));
+	}
 }
 
 void UCY_TableManager::MakeTableStructData()
 {
 	ResetData();
+	CreateTableData(ECY_TableDataType::BasePath_Directory, "/Game/TableData/BasePath_Directory.Directory");
+	CreateTableData(ECY_TableDataType::BasePath_BP_File, "/Game/TableData/BasePath_BP_File.BasePath_BP_File");
 
-	CreateTableData(ECY_TableDataType::Pal_Character, UCY_Mapper_PalCharacter::StaticClass(), "/Game/TableData/Pal_Character.Pal_Character");
+	CreateTableData(ECY_TableDataType::Pal_Character, "/Game/TableData/Pal_Character.Pal_Character", UCY_Mapper_PalCharacter::StaticClass());
+	CreateTableData(ECY_TableDataType::Widget_Resource, "/Game/TableData/Widget_Resource.Widget_Resource", UCY_Mapper_Resource_Widget::StaticClass());
 }
 
 void UCY_TableManager::LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData)

@@ -51,7 +51,7 @@ public:
 	}
 private:
 	void ResetData();
-	void CreateTableData(ECY_TableDataType TableType, TSubclassOf<UCY_TableMapper> MapperType, const FString& Path);
+	void CreateTableData(ECY_TableDataType TableType, const FString& Path, TSubclassOf<UCY_TableMapper> MapperType = nullptr);
 	void MakeTableStructData();
 
 	void LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData);
