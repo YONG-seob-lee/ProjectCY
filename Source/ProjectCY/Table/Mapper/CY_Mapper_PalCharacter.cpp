@@ -11,5 +11,6 @@ void UCY_Mapper_PalCharacter::Initialize(TObjectPtr<UCY_TableManager> Mng)
 
 void UCY_Mapper_PalCharacter::Finalize()
 {
+	PalCharacterMap.Empty();
 }
  

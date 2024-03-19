@@ -133,7 +133,6 @@ bool UCY_GameInstance::LoadBaseWorld()
 		}));
 		return true;
 	}
-
 	return false;
 }
 

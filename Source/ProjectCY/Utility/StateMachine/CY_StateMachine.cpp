@@ -33,7 +33,7 @@ void UCY_StateMachine::RegistState(int8 Index, const FName& Name, TSubclassOf<cl
 	EntireState.Emplace(Index, State);
 }
 
-void UCY_StateMachine::UnregistStates()
+void UCY_StateMachine::UnRegistStates()
 {
 	for (auto& State : EntireState)
 	{
@@ -46,4 +46,43 @@ void UCY_StateMachine::UnregistStates()
 	}
 
 	EntireState.Empty();
+}
+
+void UCY_StateMachine::SetState(int32 Index, bool _bInstant /* = true */)
+{
+	if(_bInstant)
+	{
+		SetState_Internal(Index);
+	}
+	else
+	{
+		ChangeStateId = Index;
+	}
+}
+
+TObjectPtr<UCY_StateBase> UCY_StateMachine::GetState(int32 Index) const
+{
+	if(EntireState.Contains(Index))
+	{
+		return EntireState[Index];
+	}
+
+	return nullptr;
+}
+
+void UCY_StateMachine::SetState_Internal(uint8 Index)
+{
+	PreviousStateId = CurrentStateId;
+
+	if(const TObjectPtr<UCY_StateBase> CurrentState = GetState(CurrentStateId))
+	{
+		CurrentState->OnExitState();
+	}
+
+	CurrentStateId = Index;
+
+	if(const TObjectPtr<UCY_StateBase> NextState = GetState(Index))
+	{
+		NextState->OnBeginState();
+	}
 }

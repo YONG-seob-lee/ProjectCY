@@ -22,7 +22,7 @@ public:
 
 	TObjectPtr<class UCY_UnitBase> CreateUnit(int32 UnitTableId, TSubclassOf<UCY_UnitBase> UnitType, const FVector& Pos = FVector::ZeroVector, const FRotator& Rot = FRotator::ZeroRotator);
 
-	void DestroyUnit();
+	void DestroyUnit(CY_Handle UnitHandle);
 	void DestroyAllUnit();
 
 	FORCEINLINE FStreamableManager& GetAssetLoader() { return AssetLoader; }

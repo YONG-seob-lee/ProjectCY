@@ -16,6 +16,16 @@ enum class ECY_GameSceneType : uint8
 	None = 0	UMETA(DisplayName = "None"),
 	
 	Title		UMETA(DisplayName = "Title"),
+	PalWorld	UMETA(DisplayName = "PalWorld"),
+};
+
+UENUM(BlueprintType)
+enum class ECY_GameCameraType : uint8
+{
+	None = 0	UMETA(DisplayName = "None"),
+	
+	Title		UMETA(DisplayName = "Title"),
+	PalWorld	UMETA(DisplayName = "PalWorld"),
 };
 
 enum class ECY_FadeType

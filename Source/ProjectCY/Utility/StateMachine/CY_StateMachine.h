@@ -20,8 +20,18 @@ public:
 	void Tick(float _fDeltaTime);
 
 	void RegistState(int8 Index, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType, UObject* Outer = nullptr);
-	void UnregistStates();
+	void UnRegistStates();
 
+	void SetState(int32 Index, bool _bInstant = true);
+
+	FORCEINLINE TObjectPtr<UCY_StateBase> GetState(int32 Index) const;
+private:
+	void SetState_Internal(uint8 Index);
+	
 	UPROPERTY()
 	TMap<int8, TObjectPtr<class UCY_StateBase>> EntireState;
+
+	uint8 PreviousStateId = -1;
+	uint8 CurrentStateId = -1;
+	uint8 ChangeStateId = -1;
 };

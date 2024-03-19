@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "CY_TableDefine.h"
-#include "Engine/StreamableManager.h"
+#include "CY_Widget.h"
 /**
  * 
  */
@@ -14,18 +14,27 @@ namespace CY_Utility
 {
 	// todo 용섭 : Enum 을 FString 으로 변환하는 메소드
 	template<typename TEnum>
-	FString ConvertEnumToString(const FString& EnumString, TEnum EnumType)
+	static FString ConvertEnumToString(const FString& EnumString, TEnum EnumType)
 	{
 		const UEnum* pEnum = FindObject<UEnum>(nullptr, *EnumString, true);
-		if (!pEnum) {
+		if (!pEnum)
+		{
 			return FString("");
 		}
 
-		int32 Index = pEnum->GetIndexByValue(static_cast<int32>(EnumType));
+		const int32 Index = pEnum->GetIndexByValue(static_cast<int32>(EnumType));
 		return pEnum->GetNameStringByIndex(Index);
 	}
 
+	template<typename T>
+	static TObjectPtr<T> GetSafeMapValue(TObjectPtr<T>* pMapValue)
+	{
+		return (pMapValue == nullptr) ? nullptr : *pMapValue;	
+	};
+
+
+	static const TCHAR* AttachPathAsName(FString AssetPath, FString AssetName);
+
 	TObjectPtr<UDataTable> LoadTableObjectFromFile(const FString& ResourcePath, const FString& TableName, FCY_LoadResourceDelegate Delegate);
-	TObjectPtr<UObject> LoadObjectFromFile(const FString& ResourcePath, const FCY_LoadResourceDelegate& Delegate, const FString& SubName = TEXT("SubName"), int32 Index = 0, bool SubBool = false);
-	
-}
+	TObjectPtr<UObject> LoadObjectFromFile(const FString& ResourcePath, const FCY_LoadResourceDelegate& Delegate = nullptr, const FString& SubName = TEXT("SubName"), int32 Index = 0, bool SubBool = false);
+};

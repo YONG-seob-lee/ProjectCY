@@ -18,6 +18,10 @@ enum class ECY_TableDataType : uint8
 {
 	Pal_Character = 0				UMETA(DisplayName = "Pal_Character"),
 	Hero_Level						UMETA(DisplayName = "Hero_Level"),
+	Widget_Resource					UMETA(DisplayName = "Widget_Resource"),
+
+	BasePath_Directory				UMETA(DisplayName = "BasePath_Directory"),
+	BasePath_BP_File				UMETA(DisplayName = "BasePath_BP_File"),
 };
 
 struct FCY_TableMapperData
@@ -28,8 +32,8 @@ public:
 	~FCY_TableMapperData() { TableData = nullptr; TableMapper = nullptr; }
 
 	FORCEINLINE const FString& GetTablePath() { return TablePath; }
-	FORCEINLINE TObjectPtr<UDataTable> GetTableData() { return TableData; }
-	FORCEINLINE TObjectPtr<class UCY_TableMapper> GetTableMapper() { return TableMapper; }
+	FORCEINLINE TObjectPtr<UDataTable> GetTableData() const { return TableData; }
+	FORCEINLINE TObjectPtr<class UCY_TableMapper> GetTableMapper() const { return TableMapper; }
 private:
 	FString TablePath;
 	TObjectPtr<UDataTable> TableData;

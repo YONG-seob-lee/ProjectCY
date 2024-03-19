@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "CY_Singleton.h"
+#include "CY_WidgetDefine.h"
 #include "CY_WidgetManager.generated.h"
 
 /**
@@ -17,23 +18,47 @@ class PROJECTCY_API UCY_WidgetManager : public UObject, public UCY_Singleton<UCY
 	
 public:
 	UCY_WidgetManager();
-	~UCY_WidgetManager();
+	virtual ~UCY_WidgetManager() override;
 
 	virtual void Initialize() override;
 	virtual void Finalize() override;
 	virtual void Tick(float DeltaTime) override;
 
 	void ClearExclusiveLayer();
+
+	TObjectPtr<class UCY_Widget> CY_CreateWidget(const FName& TypeName);
+	void PreDestroyWidget(TObjectPtr<UCY_Widget> Widget);
+	bool DestroyWidget(const FName& TypeName);
+	void PostDestroyWidget(const FName& TypeName);
+	TObjectPtr<UCY_Widget> GetWidget(const FName& TypeName);
+	TObjectPtr<UCY_Widget> CreateWidgetNotManaging(const FString& Path);
+	TObjectPtr<UCY_Widget> CreateWidgetNotManagingBySOP(const FSoftObjectPath& SoftObjectPath);
 	
 	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
+
+	FCY_CreateWidget OnCreateWidget;
+	FCY_DestroyWidget OnDestroyWidget;
+	
 private:
+	TObjectPtr<UCY_Widget> CreateWidget_Internal(const FName& TypeName, bool bManaged);
+	TObjectPtr<UCY_Widget> CreateWidget_Internal_Managing(const FString& Path);
+	TObjectPtr<UCY_Widget> CreateWidget_Internal_NotManaging(const FString& Path) const;
+	
+	void AddExclusiveLayerWidget(TObjectPtr<UCY_Widget> Widget);
+	void RemoveExclusiveLayerWidget(TObjectPtr<UCY_Widget> Widget);
+
+	void LoadComplete(const FString& TableName, TObjectPtr<UObject> WidgetData);
+	
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
 	UPROPERTY()
-	TObjectPtr<class UCY_BuiltInWidgetTool> BuiltInTool = nullptr;
+	TObjectPtr<UCY_BuiltInWidgetTool> BuiltInTool = nullptr;
 	
 	UPROPERTY()
-	TArray<TObjectPtr<class UCY_Widget>> ExclusiveLayers;
+	TArray<TObjectPtr<UCY_Widget>> ExclusiveLayers;
+
+	UPROPERTY()
+	TMap<FName, TWeakObjectPtr<UCY_Widget>> ManagedWidgets;
 	
 #define gWidgetMng (*UCY_WidgetManager::GetInstance())
 };

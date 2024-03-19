@@ -3,6 +3,8 @@
 
 #include "CY_CameraManager.h"
 
+#include "CY_StateMachine.h"
+
 void UCY_CameraManager::Initialize()
 {
 	UCY_Singleton<UCY_CameraManager>::Initialize();
@@ -26,4 +28,12 @@ void UCY_CameraManager::ResetData()
 void UCY_CameraManager::DestroyAllCameras()
 {
 	SceneCameras.Empty();
+}
+
+void UCY_CameraManager::ChangeCamera(uint8 Index, bool bInstant /* = true */)
+{
+	if(CameraState)
+	{
+		CameraState->SetState(Index, bInstant);
+	}
 }

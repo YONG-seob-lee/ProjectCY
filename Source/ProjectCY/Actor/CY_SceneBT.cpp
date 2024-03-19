@@ -4,7 +4,6 @@
 #include "CY_SceneBT.h"
 
 #include "CY_Define.h"
-#include "CY_TableDefine.h"
 #include "CY_Utility.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
@@ -13,9 +12,7 @@
 
 bool ACY_SceneBT::CreateBT(const FString& BTPath)
 {
-	const FCY_LoadResourceDelegate DummyDelegate;
-
-	BTAsset = Cast<UBehaviorTree>(CY_Utility::LoadObjectFromFile(BTPath, DummyDelegate));
+	BTAsset = Cast<UBehaviorTree>(CY_Utility::LoadObjectFromFile(BTPath));
 	if(BTAsset == nullptr || BTAsset->BlackboardAsset == nullptr)
 	{
 		DestroyBT();

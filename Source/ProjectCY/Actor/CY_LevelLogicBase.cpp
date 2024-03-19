@@ -133,8 +133,7 @@ bool ACY_LevelLogicBase::SetBehaviorTree(FString Filename)
 		return false;
 	}
 
-	const FCY_LoadResourceDelegate DummyDelegate;
-	BTAsset = Cast<UBehaviorTree>(CY_Utility::LoadObjectFromFile(Filename, DummyDelegate));
+	BTAsset = Cast<UBehaviorTree>(CY_Utility::LoadObjectFromFile(Filename));
 	if(BTAsset == nullptr || BTAsset->BlackboardAsset == nullptr)
 	{
 		RemoveBehaviorTree();

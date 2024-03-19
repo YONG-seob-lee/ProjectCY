@@ -29,7 +29,7 @@ void UCY_StateBase::OnExitState()
 	Exit();
 }
 
-TObjectPtr<UCY_StateMachine> UCY_StateBase::GetStateMachine()
+TObjectPtr<UCY_StateMachine> UCY_StateBase::GetStateMachine() const
 {
 	return Cast<UCY_StateMachine>(GetOuter());
 }

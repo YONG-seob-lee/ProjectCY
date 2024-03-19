@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CY_Define.h"
+#include "CY_WidgetDefine.h"
 #include "CY_Widget.generated.h"
 
 /**
@@ -18,10 +19,42 @@ class PROJECTCY_API UCY_Widget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-
+	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate = true);
+	virtual void FinishWidget();
+	virtual void Active(int32 _ZOrder = 0);
+	void Init();
+	
+	
 	void MakeButtonPool();
 
 	void PlayAnimationByName(FName Name, float StartTime = 0.f, int32 LoopCount = 1, EUMGSequencePlayMode::Type PlayType = EUMGSequencePlayMode::Forward, float Speed = 1.f);
+	TObjectPtr<UWidgetAnimation> GetAnimationByName(FName AnimName) const;
+	FORCEINLINE void SetResourceWidgetInfo(const FCY_ResourceWidgetInfo& Info) { ResourceWidgetInfo = Info; }
+	FORCEINLINE FCY_ResourceWidgetInfo GetResourceWidgetInfo() const { return ResourceWidgetInfo; }
+	FORCEINLINE void SetZOrder(int32 _ZOrder) { ZOrder = _ZOrder; }
+
+	UFUNCTION(BlueprintCallable, Category = "UCY_Widget")
+	void SetOriginVisible(ESlateVisibility _Visibility);
+protected:
+	void InitResourceWidgetInfo();
+	
+	bool bActive;
+	bool bAddToViewport;
+	bool bManaged = true;
+
+	ESlateVisibility OriginVisibility;
+	
+	UPROPERTY(Category = UCY_Widget, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 ZOrder = 0;
+
+	FCY_ResourceWidgetInfo ResourceWidgetInfo;
+
+	UPROPERTY()
+	TMap<FName, TObjectPtr<UWidgetAnimation>> Animations;
+	
+private:
+	bool IsExistAnim(FName AnimName) const;
+	
 	UPROPERTY()
 	TArray<class UCY_Button*> Buttons;
 };

@@ -9,6 +9,16 @@
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FCY_CreateWidget, const FName&);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCY_DestroyWidget, const FName&);
+
+namespace DefaultWidgetAnimation
+{
+	const FName Appearance = TEXT("Appearance");
+	const FName DisAppearance = TEXT("DisAppearance");
+	const FName Idle = TEXT("Idle");
+}
+
 UENUM(BlueprintType)
 enum class ECY_ExclusiveGroup : uint8
 {
@@ -42,4 +52,20 @@ enum class ECY_ExclusiveGroup : uint8
 	ContentSubMenu26 = 27,
 	TopMenu = 28,
 	Max
+};
+
+struct FCY_ResourceWidgetInfo
+{
+	FCY_ResourceWidgetInfo(): zOrder(0), ExclusiveGroup(), NotRender3D(false), bNotClosing(false), CreateTime(0) {}
+
+	FString File;
+	FName TypeName;
+	int32 zOrder;
+	ECY_ExclusiveGroup ExclusiveGroup;
+	bool NotRender3D;
+	bool bNotClosing;
+	float CreateTime;
+	
+	FORCEINLINE const FName& GetWidgetName() const { return TypeName; }
+	FORCEINLINE const ECY_ExclusiveGroup& GetExclusiveGroup() const { return ExclusiveGroup; }
 };

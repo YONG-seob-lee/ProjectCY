@@ -25,17 +25,17 @@ public:
 	UFUNCTION()
 	void OnExitState();
 
-	FORCEINLINE uint8 GetStateIndex() { return StateIndex; }
-	FORCEINLINE FName GetStateName() { return StateName; }
+	FORCEINLINE uint8 GetStateIndex() const { return StateIndex; }
+	FORCEINLINE FName GetStateName() const { return StateName; }
 
-	TObjectPtr<class UCY_StateMachine> GetStateMachine();
+	TObjectPtr<class UCY_StateMachine> GetStateMachine() const;
 
 protected:
 	virtual void Begin() {}
 	virtual void Tick(float DeltaTime) {}
 	virtual void Exit() {}
 
-private:
+private:	
 	UPROPERTY()
 	int32 StateIndex = -1;
 	UPROPERTY()

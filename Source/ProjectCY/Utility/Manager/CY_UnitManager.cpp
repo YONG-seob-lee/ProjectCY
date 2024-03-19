@@ -43,8 +43,16 @@ TObjectPtr<UCY_UnitBase> UCY_UnitManager::CreateUnit(int32 UnitTableId, TSubclas
 	return Unit;
 }
 
-void UCY_UnitManager::DestroyUnit()
+void UCY_UnitManager::DestroyUnit(CY_Handle UnitHandle)
 {
+	if(Units.Find(UnitHandle) != nullptr)
+	{
+		Units[UnitHandle]->RemoveFromRoot();
+		Units[UnitHandle]->Finalize();
+		Units[UnitHandle]->MarkAsGarbage();
+		Units[UnitHandle] = nullptr;
+		Units.Remove(UnitHandle);
+	}
 }
 
 void UCY_UnitManager::DestroyAllUnit()

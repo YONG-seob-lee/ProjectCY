@@ -3,7 +3,6 @@
 
 #include "CY_SceneManager.h"
 
-#include "CY_BasicGameUtility.h"
 #include "CY_CameraManager.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
@@ -136,6 +135,13 @@ bool UCY_SceneManager::ChangeSceneStep_LoadLevel()
 
 void UCY_SceneManager::ChangeSceneStep_SetSceneState(uint8 SceneId)
 {
+	ChangeSceneData.Step = ECY_ChangeSceneStep::PrepareSceneState;
+
+	//SceneStateMachine->GetState(SceneId);
+	if(SceneStateMachine)
+	{
+		SceneStateMachine->SetState(SceneId);
+	}
 }
 
 void UCY_SceneManager::OnCompleteLevelLoading(const FString& LevelPackagePath)

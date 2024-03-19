@@ -26,18 +26,37 @@ public:
 	virtual void GetRowDataMap(ECY_TableDataType TableType, TMap<FName, uint8*>& OutMapper);
 
 	TObjectPtr<FCY_TableMapperData> GetTableMapperData(ECY_TableDataType TableType);
-	FString GetPath(ECY_TableDataType TableType);
-	const TObjectPtr<UDataTable> GetTableData(ECY_TableDataType TableType);
-	const TObjectPtr<class UCY_TableMapper> GetTableMapper(ECY_TableDataType TableType);
+	FString GetPath(ECY_TableDataType TableType, int32 Key, bool bResourcePath);
+	FString GetDirectory(int32 DirectoryTableId);
+	
+	TObjectPtr<UDataTable> GetTableData(ECY_TableDataType TableType);
 
+	
+	TObjectPtr<UCY_TableMapper> GetTableMapper(ECY_TableDataType TableType);
+
+	template<typename FRowData>
+	TObjectPtr<FRowData> GetTableRowData(ECY_TableDataType TableType, int32 Key)
+	{
+		const TObjectPtr<FCY_TableMapperData> TableMapper = GetTableMapperData(TableType);
+		if (TableMapper == nullptr)
+		{
+			return nullptr;
+		}
+
+		const TObjectPtr<UDataTable> TableData = TableMapper->GetTableData();
+		const FName KeyName = FName(FString::FromInt(Key));
+		const FString Context = TEXT("GENERAL");
+	
+		return TableData->FindRow<FRowData>(KeyName, Context);
+	}
 private:
 	void ResetData();
 	void CreateTableData(ECY_TableDataType TableType, TSubclassOf<UCY_TableMapper> MapperType, const FString& Path);
 	void MakeTableStructData();
 
-	void LoadComplate(const FString& TableName, TObjectPtr<UObject> TableData);
+	void LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData);
 
 	TMap<ECY_TableDataType, FCY_TableMapperData> TableMappers;
 
-#define gTableMng (*UCY_TableManager::GetInseance())
+#define gTableMng (*UCY_TableManager::GetInstance())
 };

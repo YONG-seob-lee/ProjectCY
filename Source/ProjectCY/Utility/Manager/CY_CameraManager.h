@@ -22,8 +22,14 @@ public:
 	void ResetData();
 
 	void DestroyAllCameras();
+	
+	void ChangeCamera(uint8 Index, bool bInstant = true);
+
 private:
 
+	UPROPERTY()
+	TObjectPtr<class UCY_StateMachine> CameraState = nullptr;
+	
 	TMap<FName, int32> CameraNames;
 	TMap<FString, CY_Handle> SceneCameras;
 #define gCameraMng (*UCY_CameraManager::GetInstance())
