@@ -71,7 +71,7 @@ void ACY_Actor_EaglePoint::BeginPlay()
 TObjectPtr<AActor> ACY_Actor_EaglePoint::SpawnStatue() const
 {
 	const TObjectPtr<UCY_Unit_WayPoint> Statue = Cast<UCY_Unit_WayPoint>(gUnitMng.CreateUnit(WayPointIndex, UCY_Unit_WayPoint::StaticClass(), GetActorLocation(), GetActorRotation()));
-	if(Statue)
+	if(IsValid(Statue) == false)
 	{
 		return nullptr;
 	}

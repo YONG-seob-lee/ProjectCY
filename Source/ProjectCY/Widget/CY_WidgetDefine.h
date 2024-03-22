@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Framework/Application/IInputProcessor.h"
 #include "UObject/Object.h"
+#include "CY_WidgetDefine.generated.h"
 
 /**
  * 

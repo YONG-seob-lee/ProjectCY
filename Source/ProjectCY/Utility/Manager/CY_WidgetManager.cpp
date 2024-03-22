@@ -2,9 +2,11 @@
 
 
 #include "CY_WidgetManager.h"
+
+#include "CY_BasicGameUtility.h"
+#include "CY_BuiltInWidgetTool.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
-#include "CY_GameInstance.h"
 #include "CY_Mapper_Resource_Widget.h"
 #include "CY_TableManager.h"
 #include "CY_Utility.h"
@@ -21,21 +23,27 @@ UCY_WidgetManager::~UCY_WidgetManager()
 
 void UCY_WidgetManager::Initialize()
 {
-	WidgetMachine = CY_NewObject<UCY_StateMachine>(this, UCY_StateMachine::StaticClass());
-	WidgetMachine->AddToRoot();
-	WidgetMachine->Create();
+	BuiltInTool = CY_NewObject<UCY_BuiltInWidgetTool>(this, TEXT("BuiltInWidgetTool"));
+	if(IsValid(BuiltInTool.Get()) == false)
+	{
+		return;
+	}
+
+	BuiltInTool->Initialize();
 }
 
 void UCY_WidgetManager::Finalize()
 {
+	if(IsValid(BuiltInTool.Get()))
+	{
+		BuiltInTool->Finalize();
+		BuiltInTool = nullptr;
+	}
 }
 
 void UCY_WidgetManager::Tick(float DeltaTime)
 {
-	if (WidgetMachine)
-	{
-		WidgetMachine->Tick(DeltaTime);
-	}
+
 }
 
 void UCY_WidgetManager::ClearExclusiveLayer()
@@ -202,7 +210,7 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal_NotManaging(cons
 	const FString ClassPath = Path + TEXT("_C");
 	
 	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(CY_Utility::LoadObjectFromFile(ClassPath));
-	const TObjectPtr<UWorld> World = gInstance.GetWorld();
+	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
 	
 	if(World != nullptr && World->bIsTearingDown == false)
 	{

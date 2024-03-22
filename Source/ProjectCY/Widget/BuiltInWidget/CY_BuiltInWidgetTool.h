@@ -16,7 +16,11 @@ class PROJECTCY_API UCY_BuiltInWidgetTool : public UObject
 
 public:
 	FORCEINLINE TObjectPtr<class UCY_Widget_DialogScreenFader> GetDialogScreenFader() const { return DialogScreenFader;}
-	FORCEINLINE TObjectPtr<class UCY_Widget_Loading> GetLoadingWidget() const { return LoadingWidget; };
+	FORCEINLINE TObjectPtr<class UCY_Widget_Loading> GetLoadingWidget() const { return LoadingWidget; }
+	FORCEINLINE TSharedPtr<class FCY_PreTouchProcessor> GetPreTouchProcessor() const { return PreTouchProcessor; }
+
+	void Initialize();
+	void Finalize();
 
 private:
 	UPROPERTY()
@@ -24,4 +28,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UCY_Widget_Loading> LoadingWidget = nullptr;
+
+	TSharedPtr<FCY_PreTouchProcessor> PreTouchProcessor;
 };

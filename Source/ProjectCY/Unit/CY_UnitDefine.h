@@ -37,3 +37,10 @@ public:
 	float OutLineCullDistanceScale = 1.0f;
 	bool  bVisibleOutLine = true;
 };
+
+UENUM()
+enum ECY_UnitState
+{
+	None = 0,
+	PalWorld_Field,
+};

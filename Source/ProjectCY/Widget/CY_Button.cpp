@@ -5,11 +5,11 @@
 
 void UCY_Button::SetDelegates()
 {
-	OnClicked().AddUObject(this, &UCY_Button::OnClick);
-	OnPressed().AddUObject(this, &UCY_Button::OnPress);
-	OnReleased().AddUObject(this, &UCY_Button::OnReleas);
-	OnHovered().AddUObject(this, &UCY_Button::OnHover);
-	OnUnhovered().AddUObject(this, &UCY_Button::OnUnhover);
+	OnClicked.AddDynamic(this, &UCY_Button::OnClick);
+	OnPressed.AddDynamic(this, &UCY_Button::OnPress);
+	OnReleased.AddDynamic(this, &UCY_Button::OnReleas);
+	OnHovered.AddDynamic(this, &UCY_Button::OnHover);
+	OnUnhovered.AddDynamic(this, &UCY_Button::OnUnhover);
 }
 
 void UCY_Button::OnClick()
@@ -27,13 +27,13 @@ void UCY_Button::OnClick()
 		const float CurrentClickedTime = GetWorld() == nullptr ? 0.f : GetWorld()->GetUnpausedTimeSeconds();
 		if (LastClickedTime + ClickedDelayTime >= CurrentClickedTime)
 		{
-			CY_OnClickedInDelayTimeDelegate.Broadcast();
+			OnClickedInDelayTimeDelegate.ExecuteIfBound(this);
 			return;
 		}
 		LastClickedTime = GetWorld() == nullptr ? 0.f : GetWorld()->GetUnpausedTimeSeconds();
 		if (IsUseLongPressedEvent() == false)
 		{
-			CY_OnClickedDelegate.Broadcast();
+			OnClickedDelegate.ExecuteIfBound(this);
 		}
 	}
 }

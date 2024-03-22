@@ -24,7 +24,7 @@ TObjectPtr<UDataTable> CY_Utility::LoadTableObjectFromFile(const FString& Resour
 
 TObjectPtr<UObject> CY_Utility::LoadObjectFromFile(const FString& ResourcePath, const FCY_LoadResourceDelegate& Delegate /* = nullptr */, const FString& SubName /* = TEXT("SubName") */, int32 Index /* = 0 */, bool SubBool /* = false */)
 {
-	const FStringAssetReference Reference = ResourcePath;
+	const FSoftObjectPath Reference = ResourcePath;
 	UObject* ResultObject = gUnitMng.GetAssetLoader().LoadSynchronous(Reference);
 	Delegate.ExecuteIfBound(ResourcePath, ResultObject);
 	return ResultObject;

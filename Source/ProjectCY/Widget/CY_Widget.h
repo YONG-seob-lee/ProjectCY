@@ -29,6 +29,8 @@ public:
 
 	void PlayAnimationByName(FName Name, float StartTime = 0.f, int32 LoopCount = 1, EUMGSequencePlayMode::Type PlayType = EUMGSequencePlayMode::Forward, float Speed = 1.f);
 	TObjectPtr<UWidgetAnimation> GetAnimationByName(FName AnimName) const;
+	bool StopAnimation(const FName& AnimName);
+	
 	FORCEINLINE void SetResourceWidgetInfo(const FCY_ResourceWidgetInfo& Info) { ResourceWidgetInfo = Info; }
 	FORCEINLINE FCY_ResourceWidgetInfo GetResourceWidgetInfo() const { return ResourceWidgetInfo; }
 	FORCEINLINE void SetZOrder(int32 _ZOrder) { ZOrder = _ZOrder; }

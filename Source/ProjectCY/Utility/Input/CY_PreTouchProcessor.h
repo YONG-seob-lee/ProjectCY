@@ -1,0 +1,45 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "CY_Widget.h"
+#include "Framework/Application/IInputProcessor.h"
+
+namespace EffectThings
+{
+	inline FName Anim = TEXT("Touch_Button_Anim");
+	inline FString DefaultTouchEffectPath = TEXT("/Game/Widget/BuiltInWidget/TouchWidget.TouchWidget");
+
+	constexpr int32 DefaultEffectId = 0;
+	constexpr int32 EffectOverlapMaxCount = 10;
+}
+
+/**
+ * 
+ */
+class PROJECTCY_API FCY_PreTouchProcessor : public IInputProcessor, public FGCObject
+{
+public:
+	void Initialize();
+	void Finalize();
+
+	virtual void AddReferencedObjects(FReferenceCollector& Collector) override;
+	virtual FString GetReferencerName() const override;
+	virtual void Tick(const float DeltaTime, FSlateApplication& SlateApp, TSharedRef<ICursor> Cursor) override;
+	virtual bool HandleMouseButtonDownEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent) override;
+	virtual bool HandleMouseMoveEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent) override;
+	virtual bool HandleMouseButtonUpEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent) override;
+
+private:
+	void CreateTouchEffect(const FString& TouchEffectWidgetPath);
+	void ChangeTouchEffect(int32 TouchEffectId = EffectThings::DefaultEffectId);
+	void ClearTouchEffect();
+
+	void Touch(const FVector2d& ScreenPosition);
+
+	int32 TouchEffectIndex = 0;
+	int32 CurrentTouchEffectId = EffectThings::DefaultEffectId;
+	int32 FingerTouchIndex = -1;
+	TArray<TObjectPtr<UCY_Widget>> TouchOverlapEffect;
+};

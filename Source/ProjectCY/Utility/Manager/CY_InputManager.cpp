@@ -3,6 +3,7 @@
 
 #include "CY_InputManager.h"
 
+#include "CY_BasicGameUtility.h"
 #include "CY_GameInstance.h"
 #include "CY_Pawn_Input.h"
 
@@ -32,7 +33,7 @@ void UCY_InputManager::DestroyInputPawn()
 			InputPawn->RemoveFromRoot();
 		}
 
-		gInstance.GetWorld()->DestroyActor(InputPawn);
+		UCY_BasicGameUtility::GetGameWorld()->DestroyActor(InputPawn);
 		
 		InputPawn = nullptr;
 	}

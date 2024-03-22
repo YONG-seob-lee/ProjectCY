@@ -3,6 +3,7 @@
 
 #include "CY_SceneManager.h"
 
+#include "CY_BasicGameUtility.h"
 #include "CY_CameraManager.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
@@ -11,6 +12,8 @@
 #include "CY_InputManager.h"
 #include "CY_LevelLogicBase.h"
 #include "CY_SceneBT.h"
+#include "CY_SceneTitle.h"
+#include "CY_Scene_PalWorld.h"
 #include "CY_Utility.h"
 #include "CY_WidgetManager.h"
 #include "EngineUtils.h"
@@ -25,11 +28,15 @@ UCY_SceneManager::~UCY_SceneManager()
 {
 }
 
-void UCY_SceneManager::Initialize()
+void UCY_SceneManager::BuiltInInitialize()
 {
-	SceneStateMachine = CY_NewObject<UCY_StateMachine>(this, UCY_SceneManager::StaticClass());
+	SceneStateMachine = CY_NewObject<UCY_StateMachine>(this, UCY_StateMachine::StaticClass());
 	SceneStateMachine->AddToRoot();
 	SceneStateMachine->Create();
+}
+
+void UCY_SceneManager::Initialize()
+{
 
 	FadeTool = MakeWeakObjectPtr(CY_NewObject<UCY_FadeSceneTool>());
 	
@@ -41,6 +48,13 @@ void UCY_SceneManager::Initialize()
 
 void UCY_SceneManager::Finalize()
 {
+}
+
+void UCY_SceneManager::BuiltInFinalize()
+{
+	SceneStateMachine->Destroy();
+	SceneStateMachine->RemoveFromRoot();
+	SceneStateMachine = nullptr;
 }
 
 void UCY_SceneManager::Tick(float DeltaTime)
@@ -56,19 +70,20 @@ void UCY_SceneManager::Tick(float DeltaTime)
 	}
 }
 
-void UCY_SceneManager::RegistSceneState(uint8 SceneId, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType) const
+void UCY_SceneManager::RegisterScenes() const
 {
-	SceneStateMachine->RegistState(SceneId, Name, SceneType);
+	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
+	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::PalWorld), TEXT("PalWorld"), UCY_Scene_PalWorld::StaticClass());
 }
 
 bool UCY_SceneManager::LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const FName& PackagePath /* = FName() */, bool bAbsolute /* = true */)
 {
-	if(gInstance.HasInstance() == false)
+	if(UCY_BasicGameUtility::HasGameInstance() == false)
 	{
 		return false;
 	}
 
-	TObjectPtr<UWorld> World = gInstance.GetWorld();
+	TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
 	if(World == nullptr)
 	{
 		return false;
@@ -114,6 +129,12 @@ void UCY_SceneManager::SetSceneBehaviorTreeAsset(TObjectPtr<UBehaviorTree> BTAss
 
 void UCY_SceneManager::RegistSceneBehaviorTree()
 {
+}
+
+
+void UCY_SceneManager::RegistSceneState(uint8 SceneId, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType) const
+{
+	SceneStateMachine->RegistState(SceneId, Name, SceneType);
 }
 
 bool UCY_SceneManager::ChangeSceneStep_LoadLevel()
@@ -165,12 +186,12 @@ void UCY_SceneManager::RegisterSceneBehaviorTree()
 		return;
 	}
 
-	if(gInstancePtr == nullptr)
+	if(UCY_BasicGameUtility::HasGameInstance() == false)
 	{
 		return;
 	}
 
-	for (TActorIterator<ACY_LevelLogicBase> it(gInstance.GetWorld()); it; ++it)
+	for (TActorIterator<ACY_LevelLogicBase> it(UCY_BasicGameUtility::GetGameWorld()); it; ++it)
 	{
 		if (it->GetName().Equals(TEXT("SceneLogicActor"), ESearchCase::IgnoreCase) == true) {
 			SceneLogic = *it;
@@ -185,7 +206,7 @@ void UCY_SceneManager::RegisterSceneBehaviorTree()
 	}
 	else
 	{
-		SceneLogic = Cast<ACY_LevelLogicBase>(gInstance.GetWorld());
+		SceneLogic = Cast<ACY_LevelLogicBase>(UCY_BasicGameUtility::GetGameWorld());
 		if (SceneLogic)
 		{
 			if (SceneLogic->SetBehaviorTreeAsset(SceneBehaviorTree))

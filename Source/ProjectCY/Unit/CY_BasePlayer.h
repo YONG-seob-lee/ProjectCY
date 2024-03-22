@@ -16,8 +16,12 @@ public:
 	virtual void Initialize() override;
 	virtual void Finalize() override;
 
+	bool CreatePlayerStateMachine();
+	
 	void SetSelfPlayer(bool _bSelfPlayer);
-
+	void ChangePlayerState(ECY_UnitState UnitState) const;
+	void SetPositionAndRotator(const FVector& Position, const FRotator& Rotator) const;
+	
 	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
 	FORCEINLINE TObjectPtr<class ACY_CharacterBase> GetCharacterActor() const { return CharacterActor.Get(); }
 
@@ -29,6 +33,9 @@ protected:
 	bool bSelfPlayer = false;
 
 private:
+	UPROPERTY()
+	TObjectPtr<class UCY_StateMachine> PlayerStateMachine = nullptr;
+	
 	CY_Handle UnitHandle = InvalidUnitHandle;
 	TWeakObjectPtr<ACY_CharacterBase> CharacterActor = nullptr;
 };

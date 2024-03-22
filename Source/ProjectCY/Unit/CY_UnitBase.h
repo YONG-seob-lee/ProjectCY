@@ -22,12 +22,24 @@ public:
 	virtual bool CreateUnit(int32 UnitTableId, const FVector& Pos = FVector::ZeroVector, const FRotator& Rot = FRotator::ZeroRotator);
 	virtual void DestroyUnit();
 
-	void SetLodScaleValues(float CullDistanceScale, float OutLineCullDistanceScale, bool bVisibleOutLine);
-	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
+	void SetLodScaleValues(float CullDistanceScale, float OutLineCullDistanceScale, bool bVisibleOutLine) const;
 
+	FORCEINLINE void SetUnitHandle(CY_Handle _UnitHandle) { UnitHandle = _UnitHandle; }
+	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
+	
+	FORCEINLINE TObjectPtr<struct FResource_Unit> GetResourceUnitData() const { return ResourceUnitData; }
+	
+
+	TObjectPtr<class UCY_AnimInstance> GetAnimInstance() const;
+	FORCEINLINE TObjectPtr<class ACY_CharacterBase> GetCharacterBase() const { return CharacterBase.Get(); }
+	
+	float GetMovingSpeed() const;
 protected:
-	TWeakObjectPtr<class ACY_CharacterBase> CharacterBase = nullptr;
+	TWeakObjectPtr<ACY_CharacterBase> CharacterBase = nullptr;
 private:
 	FORCEINLINE bool IsValidCharacterActor() const { return CharacterBase.IsValid(); }
+
+	int32 ResourceUnitTableId = INDEX_NONE;
+	TObjectPtr<FResource_Unit> ResourceUnitData = nullptr;
 	CY_Handle UnitHandle = InvalidUnitHandle;
 };

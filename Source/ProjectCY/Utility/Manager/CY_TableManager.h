@@ -49,6 +49,7 @@ public:
 	
 		return TableData->FindRow<FRowData>(KeyName, Context);
 	}
+
 private:
 	void ResetData();
 	void CreateTableData(ECY_TableDataType TableType, const FString& Path, TSubclassOf<UCY_TableMapper> MapperType = nullptr);

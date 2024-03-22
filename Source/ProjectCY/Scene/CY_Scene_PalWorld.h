@@ -22,11 +22,21 @@ protected:
 	virtual void Begin() override;
 	virtual void Exit() override;
 	virtual void Tick(float DeltaTime) override;
-
+	virtual bool LoadingPostProcess(float DeltaTime) override;
 private:
 	void CreatePlayer();
+	void ChangeCamera();
+	void TransportPlayer() const;
 	void DestroyPlayer();
 
 	TWeakObjectPtr<class UCY_BasePlayer> Player;
+
+	UPROPERTY()
+	FVector PlayerDefaultPosition = FVector::ZeroVector;
+
+	UPROPERTY()
+	FRotator PlayerDefaultRotator = FRotator::ZeroRotator;
+
+	TWeakObjectPtr<class ACY_Actor_PlayerSpawnPoint> PlayerSpawnPoint = nullptr;
 	TMap<int32, FTransform> TeleportPoints;
 };

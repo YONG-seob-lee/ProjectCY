@@ -20,11 +20,13 @@ public:
 	UCY_SceneManager();
 	~UCY_SceneManager();
 
+	virtual void BuiltInInitialize() override;
 	virtual void Initialize() override;
 	virtual void Finalize() override;
+	virtual void BuiltInFinalize() override;
 	virtual void Tick(float DeltaTime) override;
 
-	void RegistSceneState(uint8 SceneId, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType) const;
+	void RegisterScenes() const;
 
 	bool LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const FName& PackagePath = FName(), bool bAbsolute = true);
 	void LoadLevelBySoftObjectPtr(TSoftObjectPtr<UWorld> LevelObjectPtr, FCY_LoadLevelInitialized Delegate);
@@ -40,6 +42,8 @@ public:
 
 	FCY_LoadLevelInitialized LoadLevelInitialized;
 private:
+	void RegistSceneState(uint8 SceneId, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType) const;
+	
 	bool ChangeSceneStep_LoadLevel();
 	void ChangeSceneStep_SetSceneState(uint8 SceneId);
 	void OnCompleteLevelLoading(const FString& LevelPackagePath);

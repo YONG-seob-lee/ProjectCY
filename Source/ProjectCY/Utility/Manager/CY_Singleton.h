@@ -29,7 +29,7 @@ protected:
 	static TObjectPtr<TClass> Instance;
 
 public:
-	static TObjectPtr<TClass> MakeInstance();
+	static TClass* MakeInstance();
 	static void    RemoveInstance();
 	static TObjectPtr<TClass> GetInstance();
 	static bool    HasInstance();
@@ -39,4 +39,4 @@ public:
 template<typename TClass>
 TObjectPtr<TClass> UCY_Singleton<TClass>::Instance = nullptr;
 
-#include "CY_Singleton.ini"
+#include "CY_Singleton.inl"

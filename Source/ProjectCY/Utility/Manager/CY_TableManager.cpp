@@ -11,6 +11,7 @@
 #include "CY_TableMapper.h"
 #include "CY_Mapper_PalCharacter.h"
 #include "CY_Define.h"
+#include "CY_Mapper_Resource_Unit.h"
 #include "CY_Mapper_Resource_Widget.h"
 
 UCY_TableManager::UCY_TableManager()
@@ -178,9 +179,10 @@ void UCY_TableManager::MakeTableStructData()
 
 	CreateTableData(ECY_TableDataType::Pal_Character, "/Game/TableData/Pal_Character.Pal_Character", UCY_Mapper_PalCharacter::StaticClass());
 	CreateTableData(ECY_TableDataType::Widget_Resource, "/Game/TableData/Widget_Resource.Widget_Resource", UCY_Mapper_Resource_Widget::StaticClass());
+	CreateTableData(ECY_TableDataType::Resource_Unit, "/Game/TableData/Resource_Unit.Resource_Unit", UCY_Mapper_Resource_Unit::StaticClass());
 }
 
 void UCY_TableManager::LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData)
 {
-
+	
 }

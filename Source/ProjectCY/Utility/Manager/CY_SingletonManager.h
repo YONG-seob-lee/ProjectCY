@@ -25,7 +25,8 @@ public:
 	void RemoveSingletons();
 	
 	void FinalizeSingletons();
-	
+	void InitializeSingletons();
+
 protected:
 	static TObjectPtr<UCY_SingletonManager> Instance;
 

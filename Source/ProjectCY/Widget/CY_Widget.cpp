@@ -96,6 +96,17 @@ TObjectPtr<UWidgetAnimation> UCY_Widget::GetAnimationByName(FName AnimName) cons
 	return pWidgetAnim == nullptr ? nullptr : *pWidgetAnim;
 }
 
+bool UCY_Widget::StopAnimation(const FName& AnimName)
+{
+	if(const TObjectPtr<UWidgetAnimation> WidgetAnimation = GetAnimationByName(AnimName))
+	{
+		UUserWidget::StopAnimation(WidgetAnimation);
+		return true;
+	}
+
+	return false;
+}
+
 void UCY_Widget::SetOriginVisible(ESlateVisibility _Visibility)
 {
 	OriginVisibility = _Visibility;

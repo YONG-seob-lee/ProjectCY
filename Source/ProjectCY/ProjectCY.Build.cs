@@ -20,13 +20,14 @@ public class ProjectCY : ModuleRules
         PrivateIncludePaths.Add("ProjectCY/Actor");
         PrivateIncludePaths.Add("ProjectCY/Actor/TelePort");
         PrivateIncludePaths.Add("ProjectCY/Unit");
+        PrivateIncludePaths.Add("ProjectCY/Generic");
 
         PublicDependencyModuleNames.AddRange(new string[]
         {
-	        "Core", "CoreUObject", "Engine", "InputCore", "Sequencer", "MessageLog", "AIModule", "Slate", "CommonUI"
+	        "Core", "CoreUObject", "Engine", "InputCore", "Sequencer", "MessageLog", "AIModule", "Slate", "SlateCore", "UMG"
         });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle", "NiagaraUIRenderer" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
