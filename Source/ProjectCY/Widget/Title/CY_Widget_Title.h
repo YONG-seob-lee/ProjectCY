@@ -13,4 +13,7 @@ UCLASS()
 class PROJECTCY_API UCY_Widget_Title : public UCY_Widget
 {
 	GENERATED_BODY()
+	
+public:
+	static FName GetWidgetName() { return TEXT("Title"); }
 };
