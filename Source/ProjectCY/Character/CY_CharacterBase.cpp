@@ -19,8 +19,30 @@ ACY_CharacterBase::ACY_CharacterBase()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
+	
 	RootCapsuleComponent = GetCapsuleComponent();
+	if(RootCapsuleComponent)
+	{
+		RootCapsuleComponent->SetCollisionProfileName("Capsule");
+		RootCapsuleComponent->BodyInstance.bLockXRotation = true;
+		RootCapsuleComponent->BodyInstance.bLockYRotation = true;
+	}
+	
 	RootSkeletalMeshComponent = GetMesh();
+	if(RootSkeletalMeshComponent)
+	{
+		RootSkeletalMeshComponent->bUseAttachParentBound = true;
+	}
+
+	MovementComponent = GetCharacterMovement();
+	if(MovementComponent)
+	{
+		MovementComponent->bRunPhysicsWithNoController = true;
+		MovementComponent->SetIsReplicated(true);
+		MovementComponent->RotationRate = FRotator(0.f, 0.f, 360.f);
+		MovementComponent->bUseControllerDesiredRotation = true;
+		MovementComponent->bOrientRotationToMovement = true;
+	}
 	
 	CreateCameraComponent();
 	CreateTestSphere();

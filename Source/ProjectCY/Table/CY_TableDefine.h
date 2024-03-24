@@ -18,7 +18,7 @@ enum class ECY_TableDataType : uint8
 {
 	Pal_Character = 0				UMETA(DisplayName = "Pal_Character"),
 	Hero_Level						UMETA(DisplayName = "Hero_Level"),
-	Widget_Resource					UMETA(DisplayName = "Widget_Resource"),
+	Resource_Widget					UMETA(DisplayName = "Resource_Widget"),
 	Resource_Unit					UMETA(DisplayName = "Resource_Unit"),
 
 	BasePath_Directory				UMETA(DisplayName = "BasePath_Directory"),

@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_Define.h"
+#include "CY_SceneDefine.h"
 #include "Chaos/AABB.h"
 #include "Engine/GameInstance.h"
 #include "CY_GameInstance.generated.h"
@@ -29,19 +31,22 @@ class PROJECTCY_API UCY_GameInstance : public UGameInstance
 	FORCEINLINE TObjectPtr<UCY_GameInstance> GetGameInstance() { return this; }
 private:
 	
-	void ProcessInitialize(uint8& CurrentProcessType);
-
+	void ProcessInitialize();
+	void ProcessFinalize();
+	
 	bool CreateBasicUtility();
 	bool CreateManagers();
-	void DestroyManagers();
-	void DestroyBasicUtility();
+	bool DestroyManagers();
+	bool DestroyBasicUtility();
 
 	void GameInstanceStart(UGameInstance* GameInstance);
 	
 	bool RegisterTick();
+	bool UnRegisterTick();
 	bool RegisterState();
 
 	bool LoadBaseWorld();
+	bool UnLoadBaseWorld();
 
 	void RestartGame();
 
@@ -51,4 +56,6 @@ private:
 	UPROPERTY(Category = UCY_GameInstance, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UBehaviorTree> SceneBTAsset = nullptr;
 	FTSTicker::FDelegateHandle TickDelegateHandle;
+
+	ECY_LaunchProcessType ProcessType = ECY_LaunchProcessType::None;
 };

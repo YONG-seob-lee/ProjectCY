@@ -11,6 +11,8 @@ public class ProjectCY : ModuleRules
 		PrivateIncludePaths.Add("ProjectCY");
         PrivateIncludePaths.Add("ProjectCY/Widget");
         PrivateIncludePaths.Add("ProjectCY/Widget/BuiltInWidget");
+        PrivateIncludePaths.Add("ProjectCY/Widget/MainHud");
+        PrivateIncludePaths.Add("ProjectCY/Widget/Title");
         PrivateIncludePaths.Add("ProjectCY/Utility");
         PrivateIncludePaths.Add("ProjectCY/Utility/Manager");
         PrivateIncludePaths.Add("ProjectCY/Utility/StateMachine");

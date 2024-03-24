@@ -11,9 +11,14 @@ void UCY_BasicGameUtility::Initialize(TObjectPtr<UCY_GameInstance> _GameInstance
 	GameInstance = _GameInstance;
 }
 
+void UCY_BasicGameUtility::Finalize()
+{
+	GameInstance = nullptr;
+}
+
 TObjectPtr<AActor> UCY_BasicGameUtility::SpawnBlueprintActor(const FString& BlueprintFileName, const FVector& Pos, const FRotator& Rot,
-			ESpawnActorCollisionHandlingMethod Method /* = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn */,
-			TSubclassOf<ACharacter> CharacterType /* = ACY_CharacterBase::StaticClass() */, bool bNeedRootComponent /* = true */)
+                                                             TSubclassOf<ACharacter> CharacterType /* = ACY_CharacterBase::StaticClass() */, bool bNeedRootComponent /* = true */, 
+                                                             ESpawnActorCollisionHandlingMethod Method /* = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn */)
 {
 	const TObjectPtr<UClass> BlueprintClass = StaticLoadClass(CharacterType, nullptr, *BlueprintFileName);
 	if(IsValid(BlueprintClass) == false)

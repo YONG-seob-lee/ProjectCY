@@ -18,10 +18,11 @@ class PROJECTCY_API UCY_BasicGameUtility : public UObject
 	
 public:
 	void Initialize(TObjectPtr<UCY_GameInstance> _GameInstance);
+	void Finalize();
 	
 	static TObjectPtr<AActor> SpawnBlueprintActor(const FString& BlueprintFileName, const FVector& Pos, const FRotator& Rot,
-		ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn,
-		TSubclassOf<ACharacter> CharacterType = ACY_CharacterBase::StaticClass(), bool bNeedRootComponent = true);
+									TSubclassOf<ACharacter> CharacterType = ACY_CharacterBase::StaticClass(), bool bNeedRootComponent = true,
+									ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
 	static TObjectPtr<UWorld> GetGameWorld();
 	static TObjectPtr<UCY_GameInstance> GetGameInstance();

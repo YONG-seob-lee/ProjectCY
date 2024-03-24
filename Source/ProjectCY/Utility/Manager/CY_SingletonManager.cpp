@@ -46,6 +46,11 @@ void UCY_SingletonManager::BuiltInInitializeSingletons()
 
 void UCY_SingletonManager::InitializeSingletons()
 {
+    if(bInitialized)
+    {
+        return;
+    }
+    
     for (const TObjectPtr<ISingleton> Singleton : Singletons)
     {
         Singleton->Initialize();

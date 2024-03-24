@@ -39,6 +39,9 @@ void UCY_WidgetManager::Finalize()
 		BuiltInTool->Finalize();
 		BuiltInTool = nullptr;
 	}
+
+	ClearExclusiveLayer();
+	ManagedWidgets.Empty();
 }
 
 void UCY_WidgetManager::Tick(float DeltaTime)
@@ -157,7 +160,7 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManagingBySOP(const FSo
 
 TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal(const FName& TypeName, bool bManaged)
 {
-	const TObjectPtr<UCY_Mapper_Resource_Widget> ResourceWidgetMapper = Cast<UCY_Mapper_Resource_Widget>(gTableMng.GetTableMapper(ECY_TableDataType::Hero_Level));
+	const TObjectPtr<UCY_Mapper_Resource_Widget> ResourceWidgetMapper = Cast<UCY_Mapper_Resource_Widget>(gTableMng.GetTableMapper(ECY_TableDataType::Resource_Widget));
 	if(ResourceWidgetMapper == nullptr)
 	{
 		return nullptr;
@@ -170,7 +173,7 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal(const FName& Typ
 		return nullptr;
 	}
 
-	const FString ResourcePath = gTableMng.GetPath(ECY_TableDataType::Widget_Resource, ResourceWidgetData->Path_File, true);
+	const FString ResourcePath = gTableMng.GetPath(ECY_TableDataType::BasePath_BP_File, ResourceWidgetData->Path_File, true);
 
 	const TObjectPtr<UCY_Widget> ResultWidget = bManaged ? CreateWidget_Internal_Managing(ResourcePath) : CreateWidget_Internal_NotManaging(ResourcePath);
 
@@ -199,9 +202,19 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal_Managing(const F
 	static FString SubName = TEXT("Create Widget");
 	const FString ClassPath = Path + TEXT("_C");
 	
-	const TObjectPtr<UCY_Widget> WidgetClass = Cast<UCY_Widget>(CY_Utility::LoadObjectFromFile(ClassPath, FCY_LoadResourceDelegate::CreateUObject(this, &UCY_WidgetManager::LoadComplete)));
+	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(CY_Utility::LoadObjectFromFile(ClassPath, FCY_LoadResourceDelegate::CreateUObject(this, &UCY_WidgetManager::LoadComplete)));
+	if(WidgetClass == nullptr)
+	{
+		return nullptr;
+	}
 
-	return WidgetClass;
+	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
+	if(World == nullptr)
+	{
+		return nullptr;
+	}
+
+	return CreateWidget<UCY_Widget>(World, WidgetClass);
 }
 
 TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal_NotManaging(const FString& Path) const

@@ -8,7 +8,7 @@ void UCY_Mapper_Resource_Widget::Initialize(TObjectPtr<UCY_TableManager> Mng)
 	TMap<int32, TObjectPtr<FResource_Widget>> PrimitiveResourceWidget;
 	PrimitiveResourceWidget.Empty();
 	
-	BuildTable(Mng, ECY_TableDataType::Widget_Resource, PrimitiveResourceWidget);
+	BuildTable(Mng, ECY_TableDataType::Resource_Widget, PrimitiveResourceWidget);
 
 	for(const auto& ResourceWidgetData : PrimitiveResourceWidget)
 	{

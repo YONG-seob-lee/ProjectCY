@@ -22,6 +22,9 @@ void UCY_ContentsProcessManager::Initialize()
 
 void UCY_ContentsProcessManager::Finalize()
 {
+	StateMachine->Destroy();
+	StateMachine->RemoveFromRoot();
+	StateMachine = nullptr;
 }
 
 void UCY_ContentsProcessManager::Tick(float DeltaTime)

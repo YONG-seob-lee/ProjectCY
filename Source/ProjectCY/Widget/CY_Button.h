@@ -40,6 +40,7 @@ public:
 
 private:
 	void SetDelegates();
+
 	
 	UFUNCTION() void OnClick();
 	UFUNCTION() void OnPress();

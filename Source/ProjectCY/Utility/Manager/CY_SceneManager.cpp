@@ -8,7 +8,6 @@
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
 #include "CY_FadeSceneTool.h"
-#include "CY_GameInstance.h"
 #include "CY_InputManager.h"
 #include "CY_LevelLogicBase.h"
 #include "CY_SceneBT.h"
@@ -17,6 +16,7 @@
 #include "CY_Utility.h"
 #include "CY_WidgetManager.h"
 #include "EngineUtils.h"
+#include "Engine/LevelStreamingDynamic.h"
 #include "Kismet/GameplayStatics.h"
 
 UCY_SceneManager::UCY_SceneManager()
@@ -48,6 +48,10 @@ void UCY_SceneManager::Initialize()
 
 void UCY_SceneManager::Finalize()
 {
+	FadeTool = nullptr;
+	LoadLevelInitialized.Unbind();
+	LoadLevelInitialized = nullptr;
+	UnregisterSceneBehaviorTree();
 }
 
 void UCY_SceneManager::BuiltInFinalize()
@@ -59,10 +63,24 @@ void UCY_SceneManager::BuiltInFinalize()
 
 void UCY_SceneManager::Tick(float DeltaTime)
 {
-	if (SceneStateMachine)
+	if(ChangeSceneData.Step == ECY_ChangeSceneStep::Complete)
 	{
-		SceneStateMachine->Tick(DeltaTime);
+		if (SceneStateMachine)
+		{
+			SceneStateMachine->Tick(DeltaTime);
+		}	
 	}
+	else if(ChangeSceneData.Step == ECY_ChangeSceneStep::PrepareSceneState)
+	{
+		const TObjectPtr<UCY_SceneBase> CurrentScene = GetCurrentScene();
+		CurrentScene->TickLoading(DeltaTime);
+
+		if(CurrentScene->IsCompleteLoading())
+		{
+			ChangeSceneData.Step = ECY_ChangeSceneStep::Complete;
+		}
+	}
+	
 
 	if(FadeTool.IsValid())
 	{
@@ -70,10 +88,54 @@ void UCY_SceneManager::Tick(float DeltaTime)
 	}
 }
 
+TObjectPtr<UCY_SceneBase> UCY_SceneManager::GetCurrentScene()
+{
+	if(SceneStateMachine)
+	{
+		Cast<UCY_SceneBase>(SceneStateMachine->GetCurrentState());
+	}
+
+	return nullptr;
+}
+
 void UCY_SceneManager::RegisterScenes() const
 {
 	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
 	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::PalWorld), TEXT("PalWorld"), UCY_Scene_PalWorld::StaticClass());
+}
+
+void UCY_SceneManager::SceneLoadComplete(float LoadTime, const FString& LevelName)
+{
+	gInputMng.CreateInputPawn();
+	ActiveLevels.Empty();
+
+	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
+	const TArray<ULevelStreaming*>& Levels = World->GetStreamingLevels();
+
+	for(int32 i = 0 ; i < Levels.Num() ; i++)
+	{
+		if(World->GetCurrentLevel()->GetName().Equals(Levels[i]->PackageNameToLoad.ToString(), ESearchCase::IgnoreCase))
+		{
+			ActiveLevels.Emplace(Levels[i]->PackageNameToLoad.ToString(), true);
+		}
+		else
+		{
+			ActiveLevels.Emplace(Levels[i]->PackageNameToLoad.ToString(), false);
+		}
+	}
+
+	ExecuteLoadLevelDelegate(LevelName);
+}
+
+void UCY_SceneManager::ExecuteLoadLevelDelegate(const FString& LevelName /* = TEXT("") */)
+{
+	if(LoadLevelInitialized.IsBound())
+	{
+		const FCY_LoadLevelInitialized Delegate = LoadLevelInitialized;
+		LoadLevelInitialized.Unbind();
+		
+		Delegate.Execute(LevelName.IsEmpty() ? UCY_BasicGameUtility::GetGameWorld()->GetMapName() : LevelName);
+	}
 }
 
 bool UCY_SceneManager::LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const FName& PackagePath /* = FName() */, bool bAbsolute /* = true */)
@@ -100,9 +162,27 @@ bool UCY_SceneManager::LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const 
 	return true;
 }
 
-void UCY_SceneManager::LoadLevelBySoftObjectPtr(TSoftObjectPtr<UWorld> LevelObjectPtr, FCY_LoadLevelInitialized Delegate)
+bool UCY_SceneManager::LoadLevelBySoftObjectPtr(const TSoftObjectPtr<UWorld>& LevelObjectPtr, const FCY_LoadLevelInitialized& Delegate)
 {
-	
+	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
+	if(IsValid(World) == false)
+	{
+		return false;
+	}
+
+	gInputMng.DestroyInputPawn();
+	gCameraMng.DestroyAllCameras();
+
+	bool bSuccess = true;
+	ULevelStreamingDynamic::LoadLevelInstanceBySoftObjectPtr(World, LevelObjectPtr, FVector::ZeroVector, FRotator::ZeroRotator, bSuccess);
+
+	if(bSuccess)
+	{
+		LoadLevelInitialized.Unbind();
+		LoadLevelInitialized = Delegate;
+	}
+
+	return true;
 }
 
 void UCY_SceneManager::ChangeScene(ECY_GameSceneType SceneType, const FName& LevelPackagePath /* = NAME_None */)

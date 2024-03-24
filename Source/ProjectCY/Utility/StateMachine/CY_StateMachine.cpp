@@ -48,6 +48,13 @@ void UCY_StateMachine::UnRegistStates()
 	EntireState.Empty();
 }
 
+TObjectPtr<UCY_StateBase> UCY_StateMachine::GetCurrentState()
+{
+	const TObjectPtr<UCY_StateBase>* pCurrentStateBase = EntireState.Find(CurrentStateId);
+
+	return pCurrentStateBase ? *pCurrentStateBase : nullptr;
+}
+
 void UCY_StateMachine::SetState(int32 Index, bool _bInstant /* = true */)
 {
 	if(_bInstant)

@@ -30,11 +30,12 @@ enum class ECY_LaunchProcessType : uint8
 
 	BasicUtility,
 	CreateManager,
+	RegistManager,
 	RegistTick,
-	RegistState,
 	LoadBaseWorld,
-	
-	ProcessFinished
+	ProcessFinished,
+
+	End
 };
 
 DECLARE_DELEGATE_TwoParams(FBindAllKeysDelegate, const FKey&, bool);

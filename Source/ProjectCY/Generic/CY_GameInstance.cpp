@@ -24,8 +24,7 @@ void UCY_GameInstance::Init()
 {
 	Super::Init();
 
-	uint8 ProcessType;
-	ProcessInitialize(ProcessType);
+	ProcessInitialize();
 
 	if (static_cast<ECY_LaunchProcessType>(ProcessType) != ECY_LaunchProcessType::ProcessFinished)
 	{
@@ -36,9 +35,14 @@ void UCY_GameInstance::Init()
 
 void UCY_GameInstance::Shutdown()
 {
-	DestroyManagers();
-	DestroyBasicUtility();
-
+	ProcessFinalize();
+	if(ProcessType != ECY_LaunchProcessType::BasicUtility)
+	{
+		CY_CHECK(false);
+		return;
+	}
+	ProcessType = ECY_LaunchProcessType::None;
+	
 	Super::Shutdown();
 }
 
@@ -50,47 +54,92 @@ void UCY_GameInstance::OnWorldChanged(UWorld* OldWorld, UWorld* NewWorld)
 void UCY_GameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 {
 	Super::LoadComplete(LoadTime, MapName);
+
+	gSceneMng.SceneLoadComplete(LoadTime, MapName);
 }
 
 bool UCY_GameInstance::Tick(float DeltaSeconds)
 {
-	UCY_SingletonManager::GetInstance()->TickSingletons(DeltaSeconds);
+	if(ProcessType == ECY_LaunchProcessType::End)
+	{
+		UCY_SingletonManager::GetInstance()->TickSingletons(DeltaSeconds);
+	}
 
+	if(ProcessType == ECY_LaunchProcessType::ProcessFinished)
+	{
+		gSceneMng.ExecuteLoadLevelDelegate();
+		ProcessType = ECY_LaunchProcessType::End;
+	}
+	
 	return true;
 }
 
-void UCY_GameInstance::ProcessInitialize(uint8& CurrentProcessType)
+void UCY_GameInstance::ProcessInitialize()
 {
-	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::CreateManager);
+	ProcessType = ECY_LaunchProcessType::CreateManager;
 
 	if (CreateBasicUtility() == false)
 	{
 		return;
 	}
-	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::BasicUtility);
+	ProcessType = ECY_LaunchProcessType::BasicUtility;
 	if (CreateManagers() == false)
 	{
 		return;
 	}
-	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::RegistTick);
+	ProcessType = ECY_LaunchProcessType::RegistManager;
 
 	if (RegisterTick() == false)
 	{
 		return;
 	}
-	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::RegistState);
+	ProcessType = ECY_LaunchProcessType::RegistTick;
 	
 	if (RegisterState() == false)
 	{
 		return;
 	}
-	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::LoadBaseWorld);
+	ProcessType = ECY_LaunchProcessType::LoadBaseWorld;
 	
 	if (LoadBaseWorld() == false)
 	{
 		return;
 	}
-	CurrentProcessType = static_cast<uint8>(ECY_LaunchProcessType::ProcessFinished);
+	ProcessType = ECY_LaunchProcessType::ProcessFinished;
+}
+
+void UCY_GameInstance::ProcessFinalize()
+{
+	if(ProcessType != ECY_LaunchProcessType::End)
+	{
+		return;
+	}
+
+	ProcessType = ECY_LaunchProcessType::ProcessFinished;
+	
+	if(UnLoadBaseWorld() == false)
+	{
+		return;
+	}
+	ProcessType = ECY_LaunchProcessType::LoadBaseWorld;
+
+	if(UnRegisterTick() == false)
+	{
+		return;
+	}
+	ProcessType = ECY_LaunchProcessType::RegistTick;
+
+	if(DestroyManagers() == false)
+	{
+		return;
+	}
+	ProcessType = ECY_LaunchProcessType::RegistManager;
+
+	if(DestroyBasicUtility() == false)
+	{
+		return;
+	}
+	ProcessType = ECY_LaunchProcessType::BasicUtility;
 }
 
 bool UCY_GameInstance::CreateBasicUtility()
@@ -115,7 +164,7 @@ bool UCY_GameInstance::CreateManagers()
 	return true;
 }
 
-void UCY_GameInstance::DestroyManagers()
+bool UCY_GameInstance::DestroyManagers()
 {
 	if (const TObjectPtr<UCY_SingletonManager> SingletonManager = UCY_SingletonManager::GetInstance())
 	{
@@ -123,14 +172,19 @@ void UCY_GameInstance::DestroyManagers()
 	}
 
 	UCY_SingletonManager::DestroyInstance();
+
+	return true;
 }
 
-void UCY_GameInstance::DestroyBasicUtility()
+bool UCY_GameInstance::DestroyBasicUtility()
 {
 	if(const TObjectPtr<UCY_BasicGameUtility> BasicGameUtility = UCY_BasicGameUtility::GetInstance())
 	{
+		BasicGameUtility->Finalize();
 		BasicGameUtility->RemoveInstance();
+		return true;
 	}
+	return false;
 }
 
 void UCY_GameInstance::GameInstanceStart(UGameInstance* GameInstance)
@@ -143,8 +197,14 @@ void UCY_GameInstance::GameInstanceStart(UGameInstance* GameInstance)
 
 bool UCY_GameInstance::RegisterTick()
 {
-	FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UCY_GameInstance::Tick));
 	TickDelegateHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UCY_GameInstance::Tick));
+	return true;
+}
+
+bool UCY_GameInstance::UnRegisterTick()
+{
+	FTSTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
+
 	return true;
 }
 
@@ -173,6 +233,17 @@ bool UCY_GameInstance::LoadBaseWorld()
 		}));
 		return true;
 	}
+	return false;
+}
+
+bool UCY_GameInstance::UnLoadBaseWorld()
+{
+	if(BaseWorld.IsValid())
+	{
+		BaseWorld = nullptr;
+		return true;
+	}
+
 	return false;
 }
 

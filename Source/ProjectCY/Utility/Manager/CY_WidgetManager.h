@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "CY_Singleton.h"
 #include "CY_WidgetDefine.h"
 #include "CY_WidgetManager.generated.h"
@@ -49,8 +48,6 @@ private:
 
 	void LoadComplete(const FString& TableName, TObjectPtr<UObject> WidgetData);
 	
-	UPROPERTY()
-	TObjectPtr<class UCY_StateMachine> WidgetMachine = nullptr;
 	UPROPERTY()
 	TObjectPtr<UCY_BuiltInWidgetTool> BuiltInTool = nullptr;
 	

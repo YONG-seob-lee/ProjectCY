@@ -15,7 +15,7 @@ namespace CY_Utility
 	template<typename TEnum>
 	static FString ConvertEnumToString(const FString& EnumString, TEnum EnumType)
 	{
-		const UEnum* pEnum = FindObject<UEnum>(nullptr, *EnumString, true);
+		const UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, *EnumString, true);
 		if (!pEnum)
 		{
 			return FString("");

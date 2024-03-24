@@ -59,5 +59,7 @@ private:
 
 	TMap<ECY_TableDataType, FCY_TableMapperData> TableMappers;
 
+	bool bInitialize = false;
+	
 #define gTableMng (*UCY_TableManager::GetInstance())
 };

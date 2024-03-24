@@ -19,10 +19,11 @@ public:
 	virtual void Finalize() override;
 	virtual void Tick(float _DeltaTime) override;
 
+	void CreateInputPawn();
 	void DestroyInputPawn();
 
 	FORCEINLINE FBindAllKeysDelegate& GetBindAllKeysDelegate() { return AllKeysDelegate; }
-	
+
 private:
 	UPROPERTY()
 	TObjectPtr<class ACY_Pawn_Input> InputPawn = nullptr;

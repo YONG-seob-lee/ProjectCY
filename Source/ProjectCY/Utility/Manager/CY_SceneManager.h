@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_SceneBase.h"
 #include "CY_SceneDefine.h"
 #include "CY_Singleton.h"
 #include "CY_SceneManager.generated.h"
@@ -25,11 +26,15 @@ public:
 	virtual void Finalize() override;
 	virtual void BuiltInFinalize() override;
 	virtual void Tick(float DeltaTime) override;
+	
+	TObjectPtr<UCY_SceneBase> GetCurrentScene();
 
 	void RegisterScenes() const;
-
+	void SceneLoadComplete(float LoadTime, const FString& LevelName);
+	void ExecuteLoadLevelDelegate(const FString& LevelName = TEXT(""));
+	
 	bool LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const FName& PackagePath = FName(), bool bAbsolute = true);
-	void LoadLevelBySoftObjectPtr(TSoftObjectPtr<UWorld> LevelObjectPtr, FCY_LoadLevelInitialized Delegate);
+	bool LoadLevelBySoftObjectPtr(const TSoftObjectPtr<UWorld>& LevelObjectPtr, const FCY_LoadLevelInitialized& Delegate);
 	
 	void ChangeScene(ECY_GameSceneType SceneType, const FName& LevelPackagePath = NAME_None);
 	void SetSceneBehaviorTreeAsset(TObjectPtr<class UBehaviorTree> BTAsset);
@@ -50,9 +55,12 @@ private:
 
 	void RegisterSceneBehaviorTree();
 	void UnregisterSceneBehaviorTree();
+
+	UPROPERTY()
+	TMap<FString, bool> ActiveLevels;
 	
 	UPROPERTY()
-	TObjectPtr<class UCY_StateMachine> SceneStateMachine = nullptr;
+	TObjectPtr<UCY_StateMachine> SceneStateMachine = nullptr;
 
 	UPROPERTY()
 	FCY_ChangeSceneData ChangeSceneData;
