@@ -61,5 +61,5 @@
 "C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RD\fmt.cpp.obj"
 "C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RD\spdlog.cpp.obj"
 "C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RD\stdout_sinks.cpp.obj"
-"C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RD\Default.rc2.res"
+"..\Intermediate\Build\Win64\UnrealEditor\Development\Default.rc2.res"
 /OUT:"C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RD\UnrealEditor-RD-Win64-DebugGame.lib"

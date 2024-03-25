@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
-#include "UObject/NoExportTypes.h"
-//#include "CY_TableDefine.generated.h"
+#include "CY_TableDefine.generated.h"
 
 /**
  * 
@@ -25,25 +24,27 @@ enum class ECY_TableDataType : uint8
 	BasePath_BP_File				UMETA(DisplayName = "BasePath_BP_File"),
 };
 
+USTRUCT()
 struct FCY_TableMapperData
 {
+	GENERATED_USTRUCT_BODY()
 public:
+	FCY_TableMapperData() {}
+	
 	FCY_TableMapperData(const FString& _TablePath, TObjectPtr<UDataTable> _TableData, TObjectPtr<class UCY_TableMapper> _TableMapper) 
 							: TablePath(_TablePath), TableData(_TableData), TableMapper(_TableMapper) {}
 	~FCY_TableMapperData() { TableData = nullptr; TableMapper = nullptr; }
 
+	void Finalize();
+	
 	FORCEINLINE const FString& GetTablePath() { return TablePath; }
 	FORCEINLINE TObjectPtr<UDataTable> GetTableData() const { return TableData; }
-	FORCEINLINE TObjectPtr<class UCY_TableMapper> GetTableMapper() const { return TableMapper; }
+	FORCEINLINE TObjectPtr<UCY_TableMapper> GetTableMapper() const { return TableMapper; }
 private:
-	FString TablePath;
-	TObjectPtr<UDataTable> TableData;
-	TObjectPtr<class UCY_TableMapper> TableMapper;
+	FString TablePath = FString();
+	
+	UPROPERTY()
+	TObjectPtr<UDataTable> TableData = nullptr;
+	UPROPERTY()
+	TObjectPtr<UCY_TableMapper> TableMapper = nullptr;
 };
-
-//UCLASS()
-//class PROJECTCY_API UCY_TableDefine : public UObject
-//{
-//	GENERATED_BODY()
-//	
-//};

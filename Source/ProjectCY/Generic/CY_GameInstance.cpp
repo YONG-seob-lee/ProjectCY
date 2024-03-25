@@ -13,6 +13,9 @@
 UCY_GameInstance::UCY_GameInstance()
 {
 	FWorldDelegates::OnStartGameInstance.AddUObject(this, &UCY_GameInstance::GameInstanceStart);
+
+	TickDelegateHandle = nullptr;
+	ProcessType = ECY_LaunchProcessType::None;
 }
 
 UCY_GameInstance::~UCY_GameInstance()
@@ -26,7 +29,7 @@ void UCY_GameInstance::Init()
 
 	ProcessInitialize();
 
-	if (static_cast<ECY_LaunchProcessType>(ProcessType) != ECY_LaunchProcessType::ProcessFinished)
+	if (ProcessType != ECY_LaunchProcessType::ProcessFinished)
 	{
 		CY_CHECK(false);
 		RestartGame();
@@ -36,7 +39,7 @@ void UCY_GameInstance::Init()
 void UCY_GameInstance::Shutdown()
 {
 	ProcessFinalize();
-	if(ProcessType != ECY_LaunchProcessType::BasicUtility)
+	if(ProcessType != ECY_LaunchProcessType::End)
 	{
 		CY_CHECK(false);
 		return;
@@ -64,7 +67,7 @@ bool UCY_GameInstance::Tick(float DeltaSeconds)
 	{
 		UCY_SingletonManager::GetInstance()->TickSingletons(DeltaSeconds);
 	}
-
+	
 	if(ProcessType == ECY_LaunchProcessType::ProcessFinished)
 	{
 		gSceneMng.ExecuteLoadLevelDelegate();
@@ -115,31 +118,10 @@ void UCY_GameInstance::ProcessFinalize()
 		return;
 	}
 
-	ProcessType = ECY_LaunchProcessType::ProcessFinished;
-	
-	if(UnLoadBaseWorld() == false)
-	{
-		return;
-	}
-	ProcessType = ECY_LaunchProcessType::LoadBaseWorld;
-
-	if(UnRegisterTick() == false)
-	{
-		return;
-	}
-	ProcessType = ECY_LaunchProcessType::RegistTick;
-
-	if(DestroyManagers() == false)
-	{
-		return;
-	}
-	ProcessType = ECY_LaunchProcessType::RegistManager;
-
-	if(DestroyBasicUtility() == false)
-	{
-		return;
-	}
-	ProcessType = ECY_LaunchProcessType::BasicUtility;
+	UnLoadBaseWorld();
+	UnRegisterTick();
+	DestroyManagers();
+	DestroyBasicUtility();
 }
 
 bool UCY_GameInstance::CreateBasicUtility()
@@ -204,7 +186,6 @@ bool UCY_GameInstance::RegisterTick()
 bool UCY_GameInstance::UnRegisterTick()
 {
 	FTSTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
-
 	return true;
 }
 

@@ -19,8 +19,6 @@ void UCY_Mapper_Resource_Widget::Initialize(TObjectPtr<UCY_TableManager> Mng)
 void UCY_Mapper_Resource_Widget::Finalize()
 {
 	ResourceWidgetDatas.Empty();
-	
-	Super::Finalize();
 }
 
 TObjectPtr<FResource_Widget> UCY_Mapper_Resource_Widget::GetResourceWidgetData(const FName& TypeName)

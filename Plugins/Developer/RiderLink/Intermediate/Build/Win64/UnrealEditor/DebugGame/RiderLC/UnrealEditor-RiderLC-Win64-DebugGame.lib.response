@@ -7,5 +7,5 @@
 /IGNORE:4221
 /NODEFAULTLIB
 "C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLC\RiderLC.cpp.obj"
-"C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLC\Default.rc2.res"
+"..\Intermediate\Build\Win64\UnrealEditor\Development\Default.rc2.res"
 /OUT:"C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLC\UnrealEditor-RiderLC-Win64-DebugGame.lib"

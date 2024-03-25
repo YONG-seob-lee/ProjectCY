@@ -35,9 +35,9 @@ void UCY_TableManager::Initialize()
 
 void UCY_TableManager::Finalize()
 {
-	for (const auto& TableMapper : TableMappers)
+	for (auto& TableMapper : TableMappers)
 	{
-		TableMapper.Value.~FCY_TableMapperData();
+		TableMapper.Value.Finalize();
 	}
 
 	TableMappers.Empty();

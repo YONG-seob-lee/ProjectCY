@@ -34,7 +34,7 @@
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN:6
 "C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\Module.RiderLink.cpp.obj"
-"C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RiderLink\Default.rc2.res"
+"..\Intermediate\Build\Win64\UnrealEditor\Development\Default.rc2.res"
 "..\Intermediate\Build\Win64\UnrealEditor\Development\Core\UnrealEditor-Core.lib"
 "C:\Users\Lee\Documents\Unreal Projects\ProjectCY\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UnrealEditor\DebugGame\RD\UnrealEditor-RD-Win64-DebugGame.lib"
 "delayimp.lib"

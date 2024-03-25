@@ -57,6 +57,7 @@ private:
 
 	void LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData);
 
+	UPROPERTY()
 	TMap<ECY_TableDataType, FCY_TableMapperData> TableMappers;
 
 	bool bInitialize = false;
