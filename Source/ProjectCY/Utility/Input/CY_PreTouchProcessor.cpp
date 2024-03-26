@@ -122,11 +122,10 @@ void FCY_PreTouchProcessor::Touch(const FVector2d& ScreenPosition)
 	const FGeometry CachedGeometry = UCY_BasicGameUtility::GetGameViewport()->GetCachedGeometry();
 	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(ScreenPosition);
 	
+	//USlateBlueprintLibrary::AbsoluteToLocal(localposition)
+	
 	TouchOverlapEffect[TouchEffectIndex]->SetPositionInViewport(AbsoluteScreenPosition);
-	TouchOverlapEffect[TouchEffectIndex]->PlayTouch();
-	
-	UCY_BasicGameUtility::ShowMessageOnScreen(FString::FromInt(TouchEffectIndex));
-	
+	TouchOverlapEffect[TouchEffectIndex]->TouchEvent();
 	TouchEffectIndex = (TouchEffectIndex + 1) % EffectThings::EffectOverlapMaxCount;
 
 #if WITH_EDITOR

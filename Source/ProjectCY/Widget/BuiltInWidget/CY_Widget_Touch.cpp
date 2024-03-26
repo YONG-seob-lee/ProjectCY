@@ -2,6 +2,8 @@
 
 
 #include "CY_Widget_Touch.h"
+
+#include "CY_BasicGameUtility.h"
 #include "NiagaraSystemWidget.h"
 #include "NiagaraUIComponent.h"
 
@@ -13,13 +15,18 @@ void UCY_Widget_Touch::InitWidget(const FName& TypeName, bool _bManaged, bool bA
 	{
 		CPP_TouchEffectWidget->RebuildWidget();
 	}
+
 }
 
-void UCY_Widget_Touch::PlayTouch() const
+void UCY_Widget_Touch::FinishWidget()
 {
-	if(CPP_TouchEffectWidget)
-	{
-		//CPP_TouchEffectWidget->GetNiagaraComponent()->SetTransformationForUIRendering(ScreenPosition, FVector2f(100.f, 100.f), 1.f);
-		CPP_TouchEffectWidget->GetNiagaraComponent()->Activate(true);
-	}
+	Super::FinishWidget();
+}
+
+void UCY_Widget_Touch::TouchEvent()
+{
+	UNiagaraUIComponent* Comp = CPP_TouchEffectWidget->GetNiagaraComponent();
+	Comp->Activate(true);
+
+	//PlayAnimation(Touch_Anim);
 }

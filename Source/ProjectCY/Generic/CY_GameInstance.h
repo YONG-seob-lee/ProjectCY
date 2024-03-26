@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "CY_Define.h"
-#include "CY_SceneDefine.h"
-#include "Chaos/AABB.h"
 #include "Engine/GameInstance.h"
 #include "CY_GameInstance.generated.h"
 

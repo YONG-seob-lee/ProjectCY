@@ -15,10 +15,14 @@ class PROJECTCY_API UCY_Widget_Touch : public UCY_Widget
 	GENERATED_BODY()
 public:
 	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate) override;
+	virtual void FinishWidget() override;
 	
-	void PlayTouch() const;
-	
+	void TouchEvent();
 private:
+	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UNiagaraSystemWidget> CPP_TouchEffectWidget = nullptr;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> Touch_Anim = nullptr;
 };
