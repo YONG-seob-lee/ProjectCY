@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
-#include "CY_Define.h"
 #include "CY_Button.generated.h"
 
 /**
@@ -16,31 +15,37 @@ class PROJECTCY_API UCY_Button : public UCommonButtonBase
 	GENERATED_BODY()
 
 public:
+	UCY_Button();
+	virtual ~UCY_Button() override;
+	
+	virtual void NativeOnCurrentTextStyleChanged() override;
+	virtual const FText GetPaletteCategory() override;
 
-	void SetOnClickedDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnClickedDelegate = p_delegate; };
+	void SetText(const FString& ButtonString) const;
+
+	void SetOnClickedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnClickedDelegate = Delegate; };
 	FORCEINLINE void UnbindClickedDelegate() { CY_OnClickedDelegate.Clear(); }
-	void SetOnPressedDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnPressedDelegate = p_delegate; };
+	void SetOnPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnPressedDelegate = Delegate; };
 	FORCEINLINE void UnbindPressedDelegate() { CY_OnPressedDelegate.Clear(); }
-	void SetOnReleasedDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnReleasedDelegate = p_delegate; };
+	void SetOnReleasedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnReleasedDelegate = Delegate; };
 	FORCEINLINE void UnbindReleasedDelegate() { CY_OnReleasedDelegate.Clear(); }
-	void SetOnHoveredDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnHoveredDelegate = p_delegate; };
+	void SetOnHoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnHoveredDelegate = Delegate; };
 	FORCEINLINE void UnbindHoveredDelegate() { CY_OnHoveredDelegate.Clear(); }
-	void SetOnUnhoveredDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnUnhoveredDelegate = p_delegate; };
+	void SetOnUnhoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnUnhoveredDelegate = Delegate; };
 	FORCEINLINE void UnbindUnhoveredDelegate() { CY_OnUnhoveredDelegate.Clear(); }
-	void SetWillCloseWidgetDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_WillCloseWidgetDelegate = p_delegate; };
+	void SetWillCloseWidgetDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_WillCloseWidgetDelegate = Delegate; };
 	FORCEINLINE void UnbindWillCloseWidgetDelegate() { CY_WillCloseWidgetDelegate.Clear(); }
-	void SetWillCreateSceneDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_WillCreateSceneDelegate = p_delegate; };
+	void SetWillCreateSceneDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_WillCreateSceneDelegate = Delegate; };
 	FORCEINLINE void UnbindWillCreateSceneDelegate() { CY_WillCreateSceneDelegate.Clear(); }
-	void SetPlayAnimDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_PlayAnimDelegate = p_delegate; };
+	void SetPlayAnimDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_PlayAnimDelegate = Delegate; };
 	FORCEINLINE void UnbindPlayAnimDelegate() { CY_PlayAnimDelegate.Clear(); }
-	void SetOnClickedInDelayTimeDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnClickedInDelayTimeDelegate = p_delegate; };
+	void SetOnClickedInDelayTimeDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnClickedInDelayTimeDelegate = Delegate; };
 	FORCEINLINE void UnbindClickedInDelayTimeDelegate() { CY_OnClickedInDelayTimeDelegate.Clear(); }
-	void SetOnLongPressedDelegate(FCommonButtonEvent p_delegate) { SetDelegates(); CY_OnLongPressedDelegate = p_delegate; };
+	void SetOnLongPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnLongPressedDelegate = Delegate; };
 	FORCEINLINE void UnbindLongPressedDelegate() { CY_OnLongPressedDelegate.Clear(); }
 
 private:
 	void SetDelegates();
-
 	
 	UFUNCTION() void OnClick();
 	UFUNCTION() void OnPress();
@@ -51,6 +56,7 @@ private:
 	FORCEINLINE bool IsUseClockedDelay() { return bUseClickedDelay && 0.f < ClickedDelayTime; }
 	FORCEINLINE bool IsUseLongPressedEvent() { return bUseLongPressedEvent && 0.f < LongPressedTime && GetWorld() != nullptr; }
 protected:
+	
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bUseClickedDelay = false;
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", EditCondition = "bUseClickedDelay"))
@@ -79,4 +85,8 @@ protected:
 
 	float LastClickedTime = 0.f;
 	float LastReleasedTime = 0.f;
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UCommonTextBlock* CPP_CommonText = nullptr;
 };

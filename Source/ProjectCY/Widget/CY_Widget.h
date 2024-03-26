@@ -23,8 +23,8 @@ public:
 	virtual void FinishWidget();
 	virtual void Active(int32 _ZOrder = 0);
 	void Init();
-	
-	
+
+	void FillDefaultAnimations();
 	void MakeButtonPool();
 
 	void PlayAnimationByName(FName Name, float StartTime = 0.f, int32 LoopCount = 1, EUMGSequencePlayMode::Type PlayType = EUMGSequencePlayMode::Forward, float Speed = 1.f);

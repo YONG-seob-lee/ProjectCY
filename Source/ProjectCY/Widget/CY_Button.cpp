@@ -2,6 +2,35 @@
 
 
 #include "CY_Button.h"
+#include "CommonTextBlock.h"
+#include "CY_BasicGameUtility.h"
+
+UCY_Button::UCY_Button()
+{
+}
+
+UCY_Button::~UCY_Button()
+{
+}
+
+void UCY_Button::NativeOnCurrentTextStyleChanged()
+{
+	Super::NativeOnCurrentTextStyleChanged();
+	CPP_CommonText->SetStyle(GetCurrentTextStyleClass());
+}
+
+const FText UCY_Button::GetPaletteCategory()
+{
+	return FText::FromString("CY Custom");
+}
+
+void UCY_Button::SetText(const FString& ButtonString) const
+{
+	if(CPP_CommonText)
+	{
+		CPP_CommonText->SetText(FText::FromString(ButtonString));
+	}
+}
 
 void UCY_Button::SetDelegates()
 {
@@ -16,7 +45,7 @@ void UCY_Button::OnClick()
 {
 	if (IsUseClockedDelay())
 	{
-		UWorld* World = GetWorld();
+		const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
 		if (!World)
 		{
 			CY_CHECK(false);

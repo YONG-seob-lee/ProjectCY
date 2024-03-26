@@ -15,7 +15,14 @@ class PROJECTCY_API UCY_DefaultButton : public UCY_Widget
 	GENERATED_BODY()
 
 public:
-
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate) override;
+
+	void SetButtonText(const FString& ButtonText) const;
+	
+private:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UCY_Button> CPP_ButtonBase = nullptr;
 };

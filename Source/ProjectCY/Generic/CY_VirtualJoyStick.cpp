@@ -21,10 +21,10 @@ int32 SCY_VirtualJoyStick::OnPaint(const FPaintArgs& Args, const FGeometry& Allo
 	FLinearColor CenterImageColor = ColorAndOpacity;
 	CenterImageColor.A = CenterImageOpacity;
 
-	if(Image_Center.IsValid())
+	if(ImageCenter.IsValid())
 	{
 		FSlateDrawElement::MakeBox(OutDrawElements, RetLayerId++, AllottedGeometry.ToPaintGeometry(VisualCenter - FVector2d(CorrectedCenterImageSize.X * 0.5f, CorrectedCenterImageSize.Y * 0.5f), CorrectedCenterImageSize),
-									Image_Center->GetSlateBrush(), ESlateDrawEffect::None, CenterImageColor);
+									ImageCenter->GetSlateBrush(), ESlateDrawEffect::None, CenterImageColor);
 	}
 
 	if(CapturePointerIndex != -1)
@@ -57,13 +57,13 @@ int32 SCY_VirtualJoyStick::OnPaint(const FPaintArgs& Args, const FGeometry& Allo
 			}
 		}
 
-		if(Image_Outer.IsValid())
+		if(ImageOuter.IsValid())
 		{
 			FSlateDrawElement::MakeRotatedBox(
 					OutDrawElements,
 					RetLayerId++,
 					AllottedGeometry.ToPaintGeometry(VisualCenter - FVector2D(CorrectedOuterImageSize.X * 0.5f , CorrectedOuterImageSize.Y * 0.5f) * OuterImageScale,
-						CorrectedOuterImageSize * OuterImageScale),	Image_Outer->GetSlateBrush(), ESlateDrawEffect::None, RotationRadian, TOptional<FVector2D>(),
+						CorrectedOuterImageSize * OuterImageScale),	ImageOuter->GetSlateBrush(), ESlateDrawEffect::None, RotationRadian, TOptional<FVector2D>(),
 						FSlateDrawElement::ERotationSpace::RelativeToElement, OuterImageColor
 				);
 		}

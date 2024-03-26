@@ -11,11 +11,11 @@
 class PROJECTCY_API SCY_VirtualJoyStick : public SVirtualJoystick
 {
 public:
-    TSharedPtr<ISlateBrushSource> Image_Center;
+    TSharedPtr<ISlateBrushSource> ImageCenter;
 	FVector2d CenterImageSize;
 	float CenterImageOpacity;
 
-	TSharedPtr<ISlateBrushSource> Image_Outer;
+	TSharedPtr<ISlateBrushSource> ImageOuter;
 	FVector2d OuterImageSize;
 	float OuterImageOpacity;
 

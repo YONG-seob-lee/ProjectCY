@@ -3,11 +3,23 @@
 
 #include "CY_Widget_Touch.h"
 #include "NiagaraSystemWidget.h"
+#include "NiagaraUIComponent.h"
+
+void UCY_Widget_Touch::InitWidget(const FName& TypeName, bool _bManaged, bool bActivate)
+{
+	Super::InitWidget(TypeName, _bManaged, bActivate);
+
+	if(CPP_TouchEffectWidget)
+	{
+		CPP_TouchEffectWidget->RebuildWidget();
+	}
+}
 
 void UCY_Widget_Touch::PlayTouch() const
 {
-	if(CCY_TouchEffectWidget)
+	if(CPP_TouchEffectWidget)
 	{
-		CCY_TouchEffectWidget->ActivateSystem(true);
+		//CPP_TouchEffectWidget->GetNiagaraComponent()->SetTransformationForUIRendering(ScreenPosition, FVector2f(100.f, 100.f), 1.f);
+		CPP_TouchEffectWidget->GetNiagaraComponent()->Activate(true);
 	}
 }

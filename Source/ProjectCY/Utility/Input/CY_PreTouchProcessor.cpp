@@ -3,8 +3,11 @@
 
 #include "CY_PreTouchProcessor.h"
 
+#include "CY_BasicGameUtility.h"
 #include "CY_WidgetManager.h"
 #include "CY_Widget_Touch.h"
+#include "Blueprint/SlateBlueprintLibrary.h"
+#include "Slate/SceneViewport.h"
 
 void FCY_PreTouchProcessor::Initialize()
 {
@@ -31,15 +34,17 @@ FString FCY_PreTouchProcessor::GetReferencerName() const
 
 void FCY_PreTouchProcessor::Tick(const float DeltaTime, FSlateApplication& SlateApp, TSharedRef<ICursor> Cursor)
 {
+	while(TouchEffectQueue.IsEmpty() == false)
+	{
+		TouchEffectQueue.Pop();		
+	}
 }
 
 bool FCY_PreTouchProcessor::HandleMouseButtonDownEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent)
 {
 	FingerTouchIndex = MouseEvent.GetPointerIndex();
-	const FVector2d ScreenSpacePosition = MouseEvent.GetScreenSpacePosition();
-
-
-	Touch(ScreenSpacePosition);
+	
+	Touch(MouseEvent.GetScreenSpacePosition());
 	return false;
 }
 
@@ -50,7 +55,18 @@ bool FCY_PreTouchProcessor::HandleMouseMoveEvent(FSlateApplication& SlateApp, co
 
 bool FCY_PreTouchProcessor::HandleMouseButtonUpEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent)
 {
-	return IInputProcessor::HandleMouseButtonUpEvent(SlateApp, MouseEvent);
+	const int32 PointerIndex = MouseEvent.GetPointerIndex();
+	if(FingerTouchIndex != -1 && FingerTouchIndex != MouseEvent.GetPointerIndex())
+	{
+		SlateApp.RoutePointerUpEvent(FWidgetPath(), FPointerEvent(MouseEvent.GetUserIndex(), PointerIndex,
+			FVector2d(-10000.f, -10000.f), FVector2d(-10000.f, -10000), false, false));
+		return true;
+	}
+
+	TouchEffectQueue.Enqueue(PointerIndex);
+	FingerTouchIndex = -1;
+	
+	return false;
 }
 
 void FCY_PreTouchProcessor::CreateTouchEffect(const FString& TouchEffectWidgetPath)
@@ -62,10 +78,11 @@ void FCY_PreTouchProcessor::CreateTouchEffect(const FString& TouchEffectWidgetPa
 
 	for(int32 i = 0 ; i < EffectThings::EffectOverlapMaxCount ; i++)
 	{
-		TObjectPtr<UCY_Widget> EffectWidget = Cast<UCY_Widget>(gWidgetMng.CreateWidgetNotManagingBySOP(TouchEffectWidgetPath));
+		TObjectPtr<UCY_Widget_Touch> EffectWidget = Cast<UCY_Widget_Touch>(gWidgetMng.CreateWidgetNotManagingBySOP(TouchEffectWidgetPath));
 		if(IsValid(EffectWidget))
 		{
 			EffectWidget->InitWidget(FName(TouchEffectWidgetPath), false, false);
+			EffectWidget->AddToViewport(99999);
 			TouchOverlapEffect.Emplace(EffectWidget);
 		}
 	}
@@ -97,19 +114,22 @@ void FCY_PreTouchProcessor::ClearTouchEffect()
 
 void FCY_PreTouchProcessor::Touch(const FVector2d& ScreenPosition)
 {
-	const TObjectPtr<UCY_Widget> EffectWidget = TouchOverlapEffect[TouchEffectIndex];
-	if(IsValid(EffectWidget) == false)
+	if(TouchOverlapEffect.IsValidIndex(TouchEffectIndex) == false)
 	{
 		return;
 	}
 
-	EffectWidget->SetPositionInViewport(ScreenPosition);
-	EffectWidget->PlayAnimationByName(EffectThings::Anim);
+	const FGeometry CachedGeometry = UCY_BasicGameUtility::GetGameViewport()->GetCachedGeometry();
+	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(ScreenPosition);
 	
-	if(const TObjectPtr<UCY_Widget_Touch> TouchWidget = Cast<UCY_Widget_Touch>(EffectWidget))
-	{
-		TouchWidget->PlayTouch();
-	}
+	TouchOverlapEffect[TouchEffectIndex]->SetPositionInViewport(AbsoluteScreenPosition);
+	TouchOverlapEffect[TouchEffectIndex]->PlayTouch();
+	
+	UCY_BasicGameUtility::ShowMessageOnScreen(FString::FromInt(TouchEffectIndex));
 	
 	TouchEffectIndex = (TouchEffectIndex + 1) % EffectThings::EffectOverlapMaxCount;
+
+#if WITH_EDITOR
+	//UCY_BasicGameUtility::ShowMessageOnScreen(TEXT("FCY_PreTouchProcessor::Touch"));
+#endif
 }

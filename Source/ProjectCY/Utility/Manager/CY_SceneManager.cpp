@@ -37,7 +37,6 @@ void UCY_SceneManager::BuiltInInitialize()
 
 void UCY_SceneManager::Initialize()
 {
-
 	FadeTool = MakeWeakObjectPtr(CY_NewObject<UCY_FadeSceneTool>());
 	
 	if(!FadeTool.IsValid())

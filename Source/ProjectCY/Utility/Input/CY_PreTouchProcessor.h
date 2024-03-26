@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CY_Widget.h"
 #include "Framework/Application/IInputProcessor.h"
 
 namespace EffectThings
@@ -12,7 +11,7 @@ namespace EffectThings
 	inline FString DefaultTouchEffectPath = TEXT("/Game/Widget/BuiltInWidget/TouchWidget.TouchWidget");
 
 	constexpr int32 DefaultEffectId = 0;
-	constexpr int32 EffectOverlapMaxCount = 10;
+	constexpr int32 EffectOverlapMaxCount = 1;
 }
 
 /**
@@ -41,5 +40,7 @@ private:
 	int32 TouchEffectIndex = 0;
 	int32 CurrentTouchEffectId = EffectThings::DefaultEffectId;
 	int32 FingerTouchIndex = -1;
-	TArray<TObjectPtr<UCY_Widget>> TouchOverlapEffect;
+	TArray<TObjectPtr<class UCY_Widget_Touch>> TouchOverlapEffect;
+
+	TQueue<int32> TouchEffectQueue;
 };

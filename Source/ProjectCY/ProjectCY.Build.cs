@@ -29,7 +29,7 @@ public class ProjectCY : ModuleRules
 	        "Core", "CoreUObject", "Engine", "InputCore", "Sequencer", "MessageLog", "AIModule", "Slate", "SlateCore", "UMG", "CommonUI"
         });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle", "NiagaraUIRenderer" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle", "Niagara", "NiagaraUIRenderer", "CommonUI"});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

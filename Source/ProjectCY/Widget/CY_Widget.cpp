@@ -3,6 +3,8 @@
 
 #include "CY_Widget.h"
 #include "CY_Button.h"
+#include "MovieScene.h"
+#include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/UserWidget.h"
 
@@ -20,6 +22,8 @@ void UCY_Widget::InitWidget(const FName& TypeName, bool _bManaged, bool bActivat
 {
 	bManaged = _bManaged;
 
+	FillDefaultAnimations();
+	
 	if(bActivate)
 	{
 		Active(ResourceWidgetInfo.zOrder);
@@ -64,9 +68,35 @@ void UCY_Widget::Init()
 	bAddToViewport = false;
 }
 
+void UCY_Widget::FillDefaultAnimations()
+{
+	Animations.Empty();
+
+	TObjectPtr<FProperty> Property = GetClass()->PropertyLink;
+	while(Property != nullptr)
+	{
+		if(Property->GetClass() == FObjectProperty::StaticClass())
+		{
+			if(const TObjectPtr<FObjectProperty> ObjectProperty = CastField<FObjectProperty>(Property))
+			{
+				if(ObjectProperty->PropertyClass == UWidgetAnimation::StaticClass())
+				{
+					TObjectPtr<UWidgetAnimation> WidgetAnimObject = Cast<UWidgetAnimation>(ObjectProperty->GetObjectPropertyValue_InContainer(this));
+
+					if(WidgetAnimObject && WidgetAnimObject->MovieScene != nullptr)
+					{
+						Animations.Emplace(WidgetAnimObject->GetMovieScene()->GetName(), WidgetAnimObject);
+					}
+				}
+			}
+		}
+		Property = Property->PropertyLinkNext;
+	}
+}
+
 void UCY_Widget::MakeButtonPool()
 {
-	if (TObjectPtr<UWidgetTree> WidgetTreePtr = WidgetTree.Get())
+	if (const TObjectPtr<UWidgetTree> WidgetTreePtr = WidgetTree.Get())
 	{
 		WidgetTreePtr->ForEachWidget([&](UWidget* Widget)
 			{
@@ -74,8 +104,7 @@ void UCY_Widget::MakeButtonPool()
 
 				if (Widget->IsA(UCY_Button::StaticClass()))
 				{
-					UCY_Button* Button = Cast<UCY_Button>(Widget);
-					if (Button)
+					if (const TObjectPtr<UCY_Button> Button = Cast<UCY_Button>(Widget))
 					{
 						Buttons.Emplace(Button);
 					}
@@ -86,6 +115,10 @@ void UCY_Widget::MakeButtonPool()
 
 void UCY_Widget::PlayAnimationByName(FName Name, float StartTime /* = 0.f */, int32 LoopCount /* = 1 */, EUMGSequencePlayMode::Type PlayType /* = EUMGSequencePlayMode::Forward */,float Speed /* = 1.f */)
 {
+	if(const TObjectPtr<UWidgetAnimation> WidgetAnimation = GetAnimationByName(Name))
+	{
+		PlayAnimation(WidgetAnimation, StartTime, LoopCount, PlayType, Speed);
+	}
 	
 }
 

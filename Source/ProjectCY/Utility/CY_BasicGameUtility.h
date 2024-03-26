@@ -19,13 +19,16 @@ class PROJECTCY_API UCY_BasicGameUtility : public UObject
 public:
 	void Initialize(TObjectPtr<UCY_GameInstance> _GameInstance);
 	void Finalize();
-	
+	static void ShowMessageOnScreen(const FString& Message, float ElapsedTime = 3.f, FColor DisplayColor = FColor::Green);
+
 	static TObjectPtr<AActor> SpawnBlueprintActor(const FString& BlueprintFileName, const FVector& Pos, const FRotator& Rot,
-									TSubclassOf<ACharacter> CharacterType = ACY_CharacterBase::StaticClass(), bool bNeedRootComponent = true,
-									ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+	                                              TSubclassOf<ACharacter> CharacterType = ACY_CharacterBase::StaticClass(), bool bNeedRootComponent = true,
+	                                              ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
 	static TObjectPtr<UWorld> GetGameWorld();
 	static TObjectPtr<UCY_GameInstance> GetGameInstance();
+	static TObjectPtr<APlayerController> GetPlayerController();
+	static TObjectPtr<FSceneViewport> GetGameViewport();
 	static bool HasGameInstance();
 
 private:
