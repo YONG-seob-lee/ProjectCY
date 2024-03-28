@@ -12,7 +12,7 @@ namespace DefaultImage
 	const FString Path = TEXT("Texture2D'/Game/Texture2D/Game/EditorResources/DefaultImage.DefaultImage'");	
 }
 
-UCLASS()
+UCLASS(BlueprintType)
 class PROJECTCY_API ACY_Actor_TeleportPoint : public ACY_ActorBase
 {
 	GENERATED_BODY()
@@ -20,7 +20,7 @@ class PROJECTCY_API ACY_Actor_TeleportPoint : public ACY_ActorBase
 public:
 	ACY_Actor_TeleportPoint(const FObjectInitializer& ObjectInitializer);
 	FORCEINLINE int32 GetTeleportPointId() const { return TeleportPointId; }
-	
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

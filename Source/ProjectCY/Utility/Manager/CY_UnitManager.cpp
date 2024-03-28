@@ -7,6 +7,7 @@
 #include "CY_BasicGameUtility.h"
 #include "CY_GameInstance.h"
 #include "CY_UnitBase.h"
+#include "CY_Utility.h"
 #include "Character/CY_CharacterBase.h"
 
 void UCY_UnitManager::Initialize()
@@ -115,12 +116,12 @@ TObjectPtr<AActor> UCY_UnitManager::SpawnActor(UClass* Class, const FVector& Loc
 	return NewActor;
 }
 
-TObjectPtr<ACY_CharacterBase> UCY_UnitManager::CreateCharacter(const FString& BlueprintPath, const FString& BlueprintName, const FVector& Pos, const FRotator& Rot)
+TObjectPtr<ACY_CharacterBase> UCY_UnitManager::CreateCharacter(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot)
 {
-	const TObjectPtr<ACY_CharacterBase> NewCharacter = Cast<ACY_CharacterBase>(UCY_BasicGameUtility::SpawnBlueprintActor(BlueprintName, Pos, Rot));
+	const TObjectPtr<ACY_CharacterBase> NewCharacter = Cast<ACY_CharacterBase>(UCY_BasicGameUtility::SpawnBlueprintActor(BlueprintPath, Pos, Rot));
 	if(IsValid(NewCharacter))
 	{
-		NewCharacter->Create(BlueprintName);
+		NewCharacter->Create(CY_Utility::GetBPNameFromFullPath(BlueprintPath));
 		return NewCharacter;
 	}
 

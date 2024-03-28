@@ -33,6 +33,7 @@ namespace CY_Utility
 
 
 	static const TCHAR* AttachPathAsName(FString AssetPath, FString AssetName);
+	FString GetBPNameFromFullPath(const FString& FullPath);
 
 	TObjectPtr<UDataTable> LoadTableObjectFromFile(const FString& ResourcePath, const FString& TableName, FCY_LoadResourceDelegate Delegate);
 	TObjectPtr<UObject> LoadObjectFromFile(const FString& ResourcePath, const FCY_LoadResourceDelegate& Delegate = nullptr, const FString& SubName = TEXT("SubName"), int32 Index = 0, bool SubBool = false);

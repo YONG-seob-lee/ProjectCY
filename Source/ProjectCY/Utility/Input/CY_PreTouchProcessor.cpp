@@ -6,7 +6,6 @@
 #include "CY_BasicGameUtility.h"
 #include "CY_WidgetManager.h"
 #include "CY_Widget_Touch.h"
-#include "Blueprint/SlateBlueprintLibrary.h"
 #include "Slate/SceneViewport.h"
 
 void FCY_PreTouchProcessor::Initialize()

@@ -22,6 +22,10 @@ public:
 	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate = true);
 	virtual void FinishWidget();
 	virtual void Active(int32 _ZOrder = 0);
+
+	virtual void OnAnimationStarted_Implementation(const UWidgetAnimation* Animation) override;
+	virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;
+	
 	void Init();
 
 	void FillDefaultAnimations();
@@ -38,7 +42,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UCY_Widget")
 	void SetOriginVisible(ESlateVisibility _Visibility);
 protected:
+	virtual void OnAnimFinished(const FName& AnimName);
+	
 	void InitResourceWidgetInfo();
+
+	void PlayIdleAnimation();
 	
 	bool bActive;
 	bool bAddToViewport;

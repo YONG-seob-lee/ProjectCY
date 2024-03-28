@@ -8,6 +8,8 @@
 #include "CY_FadeCommand.generated.h"
 
 DECLARE_DELEGATE(FCY_FadeEventDelegate);
+DECLARE_DELEGATE_RetVal(bool, FCY_FadeCheckLoadDelegate);
+
 /**
  * 
  */
@@ -16,15 +18,25 @@ class PROJECTCY_API UCY_FadeCommand : public UObject
 {
 	GENERATED_BODY()
 public:
+	FORCEINLINE void SetFadeStyle(ECY_FadeStyle FadeStyle) { Fade = FadeStyle; }
+	FORCEINLINE void SetIsDirectFadeIn(bool _bDirectFadeIn) { bDirectFadeIn = _bDirectFadeIn; }
+	FORCEINLINE void SetLoadingPageType(ECY_LoadingPageType Type) { LoadingPageType = Type; }
+	
 	FORCEINLINE ECY_FadeStyle GetFadeType() const { return Fade; }
 	FORCEINLINE bool GetIsDirectFadeIn() const { return bDirectFadeIn; }
 	FORCEINLINE ECY_LoadingPageType GetLoadingPageType() const { return LoadingPageType; }
-
+	
 	FCY_FadeEventDelegate OnFadeInComplete;
-	FCY_FadeEventDelegate OnFadeOutComplete;
 	FCY_FadeEventDelegate OnFadeOutStart;
+	FCY_FadeEventDelegate OnFadeOutComplete;
+
+	FCY_FadeCheckLoadDelegate OnCheckLoadComplete;
+	
+	void SetCreateFrom(const ANSICHAR* File, const int32 Line);
 private:
 	ECY_FadeStyle Fade = ECY_FadeStyle::None;
 	ECY_LoadingPageType LoadingPageType = ECY_LoadingPageType::None;
 	bool bDirectFadeIn = false;
+	
+	FString CreateFileLine = FString();
 };

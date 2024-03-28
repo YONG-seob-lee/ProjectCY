@@ -13,6 +13,13 @@ UCY_Button::~UCY_Button()
 {
 }
 
+void UCY_Button::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	CPP_CommonText->SetVisibility(bUseButtonText ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+}
+
 void UCY_Button::NativeOnCurrentTextStyleChanged()
 {
 	Super::NativeOnCurrentTextStyleChanged();
@@ -36,7 +43,7 @@ void UCY_Button::SetDelegates()
 {
 	OnClicked().AddUObject(this, &UCY_Button::OnClick);
 	OnPressed().AddUObject(this, &UCY_Button::OnPress);
-	OnReleased().AddUObject(this, &UCY_Button::OnReleas);
+	OnReleased().AddUObject(this, &UCY_Button::OnRelease);
 	OnHovered().AddUObject(this, &UCY_Button::OnHover);
 	OnUnhovered().AddUObject(this, &UCY_Button::OnUnhover);
 }
@@ -60,10 +67,11 @@ void UCY_Button::OnClick()
 			return;
 		}
 		LastClickedTime = GetWorld() == nullptr ? 0.f : GetWorld()->GetUnpausedTimeSeconds();
-		if (IsUseLongPressedEvent() == false)
-		{
-			CY_OnClickedDelegate.Broadcast();
-		}
+	}
+
+	if (IsUseLongPressedEvent() == false)
+	{
+		CY_OnClickedDelegate.Broadcast();
 	}
 }
 
@@ -71,7 +79,7 @@ void UCY_Button::OnPress()
 {
 }
 
-void UCY_Button::OnReleas()
+void UCY_Button::OnRelease()
 {
 }
 

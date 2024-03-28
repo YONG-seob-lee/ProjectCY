@@ -5,10 +5,33 @@
 
 #include "CY_BuiltInWidgetTool.h"
 #include "CY_FadeCommand.h"
+#include "CY_Mapper_Common.h"
 #include "CY_StateMachine.h"
+#include "CY_TableManager.h"
 #include "CY_WidgetManager.h"
 #include "CY_Widget_DialogScreenFader.h"
 #include "CY_Widget_Loading.h"
+
+void UCY_FadeSceneTool::Initialize()
+{
+	DialogScreenFader = gWidgetMng.GetBuiltInWidgetTool()->GetDialogScreenFader();
+	
+	if(const TObjectPtr<UCY_Mapper_Common> CommonMapper = Cast<UCY_Mapper_Common>(gTableMng.GetTableMapper(ECY_TableDataType::Common)))
+	{
+		LoadingMinimumTime = CommonMapper->GetParam03(CommonContents::Loading_Minimum_Time);		
+	}
+}
+
+void UCY_FadeSceneTool::RegistLevelPath(uint8 SceneId)
+{
+	const FString Path = gTableMng.GetPath(ECY_TableDataType::BasePath_Level_File, SceneId);
+	if(Path.IsEmpty())
+	{
+		return;
+	}
+	
+	LevelsPath.Emplace(SceneId, Path);
+}
 
 void UCY_FadeSceneTool::Request(UCY_FadeCommand* Command)
 {
@@ -17,6 +40,18 @@ void UCY_FadeSceneTool::Request(UCY_FadeCommand* Command)
 	if(CurrentStep == ECY_FadeStep::Ready)
 	{
 		StartFadeIn();
+	}
+}
+
+void UCY_FadeSceneTool::FinishRequest()
+{
+	CurrentStep = ECY_FadeStep::Ready;
+
+	for(int32 i = 0 ; i < Commands.Num(); i++)
+	{
+		Commands[i]->RemoveFromRoot();
+		CY_DeleteObject(Commands[i]);
+		Commands.RemoveAt(i);
 	}
 }
 
@@ -39,13 +74,40 @@ void UCY_FadeSceneTool::Tick(float DeltaTime)
     		for(int32 i = 0 ; i < Commands.Num() ; ++i)
     		{
 			    const TObjectPtr<UCY_FadeCommand> Command = Commands[i];
-    			Command->OnFadeInComplete.ExecuteIfBound();
-    			Command->OnFadeInComplete.Unbind();
+    			if(Command->OnFadeInComplete.IsBound())
+    			{
+    				Command->OnFadeInComplete.Execute();
+    				Command->OnFadeInComplete.Unbind();
+    			}
+    			if(Command->OnCheckLoadComplete.IsBound())
+    			{
+    				if(Command->OnCheckLoadComplete.Execute() == false)
+    				{
+    					return;
+    				}
+    			}
+
+    			if(Command->GetLoadingPageType() != ECY_LoadingPageType::None)
+    			{
+    				if(LoadingMinimumTime <= LoadElapsedTime)
+    				{
+    					bLoadComplete = true;
+    				}
+    			}
+			    else
+			    {
+    				bLoadComplete = true;
+			    }
     		}
-    
-    		bLoadComplete = true;
     	}	
 	}
+}
+
+FString UCY_FadeSceneTool::GetLevelPath(ECY_GameSceneType SceneType)
+{
+	const FString* pLevelPath = LevelsPath.Find(static_cast<uint8>(SceneType));
+
+	return pLevelPath ? *pLevelPath : FString();
 }
 
 void UCY_FadeSceneTool::StartFadeIn()
@@ -57,7 +119,7 @@ void UCY_FadeSceneTool::StartFadeIn()
 
 	for(int32 i = 0 ; i < Commands.Num() ; ++i)
 	{
-		TObjectPtr<UCY_FadeCommand> Command = Commands[i].Get();
+		const TObjectPtr<UCY_FadeCommand> Command = Commands[i].Get();
 		if(Command->GetFadeType() != ECY_FadeStyle::None)
 		{
 			FadeWidgetCommand = Command;
@@ -79,7 +141,10 @@ void UCY_FadeSceneTool::StartFadeOut()
 {
 	for(const TObjectPtr<UCY_FadeCommand> Command : Commands)
 	{
-		Command->OnFadeOutStart.ExecuteIfBound();
+		if(Command->OnFadeOutStart.IsBound())
+		{
+			Command->OnFadeOutStart.Execute();
+		}
 	}
 
 	if(FadeWidgetCommand)
@@ -92,15 +157,22 @@ void UCY_FadeSceneTool::PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, 
 {
 	if(FadeType == ECY_FadeStyle::Dialog)
 	{
-		UCY_Widget_DialogScreenFader* DialogScreenFader = gWidgetMng.GetBuiltInWidgetTool()->GetDialogScreenFader();
 		if(DialogScreenFader == nullptr)
 		{
 			return;
 		}
 
-		DialogScreenFader->StartScreenFade(bFadeIn ? ECY_FadeType::FadeIn : ECY_FadeType::FadeOut,
-			FBuiltInFadeDelegate::CreateUObject(this, &UCY_FadeSceneTool::OnWidgetFadeInFinished),
-						 FBuiltInFadeDelegate::CreateUObject(this, &UCY_FadeSceneTool::OnWidgetFadeOutFinished));
+		DialogScreenFader->Active(500);
+		
+		if(bFadeIn)
+		{
+			DialogScreenFader->StartScreenFade(ECY_FadeType::FadeIn,[this](){ OnWidgetFadeInFinished();});	
+		}
+		else
+		{
+			DialogScreenFader->StartScreenFade(ECY_FadeType::FadeOut,[this](){ OnWidgetFadeOutFinished();});
+		}
+		
 	}
 }
 
@@ -109,16 +181,7 @@ void UCY_FadeSceneTool::OnWidgetFadeInFinished()
 	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
 	{
 		CurrentStep = ECY_FadeStep::ExitFadeIn;
-		bLoadStart = true;
-	}
-}
-
-void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
-{
-	if(CurrentStep == ECY_FadeStep::EnterFadeOut)
-	{
-		CurrentStep = ECY_FadeStep::ExitFadeOut;
-
+		
 		if(FadeWidgetCommand && FadeWidgetCommand->GetLoadingPageType() != ECY_LoadingPageType::None)
 		{
 			const TObjectPtr<UCY_Widget_Loading> LoadingWidget = gWidgetMng.GetBuiltInWidgetTool()->GetLoadingWidget();
@@ -128,8 +191,29 @@ void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
 			}
 			LoadingWidget->SetLoadingData(FadeWidgetCommand->GetLoadingPageType());
 			LoadingWidget->ShowLoading();
+
+			//PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), false, false);
+		}
+		else
+		{
+			bLoadStart = true;
+		}
+	}
+}
+
+void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
+{
+	if(CurrentStep == ECY_FadeStep::EnterFadeOut)
+	{
+		CurrentStep = ECY_FadeStep::ExitFadeOut;
+		for(const TObjectPtr<UCY_FadeCommand> Command : Commands)
+		{
+			if(Command->OnFadeOutComplete.IsBound())
+			{
+				Command->OnFadeOutComplete.Execute();
+			}
 		}
 
-		PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), false, false);
+		FinishRequest();
 	}
 }

@@ -18,8 +18,12 @@ public:
 	static FName GetWidgetName() { return TEXT("Title"); }
 
 	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate) override;
+	virtual void FinishWidget() override;
 
 private:
+	void OnClickStartButton();
+	void OnClickExitButton();
+	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UCY_DefaultButton> CPP_StartButton = nullptr;
 

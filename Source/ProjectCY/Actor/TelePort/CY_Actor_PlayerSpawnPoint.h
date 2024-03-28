@@ -6,7 +6,7 @@
 #include "CY_Actor_TeleportPoint.h"
 #include "CY_Actor_PlayerSpawnPoint.generated.h"
 
-UCLASS()
+UCLASS(BlueprintType)
 class PROJECTCY_API ACY_Actor_PlayerSpawnPoint : public ACY_Actor_TeleportPoint
 {
 	GENERATED_BODY()

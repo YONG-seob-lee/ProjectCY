@@ -16,7 +16,7 @@ void UCY_SceneBase::TickLoading(float Delta)
 
 bool UCY_SceneBase::IsCompleteLoading()
 {
-	return false;
+	return LoadingProcessDelegates.Num() <= 0;
 }
 
 void UCY_SceneBase::Begin()

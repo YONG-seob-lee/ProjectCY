@@ -4,7 +4,7 @@
 #include "CY_Actor_EaglePoint.h"
 
 #include "CY_UnitManager.h"
-#include "CY_Unit_WayPoint.h"
+#include "CY_Unit_TeleportPoint.h"
 #include "Character/CY_CharacterBase.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BillboardComponent.h"
@@ -70,7 +70,7 @@ void ACY_Actor_EaglePoint::BeginPlay()
 
 TObjectPtr<AActor> ACY_Actor_EaglePoint::SpawnStatue() const
 {
-	const TObjectPtr<UCY_Unit_WayPoint> Statue = Cast<UCY_Unit_WayPoint>(gUnitMng.CreateUnit(WayPointIndex, UCY_Unit_WayPoint::StaticClass(), GetActorLocation(), GetActorRotation()));
+	const TObjectPtr<UCY_Unit_TeleportPoint> Statue = Cast<UCY_Unit_TeleportPoint>(gUnitMng.CreateUnit(WayPointIndex, UCY_Unit_TeleportPoint::StaticClass(), GetActorLocation(), GetActorRotation()));
 	if(IsValid(Statue) == false)
 	{
 		return nullptr;

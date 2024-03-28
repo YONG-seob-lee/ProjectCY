@@ -63,7 +63,7 @@ void UCY_SingletonManager::TickSingletons(float DeltaTime)
 {
     if (bInitialized)
     {
-        for (const TObjectPtr<ISingleton> Singleton : SingletonsForTick)
+        for (const TObjectPtr<ISingleton> Singleton : Singletons)
         {
             Singleton->Tick(DeltaTime);
         }
@@ -104,11 +104,11 @@ void UCY_SingletonManager::RegisterSingletons()
 {
     Singletons.Reset();
 
-    Singletons.Emplace(UCY_CameraManager::MakeInstance());
     Singletons.Emplace(UCY_ContentsProcessManager::MakeInstance());
+    Singletons.Emplace(UCY_TableManager::MakeInstance());
+    Singletons.Emplace(UCY_CameraManager::MakeInstance());
     Singletons.Emplace(UCY_InputManager::MakeInstance());
     Singletons.Emplace(UCY_SceneManager::MakeInstance());
-    Singletons.Emplace(UCY_TableManager::MakeInstance());
     Singletons.Emplace(UCY_UnitManager::MakeInstance());
     Singletons.Emplace(UCY_WidgetManager::MakeInstance());
 }

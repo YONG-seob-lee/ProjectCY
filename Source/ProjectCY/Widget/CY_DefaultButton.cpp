@@ -18,11 +18,31 @@ void UCY_DefaultButton::InitWidget(const FName& TypeName, bool _bManaged, bool b
 	Super::InitWidget(TypeName, _bManaged, bActivate);
 }
 
+void UCY_DefaultButton::FinishWidget()
+{
+	Super::FinishWidget();
+
+	CPP_ButtonBase->UnbindClickedDelegate();
+}
+
+void UCY_DefaultButton::SetOnClickEvent(const UCommonButtonBase::FCommonButtonEvent& Event) const
+{
+	CPP_ButtonBase->SetOnClickedDelegate(Event);
+}
+
+void UCY_DefaultButton::UnbindClickEvent() const
+{
+	CPP_ButtonBase->UnbindClickedDelegate();
+}
+
 void UCY_DefaultButton::SetButtonText(const FString& ButtonText) const
 {
 	if(CPP_ButtonBase)
 	{
 		CPP_ButtonBase->SetText(ButtonText);
-		
 	}
+}
+
+void UCY_DefaultButton::OnClicked()
+{
 }

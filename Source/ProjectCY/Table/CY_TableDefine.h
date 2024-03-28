@@ -15,14 +15,22 @@ DECLARE_DELEGATE_TwoParams(FCY_LoadResourceDelegate, const FString&, TObjectPtr<
 UENUM()
 enum class ECY_TableDataType : uint8
 {
-	Pal_Character = 0				UMETA(DisplayName = "Pal_Character"),
+	Common = 0						UMETA(DisplayName = "Common"),
+	Pal_Character					UMETA(DisplayName = "Pal_Character"),
 	Hero_Level						UMETA(DisplayName = "Hero_Level"),
 	Resource_Widget					UMETA(DisplayName = "Resource_Widget"),
 	Resource_Unit					UMETA(DisplayName = "Resource_Unit"),
 
 	BasePath_Directory				UMETA(DisplayName = "BasePath_Directory"),
 	BasePath_BP_File				UMETA(DisplayName = "BasePath_BP_File"),
+	BasePath_Level_File				UMETA(DisplayName = "BasePath_Level_File"),
 };
+
+namespace CommonContents
+{
+	const FString Loading_Minimum_Time = TEXT("Loading_Minimum_Time");
+	const FString Initial_Login = TEXT("Initial_Login");
+}
 
 USTRUCT()
 struct FCY_TableMapperData

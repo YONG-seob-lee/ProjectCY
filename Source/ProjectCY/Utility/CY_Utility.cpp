@@ -15,6 +15,23 @@ const TCHAR* CY_Utility::AttachPathAsName(FString AssetPath, FString AssetName)
 	return *AssetPath;
 }
 
+FString CY_Utility::GetBPNameFromFullPath(const FString& FullPath)
+{
+	if(FullPath.IsEmpty())
+	{
+		return FString();
+	}
+
+	int32 LastPoint = 0;
+	int32 LastSlash = 0;
+	constexpr TCHAR Point = '.';
+	constexpr TCHAR Slash = '/';
+	FullPath.FindLastChar(Point, LastPoint);
+	FullPath.FindLastChar(Slash, LastSlash);
+
+	return FullPath.Mid(LastSlash + 1, LastPoint - LastSlash - 1);
+}
+
 TObjectPtr<UDataTable> CY_Utility::LoadTableObjectFromFile(const FString& ResourcePath, const FString& TableName, FCY_LoadResourceDelegate Delegate)
 {
 	const TObjectPtr<UDataTable> ResultObject = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *ResourcePath, *ResourcePath, LOAD_None, nullptr));

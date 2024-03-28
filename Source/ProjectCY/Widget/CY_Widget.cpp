@@ -62,6 +62,19 @@ void UCY_Widget::Active(int32 _ZOrder /* = 0 */)
 	bActive = true;
 }
 
+void UCY_Widget::OnAnimationStarted_Implementation(const UWidgetAnimation* Animation)
+{
+	Super::OnAnimationStarted_Implementation(Animation);
+}
+
+void UCY_Widget::OnAnimationFinished_Implementation(const UWidgetAnimation* Animation)
+{
+	Super::OnAnimationFinished_Implementation(Animation);
+
+	
+	OnAnimFinished(FName(Animation->GetMovieScene()->GetName()));
+}
+
 void UCY_Widget::Init()
 {
 	bActive = false;
@@ -145,6 +158,14 @@ void UCY_Widget::SetOriginVisible(ESlateVisibility _Visibility)
 	OriginVisibility = _Visibility;
 }
 
+void UCY_Widget::OnAnimFinished(const FName& AnimName)
+{
+	if(AnimName == DefaultWidgetAnimation::Appearance)
+	{
+		PlayIdleAnimation();
+	}
+}
+
 void UCY_Widget::InitResourceWidgetInfo()
 {
 	if(bManaged == false)
@@ -152,6 +173,14 @@ void UCY_Widget::InitResourceWidgetInfo()
 		return;
 	}
 
+}
+
+void UCY_Widget::PlayIdleAnimation()
+{
+	if(GetAnimationByName(DefaultWidgetAnimation::Idle))
+	{
+		PlayAnimationByName(DefaultWidgetAnimation::Idle, 0.f, 0);
+	}
 }
 
 bool UCY_Widget::IsExistAnim(FName AnimName) const

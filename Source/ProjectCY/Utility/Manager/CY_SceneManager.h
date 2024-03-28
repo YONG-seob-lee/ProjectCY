@@ -23,20 +23,23 @@ public:
 
 	virtual void BuiltInInitialize() override;
 	virtual void Initialize() override;
+	virtual void PostInitialize() override;
 	virtual void Finalize() override;
 	virtual void BuiltInFinalize() override;
 	virtual void Tick(float DeltaTime) override;
 	
-	TObjectPtr<UCY_SceneBase> GetCurrentScene();
+	TObjectPtr<UCY_SceneBase> GetCurrentScene() const;
+
+	FORCEINLINE bool IsCompleteChangeScene() const { return ChangeSceneData.Step == ECY_ChangeSceneStep::Complete; }
 
 	void RegisterScenes() const;
 	void SceneLoadComplete(float LoadTime, const FString& LevelName);
 	void ExecuteLoadLevelDelegate(const FString& LevelName = TEXT(""));
 	
-	bool LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const FName& PackagePath = FName(), bool bAbsolute = true);
+	bool LoadLevelByPath(const FCY_LoadLevelInitialized& Delegate, const FName& PackagePath = FName(), bool bAbsolute = true);
 	bool LoadLevelBySoftObjectPtr(const TSoftObjectPtr<UWorld>& LevelObjectPtr, const FCY_LoadLevelInitialized& Delegate);
 	
-	void ChangeScene(ECY_GameSceneType SceneType, const FName& LevelPackagePath = NAME_None);
+	void ChangeScene(ECY_GameSceneType SceneType, TObjectPtr<class UCY_FadeCommand> Command = nullptr);
 	void SetSceneBehaviorTreeAsset(TObjectPtr<class UBehaviorTree> BTAsset);
 	void RegistSceneBehaviorTree();
 
@@ -48,14 +51,16 @@ public:
 	FCY_LoadLevelInitialized LoadLevelInitialized;
 private:
 	void RegistSceneState(uint8 SceneId, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType) const;
-	
+
+	bool ChangeSceneStep_Fade(TObjectPtr<UCY_FadeCommand> Command);
 	bool ChangeSceneStep_LoadLevel();
 	void ChangeSceneStep_SetSceneState(uint8 SceneId);
 	void OnCompleteLevelLoading(const FString& LevelPackagePath);
 
 	void RegisterSceneBehaviorTree();
 	void UnregisterSceneBehaviorTree();
-
+	
+	
 	UPROPERTY()
 	TMap<FString, bool> ActiveLevels;
 	
@@ -74,6 +79,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<class ACY_SceneBT> CustomSceneBT = nullptr;
 	
-	TWeakObjectPtr<class UCY_FadeSceneTool> FadeTool = nullptr;
+	UPROPERTY()
+	TObjectPtr<class UCY_FadeSceneTool> FadeTool = nullptr;
 #define	gSceneMng (*UCY_SceneManager::GetInstance())
 };

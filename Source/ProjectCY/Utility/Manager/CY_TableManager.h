@@ -26,7 +26,7 @@ public:
 	virtual void GetRowDataMap(ECY_TableDataType TableType, TMap<FName, uint8*>& OutMapper);
 
 	TObjectPtr<FCY_TableMapperData> GetTableMapperData(ECY_TableDataType TableType);
-	FString GetPath(ECY_TableDataType TableType, int32 Key, bool bResourcePath);
+	FString GetPath(ECY_TableDataType TableType, int32 Key, bool bResourcePath = false);
 	FString GetDirectory(int32 DirectoryTableId);
 	
 	TObjectPtr<UDataTable> GetTableData(ECY_TableDataType TableType);
@@ -46,8 +46,22 @@ public:
 		const TObjectPtr<UDataTable> TableData = TableMapper->GetTableData();
 		const FName KeyName = FName(FString::FromInt(Key));
 		const FString Context = TEXT("GENERAL");
-	
 		return TableData->FindRow<FRowData>(KeyName, Context);
+	}
+
+	int32 GetTableRowNum(ECY_TableDataType TableType)
+	{
+		const TObjectPtr<FCY_TableMapperData> TableMapper = GetTableMapperData(TableType);
+		if (TableMapper == nullptr)
+		{
+			return 0;
+		}
+
+		if(const TObjectPtr<UDataTable> TableData = TableMapper->GetTableData())
+		{
+			return TableData->GetRowMap().Num();
+		}
+		return 0;
 	}
 
 private:

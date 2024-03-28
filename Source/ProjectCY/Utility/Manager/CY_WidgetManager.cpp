@@ -21,7 +21,7 @@ UCY_WidgetManager::~UCY_WidgetManager()
 {
 }
 
-void UCY_WidgetManager::Initialize()
+void UCY_WidgetManager::BuiltInInitialize()
 {
 	BuiltInTool = CY_NewObject<UCY_BuiltInWidgetTool>(this, TEXT("BuiltInWidgetTool"));
 	if(IsValid(BuiltInTool.Get()) == false)
@@ -32,16 +32,25 @@ void UCY_WidgetManager::Initialize()
 	BuiltInTool->Initialize();
 }
 
+void UCY_WidgetManager::Initialize()
+{
+}
+
 void UCY_WidgetManager::Finalize()
+{
+
+	ClearExclusiveLayer();
+	ManagedWidgets.Empty();
+}
+
+void UCY_WidgetManager::BuiltInFinalize()
 {
 	if(IsValid(BuiltInTool.Get()))
 	{
 		BuiltInTool->Finalize();
+		CY_DeleteObject(BuiltInTool);
 		BuiltInTool = nullptr;
 	}
-
-	ClearExclusiveLayer();
-	ManagedWidgets.Empty();
 }
 
 void UCY_WidgetManager::Tick(float DeltaTime)
@@ -200,9 +209,8 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal(const FName& Typ
 TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal_Managing(const FString& Path)
 {
 	static FString SubName = TEXT("Create Widget");
-	const FString ClassPath = Path + TEXT("_C");
 	
-	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(CY_Utility::LoadObjectFromFile(ClassPath, FCY_LoadResourceDelegate::CreateUObject(this, &UCY_WidgetManager::LoadComplete)));
+	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(CY_Utility::LoadObjectFromFile(Path, FCY_LoadResourceDelegate::CreateUObject(this, &UCY_WidgetManager::LoadComplete)));
 	if(WidgetClass == nullptr)
 	{
 		return nullptr;
@@ -220,9 +228,9 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal_Managing(const F
 TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal_NotManaging(const FString& Path) const
 {
 	static FString SubName = TEXT("Create Widget");
-	const FString ClassPath = Path + TEXT("_C");
+	const FString ClassName = Path + TEXT("_C");
 	
-	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(CY_Utility::LoadObjectFromFile(ClassPath));
+	const TObjectPtr<UClass> WidgetClass = Cast<UClass>(CY_Utility::LoadObjectFromFile(ClassName));
 	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
 	
 	if(World != nullptr && World->bIsTearingDown == false)

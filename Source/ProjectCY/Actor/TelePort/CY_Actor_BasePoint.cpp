@@ -3,6 +3,9 @@
 
 #include "CY_Actor_BasePoint.h"
 
+#include "CY_BasicGameUtility.h"
+#include "CY_UnitManager.h"
+#include "CY_Unit_TeleportPoint.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BillboardComponent.h"
 
@@ -62,7 +65,32 @@ ACY_Actor_BasePoint::ACY_Actor_BasePoint(const FObjectInitializer& ObjectInitial
 void ACY_Actor_BasePoint::BeginPlay()
 {
 	Super::BeginPlay();
+	if(UCY_BasicGameUtility::HasGameInstance() == false)
+	{
+		return;
+	}
 	
+	SpawnBasePoint();
+}
+
+TObjectPtr<AActor> ACY_Actor_BasePoint::SpawnBasePoint()
+{
+	const TObjectPtr<UCY_Unit_TeleportPoint> TeleportPointUnit = Cast<UCY_Unit_TeleportPoint>(gUnitMng.CreateUnit(TeleportPointId, UCY_Unit_TeleportPoint::StaticClass(),
+																								GetActorLocation(), GetActorRotation()));
+	if(TeleportPointUnit == nullptr)
+	{
+		return nullptr;
+	}
+	
+	const TObjectPtr<ACY_CharacterBase> Character = TeleportPointUnit->GetCharacterActor();
+	if(Character == nullptr)
+	{
+		return nullptr;
+	}
+
+	Character->SetActorRotation(ArrowComponent->GetComponentRotation());
+
+	return Character;
 }
 
 void ACY_Actor_BasePoint::Tick(float DeltaTime)

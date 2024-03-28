@@ -34,6 +34,13 @@ ACY_CharacterBase::ACY_CharacterBase()
 		RootSkeletalMeshComponent->bUseAttachParentBound = true;
 	}
 
+	if(StaticMesh)
+	{
+		RootStaticMeshComponent->SetStaticMesh(StaticMesh);
+		RootStaticMeshComponent->SetupAttachment(RootComponent);
+		RootSkeletalMeshComponent->SetupAttachment(RootStaticMeshComponent);
+	}
+
 	MovementComponent = GetCharacterMovement();
 	if(MovementComponent)
 	{

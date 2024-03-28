@@ -19,8 +19,10 @@ public:
 	UCY_WidgetManager();
 	virtual ~UCY_WidgetManager() override;
 
+	virtual void BuiltInInitialize() override;
 	virtual void Initialize() override;
 	virtual void Finalize() override;
+	virtual void BuiltInFinalize() override;
 	virtual void Tick(float DeltaTime) override;
 
 	void ClearExclusiveLayer();

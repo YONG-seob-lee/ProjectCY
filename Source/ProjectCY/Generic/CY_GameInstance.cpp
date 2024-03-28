@@ -208,13 +208,13 @@ bool UCY_GameInstance::LoadBaseWorld()
 	{
 		gSceneMng.LoadLevelBySoftObjectPtr(BaseWorld, FCY_LoadLevelInitialized::CreateWeakLambda(this, [this](const FString& Value)
 		{
-			gSceneMng.ChangeScene(ECY_GameSceneType::Title);
+			gSceneMng.ChangeScene(ECY_GameSceneType::Logo);
 			gSceneMng.SetSceneBehaviorTreeAsset(SceneBTAsset);
 			gSceneMng.RegistSceneBehaviorTree();
 		}));
 		return true;
 	}
-	return false;
+	return true;
 }
 
 bool UCY_GameInstance::UnLoadBaseWorld()
@@ -225,7 +225,7 @@ bool UCY_GameInstance::UnLoadBaseWorld()
 		return true;
 	}
 
-	return false;
+	return true;
 }
 
 void UCY_GameInstance::RestartGame()

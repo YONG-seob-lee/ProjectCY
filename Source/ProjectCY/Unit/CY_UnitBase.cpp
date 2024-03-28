@@ -28,7 +28,7 @@ bool UCY_UnitBase::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRota
 	}
 
 	const FString BPPath = gTableMng.GetPath(ECY_TableDataType::BasePath_BP_File, ResourceUnitData->Base_Path, true);
-	if(const TObjectPtr<ACY_CharacterBase> NewCharacter = gUnitMng.CreateCharacter(BPPath, FPaths::GetCleanFilename(BPPath), Pos, Rot))
+	if(const TObjectPtr<ACY_CharacterBase> NewCharacter = gUnitMng.CreateCharacter(BPPath, Pos, Rot))
 	{
 		CharacterBase = NewCharacter;
 	}

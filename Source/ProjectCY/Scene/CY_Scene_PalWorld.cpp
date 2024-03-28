@@ -41,8 +41,11 @@ void UCY_Scene_PalWorld::Begin()
 			PlayerSpawnPoint = _PlayerSpawnPoint;
 		}
 	}
-	PlayerDefaultPosition = PlayerSpawnPoint->GetActorLocation();
-	PlayerDefaultRotator = PlayerSpawnPoint->GetActorRotation();
+	if(PlayerSpawnPoint.IsValid())
+	{
+		PlayerDefaultPosition = PlayerSpawnPoint->GetActorLocation();
+		PlayerDefaultRotator = PlayerSpawnPoint->GetActorRotation();
+	}
 }
 
 void UCY_Scene_PalWorld::Exit()

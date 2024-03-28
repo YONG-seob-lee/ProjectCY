@@ -9,18 +9,18 @@ namespace FadeType
 	const FName FadeOut = TEXT("FadeOut");
 }
 
-void UCY_Widget_DialogScreenFader::StartScreenFade(ECY_FadeType _FadeType, FBuiltInFadeDelegate FadeInCallback, FBuiltInFadeDelegate FadeOutCallback)
+void UCY_Widget_DialogScreenFader::StartScreenFade(ECY_FadeType _FadeType, const TFunction<void()>& FadeCallback /* = nullptr */)
 {
-	FadeInCompleteCallback.Clear();
-	FadeOutCompleteCallback.Clear();
+	FadeInCompleteCallback = nullptr;
+	FadeOutCompleteCallback = nullptr;
 
-	if(FadeInCallback.IsBound())
+	if(_FadeType == ECY_FadeType::FadeIn)
 	{
-		FadeInCompleteCallback.Add(FadeInCallback);
+		FadeInCompleteCallback = FadeCallback;
 	}
-	if(FadeOutCallback.IsBound())
+	else if(_FadeType == ECY_FadeType::FadeOut)
 	{
-		FadeOutCompleteCallback.Add(FadeOutCallback);
+		FadeOutCompleteCallback = FadeCallback;
 	}
 
 	SetVisibility(ESlateVisibility::Visible);
@@ -36,4 +36,36 @@ void UCY_Widget_DialogScreenFader::StartScreenFade(ECY_FadeType _FadeType, FBuil
 		FadeStatus = ECY_FadeStatus::FadeOutAnimation;
 		PlayAnimationByName(FadeType::FadeOut);
 	}
+}
+
+void UCY_Widget_DialogScreenFader::OnAnimFinished(const FName& AnimName)
+{
+	if(AnimName == FadeType::FadeIn)
+	{
+		FinishedFadeIn();
+	}
+	else if(AnimName == FadeType::FadeOut)
+	{
+		FinishedFadeOut();
+	}
+}
+
+void UCY_Widget_DialogScreenFader::FinishedFadeIn() const
+{
+	if(FadeInCompleteCallback)
+	{
+		FadeInCompleteCallback();
+	}
+	CY_LOG(TEXT("FadeIn Finished"));
+}
+
+void UCY_Widget_DialogScreenFader::FinishedFadeOut()
+{
+	if(FadeOutCompleteCallback)
+	{
+		FadeOutCompleteCallback();
+	}
+	CY_LOG(TEXT("FadeOut Finished"));
+	
+	SetVisibility(ESlateVisibility::Collapsed);
 }

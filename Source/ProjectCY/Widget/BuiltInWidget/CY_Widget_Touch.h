@@ -17,7 +17,7 @@ public:
 	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate) override;
 	virtual void FinishWidget() override;
 	
-	void TouchEvent();
+	void TouchEvent() const;
 private:
 	
 	UPROPERTY(meta = (BindWidget))

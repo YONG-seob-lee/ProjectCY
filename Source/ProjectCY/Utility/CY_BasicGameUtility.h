@@ -21,8 +21,7 @@ public:
 	void Finalize();
 	static void ShowMessageOnScreen(const FString& Message, float ElapsedTime = 3.f, FColor DisplayColor = FColor::Green);
 
-	static TObjectPtr<AActor> SpawnBlueprintActor(const FString& BlueprintFileName, const FVector& Pos, const FRotator& Rot,
-	                                              TSubclassOf<ACharacter> CharacterType = ACY_CharacterBase::StaticClass(), bool bNeedRootComponent = true,
+	static TObjectPtr<AActor> SpawnBlueprintActor(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
 	                                              ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
 	static TObjectPtr<UWorld> GetGameWorld();

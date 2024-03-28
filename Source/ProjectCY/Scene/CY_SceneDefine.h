@@ -14,7 +14,8 @@ UENUM(BlueprintType)
 enum class ECY_GameSceneType : uint8
 {
 	None = 0	UMETA(DisplayName = "None"),
-	
+
+	Logo		UMETA(DisplayName = "Logo"),
 	Title		UMETA(DisplayName = "Title"),
 	PalWorld	UMETA(DisplayName = "PalWorld"),
 };
@@ -66,8 +67,9 @@ enum class ECY_LoadingPageType
 
 enum class ECY_ChangeSceneStep
 {
-	Ready,
-	LoadLevel,
+	Ready = 0,
+	PlayFade,
+	StartLoadLevel,
 	PrepareSceneState,
 	Complete,
 };

@@ -23,10 +23,12 @@ void UCY_Widget_Touch::FinishWidget()
 	Super::FinishWidget();
 }
 
-void UCY_Widget_Touch::TouchEvent()
+void UCY_Widget_Touch::TouchEvent() const
 {
-	UNiagaraUIComponent* Comp = CPP_TouchEffectWidget->GetNiagaraComponent();
-	Comp->Activate(true);
+	if(const TObjectPtr<UNiagaraUIComponent> Comp = CPP_TouchEffectWidget->GetNiagaraComponent())
+	{
+		Comp->Activate(true);
+	}
 
 	//PlayAnimation(Touch_Anim);
 }

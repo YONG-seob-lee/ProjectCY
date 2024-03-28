@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
+#include "CY_DefaultButton.h"
 #include "CY_Button.generated.h"
 
 /**
@@ -17,15 +18,16 @@ class PROJECTCY_API UCY_Button : public UCommonButtonBase
 public:
 	UCY_Button();
 	virtual ~UCY_Button() override;
+	virtual void NativeConstruct() override;
 	
 	virtual void NativeOnCurrentTextStyleChanged() override;
 	virtual const FText GetPaletteCategory() override;
 
 	void SetText(const FString& ButtonString) const;
 
-	void SetOnClickedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnClickedDelegate = Delegate; };
+	void SetOnClickedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnClickedDelegate = Delegate; }
 	FORCEINLINE void UnbindClickedDelegate() { CY_OnClickedDelegate.Clear(); }
-	void SetOnPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnPressedDelegate = Delegate; };
+	void SetOnPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnPressedDelegate = Delegate; }
 	FORCEINLINE void UnbindPressedDelegate() { CY_OnPressedDelegate.Clear(); }
 	void SetOnReleasedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnReleasedDelegate = Delegate; };
 	FORCEINLINE void UnbindReleasedDelegate() { CY_OnReleasedDelegate.Clear(); }
@@ -49,16 +51,18 @@ private:
 	
 	UFUNCTION() void OnClick();
 	UFUNCTION() void OnPress();
-	UFUNCTION() void OnReleas();
+	UFUNCTION() void OnRelease();
 	UFUNCTION() void OnHover();
 	UFUNCTION() void OnUnhover();
 
-	FORCEINLINE bool IsUseClockedDelay() { return bUseClickedDelay && 0.f < ClickedDelayTime; }
-	FORCEINLINE bool IsUseLongPressedEvent() { return bUseLongPressedEvent && 0.f < LongPressedTime && GetWorld() != nullptr; }
+	FORCEINLINE bool IsUseClockedDelay() const { return bUseClickedDelay && 0.f < ClickedDelayTime; }
+	FORCEINLINE bool IsUseLongPressedEvent() const { return bUseLongPressedEvent && 0.f < LongPressedTime && GetWorld() != nullptr; }
 protected:
 	
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bUseClickedDelay = false;
+	UPROPERTY(Category = UCY_Button, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool bUseButtonText = true;
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", EditCondition = "bUseClickedDelay"))
 	float ClickedDelayTime = 0.f;
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

@@ -7,10 +7,12 @@
 #include "CY_CameraManager.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
+#include "CY_FadeCommand.h"
 #include "CY_FadeSceneTool.h"
 #include "CY_InputManager.h"
 #include "CY_LevelLogicBase.h"
 #include "CY_SceneBT.h"
+#include "CY_SceneLogo.h"
 #include "CY_SceneTitle.h"
 #include "CY_Scene_PalWorld.h"
 #include "CY_Utility.h"
@@ -37,16 +39,32 @@ void UCY_SceneManager::BuiltInInitialize()
 
 void UCY_SceneManager::Initialize()
 {
-	FadeTool = MakeWeakObjectPtr(CY_NewObject<UCY_FadeSceneTool>());
-	
-	if(!FadeTool.IsValid())
+	FadeTool = CY_NewObject<UCY_FadeSceneTool>();
+	if(IsValid(FadeTool))
 	{
-		return;
+		FadeTool->Initialize();
+		
+		TArray<int8> ActiveSceneId;
+		SceneStateMachine->GetActiveSceneId(ActiveSceneId);
+
+		for(const int8 SceneId : ActiveSceneId)
+		{
+			FadeTool->RegistLevelPath(SceneId);
+		}
+	}
+}
+
+void UCY_SceneManager::PostInitialize()
+{
+	if(IsValid(FadeTool))
+	{
+		FadeTool->Initialize();
 	}
 }
 
 void UCY_SceneManager::Finalize()
 {
+	CY_DeleteObject(FadeTool);
 	FadeTool = nullptr;
 	LoadLevelInitialized.Unbind();
 	LoadLevelInitialized = nullptr;
@@ -62,6 +80,11 @@ void UCY_SceneManager::BuiltInFinalize()
 
 void UCY_SceneManager::Tick(float DeltaTime)
 {
+	if(IsValid(FadeTool))
+	{
+		FadeTool->Tick(DeltaTime);
+	}
+	
 	if(ChangeSceneData.Step == ECY_ChangeSceneStep::Complete)
 	{
 		if (SceneStateMachine)
@@ -72,6 +95,11 @@ void UCY_SceneManager::Tick(float DeltaTime)
 	else if(ChangeSceneData.Step == ECY_ChangeSceneStep::PrepareSceneState)
 	{
 		const TObjectPtr<UCY_SceneBase> CurrentScene = GetCurrentScene();
+		if(IsValid(CurrentScene) == false)
+		{
+			return;
+		}
+		
 		CurrentScene->TickLoading(DeltaTime);
 
 		if(CurrentScene->IsCompleteLoading())
@@ -79,26 +107,21 @@ void UCY_SceneManager::Tick(float DeltaTime)
 			ChangeSceneData.Step = ECY_ChangeSceneStep::Complete;
 		}
 	}
-	
-
-	if(FadeTool.IsValid())
-	{
-		FadeTool->Tick(DeltaTime);
-	}
 }
 
-TObjectPtr<UCY_SceneBase> UCY_SceneManager::GetCurrentScene()
+TObjectPtr<UCY_SceneBase> UCY_SceneManager::GetCurrentScene() const
 {
 	if(SceneStateMachine)
 	{
-		Cast<UCY_SceneBase>(SceneStateMachine->GetCurrentState());
+		return Cast<UCY_SceneBase>(SceneStateMachine->GetCurrentState());
 	}
 
 	return nullptr;
 }
 
 void UCY_SceneManager::RegisterScenes() const
-{
+{	
+	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::Logo), TEXT("Logo"), UCY_SceneLogo::StaticClass());
 	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::Title), TEXT("Title"), UCY_SceneTitle::StaticClass());
 	RegistSceneState(static_cast<uint8>(ECY_GameSceneType::PalWorld), TEXT("PalWorld"), UCY_Scene_PalWorld::StaticClass());
 }
@@ -137,14 +160,14 @@ void UCY_SceneManager::ExecuteLoadLevelDelegate(const FString& LevelName /* = TE
 	}
 }
 
-bool UCY_SceneManager::LoadLevelByPath(FCY_LoadLevelInitialized Delegate, const FName& PackagePath /* = FName() */, bool bAbsolute /* = true */)
+bool UCY_SceneManager::LoadLevelByPath(const FCY_LoadLevelInitialized& Delegate, const FName& PackagePath /* = FName() */, bool bAbsolute /* = true */)
 {
 	if(UCY_BasicGameUtility::HasGameInstance() == false)
 	{
 		return false;
 	}
 
-	TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
+	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
 	if(World == nullptr)
 	{
 		return false;
@@ -184,20 +207,29 @@ bool UCY_SceneManager::LoadLevelBySoftObjectPtr(const TSoftObjectPtr<UWorld>& Le
 	return true;
 }
 
-void UCY_SceneManager::ChangeScene(ECY_GameSceneType SceneType, const FName& LevelPackagePath /* = NAME_None */)
+void UCY_SceneManager::ChangeScene(ECY_GameSceneType SceneType, TObjectPtr<UCY_FadeCommand> Command /* = nullptr */)
 {
-	CY_LOG(TEXT("UCY_SceneManager::ChangeScene - SceneId(%d), LevelPath(%s)"), SceneType, *LevelPackagePath.ToString());
-
 	if(OnChangeScene.IsBound())
 	{
 		OnChangeScene.Broadcast(SceneType);
 	}
 
+	const FString LevelPackagePath = Command != nullptr ? FadeTool->GetLevelPath(SceneType) : FString();
+	
+	CY_LOG(TEXT("UCY_SceneManager::ChangeScene - SceneId(%d), LevelPath(%s)"), SceneType, *LevelPackagePath);
+	
 	ChangeSceneData.Step = ECY_ChangeSceneStep::Ready;
 	ChangeSceneData.SceneType = SceneType;
-	ChangeSceneData.LevelPackagePath = LevelPackagePath;
+	ChangeSceneData.LevelPackagePath = FName(LevelPackagePath);
 
-	ChangeSceneStep_LoadLevel();
+	if(LevelPackagePath.Len() != 0 && Command != nullptr)
+	{
+		ChangeSceneStep_Fade(Command);
+	}
+	else
+	{
+		ChangeSceneStep_LoadLevel();
+	}
 
 	gWidgetMng.ClearExclusiveLayer();
 }
@@ -216,6 +248,27 @@ void UCY_SceneManager::RegistSceneState(uint8 SceneId, const FName& Name, TSubcl
 	SceneStateMachine->RegistState(SceneId, Name, SceneType);
 }
 
+bool UCY_SceneManager::ChangeSceneStep_Fade(TObjectPtr<UCY_FadeCommand> Command)
+{
+	if(Command == nullptr)
+	{
+		return false;
+	}
+
+	if(ChangeSceneData.Step == ECY_ChangeSceneStep::Ready)
+	{
+		Command->OnFadeInComplete = FCY_FadeEventDelegate::CreateWeakLambda(this, [this]()
+			{
+				ChangeSceneStep_LoadLevel();
+			});
+		
+		ChangeSceneData.Step = ECY_ChangeSceneStep::PlayFade;
+		FadeTool->Request(Command);
+		return true;
+	}
+	return false;
+}
+
 bool UCY_SceneManager::ChangeSceneStep_LoadLevel()
 {
 	if(ChangeSceneData.LevelPackagePath == NAME_None)
@@ -223,8 +276,8 @@ bool UCY_SceneManager::ChangeSceneStep_LoadLevel()
 		ChangeSceneStep_SetSceneState(static_cast<uint8>(ChangeSceneData.SceneType));
 		return true;
 	}
-
-	ChangeSceneData.Step = ECY_ChangeSceneStep::LoadLevel;
+	
+	ChangeSceneData.Step = ECY_ChangeSceneStep::StartLoadLevel;
 
 	UnregisterSceneBehaviorTree();
 	gCameraMng.ResetData();

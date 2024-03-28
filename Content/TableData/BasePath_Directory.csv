@@ -1,2 +1,5 @@
 Id,Directory
 100,Widget/Title
+1000,Maps
+10000,Unit/BasePlayer/Blueprints
+10001,Character/Npc/Blueprints

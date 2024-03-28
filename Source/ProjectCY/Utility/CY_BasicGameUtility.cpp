@@ -3,6 +3,7 @@
 
 #include "CY_BasicGameUtility.h"
 #include "CY_GameInstance.h"
+#include "CY_Utility.h"
 #include "Kismet/GameplayStatics.h"
 
 TObjectPtr<UCY_BasicGameUtility> UCY_BasicGameUtility::ThisInstance = nullptr;
@@ -22,21 +23,20 @@ void UCY_BasicGameUtility::ShowMessageOnScreen(const FString& Message, float Ela
 	GEngine->AddOnScreenDebugMessage(-1, ElapsedTime, DisplayColor, Message);
 }
 
-TObjectPtr<AActor> UCY_BasicGameUtility::SpawnBlueprintActor(const FString& BlueprintFileName, const FVector& Pos, const FRotator& Rot,
-                                                             TSubclassOf<ACharacter> CharacterType /* = ACY_CharacterBase::StaticClass() */, bool bNeedRootComponent /* = true */, 
+TObjectPtr<AActor> UCY_BasicGameUtility::SpawnBlueprintActor(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent /* = true */, 
                                                              ESpawnActorCollisionHandlingMethod Method /* = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn */)
 {
-	const TObjectPtr<UClass> BlueprintClass = StaticLoadClass(CharacterType, nullptr, *BlueprintFileName);
+	UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
 	if(IsValid(BlueprintClass) == false)
 	{
 		return nullptr;
 	}
 	
-	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
-		if(IsValid(World) == false)
-		{
-			return nullptr;	
-		}
+	const TObjectPtr<UWorld> World = GetGameWorld();
+	if(IsValid(World) == false)
+	{
+		return nullptr;	
+	}
 			
 	FActorSpawnParameters Parameters;
 	Parameters.OverrideLevel = World->GetCurrentLevel();
@@ -45,7 +45,7 @@ TObjectPtr<AActor> UCY_BasicGameUtility::SpawnBlueprintActor(const FString& Blue
 
 	if(ResultActor)
 	{
-		ResultActor->SetActorLabel(BlueprintFileName);
+		ResultActor->SetActorLabel(CY_Utility::GetBPNameFromFullPath(BlueprintPath));
 
 		if(bNeedRootComponent && ResultActor->GetRootComponent() == nullptr)
 		{

@@ -8,8 +8,6 @@
 #include "CY_Widget_DialogScreenFader.generated.h"
 
 DECLARE_DELEGATE(FBuiltInFadeDelegate);
-DECLARE_MULTICAST_DELEGATE(FBuiltInFadeOutComplete);
-DECLARE_MULTICAST_DELEGATE(FBuiltInFadeInComplete);
 
 /**
  * 
@@ -20,12 +18,20 @@ class PROJECTCY_API UCY_Widget_DialogScreenFader : public UCY_Widget
 	GENERATED_BODY()
 
 public:
-	void StartScreenFade(ECY_FadeType _FadeType, FBuiltInFadeDelegate FadeInCallback = nullptr, FBuiltInFadeDelegate FadeOutCallback = nullptr);
-
-
+	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath("/Game/Widget/BuiltInWidget/DialogScreenFader.DialogScreenFader"); }
+	
+	void StartScreenFade(ECY_FadeType _FadeType, const TFunction<void()>& FadeCallback = nullptr);
+	
+protected:
+	virtual void OnAnimFinished(const FName& AnimName) override;
+	
 private:
+	void FinishedFadeIn() const;
+	void FinishedFadeOut();
+	
 	ECY_FadeType FadeType;
 	ECY_FadeStatus FadeStatus;
-	FBuiltInFadeInComplete FadeInCompleteCallback;
-	FBuiltInFadeOutComplete FadeOutCompleteCallback;
+
+	TFunction<void()> FadeInCompleteCallback;
+	TFunction<void()> FadeOutCompleteCallback;
 };

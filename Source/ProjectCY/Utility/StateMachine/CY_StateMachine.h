@@ -22,7 +22,9 @@ public:
 	void RegistState(int8 Index, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType, UObject* Outer = nullptr);
 	void UnRegistStates();
 
-	TObjectPtr<UCY_StateBase> GetCurrentState();;
+	TObjectPtr<UCY_StateBase> GetCurrentState();
+
+	void GetActiveSceneId(TArray<int8>& ActiveSceneState) const;
 
 	void SetState(int32 Index, bool _bInstant = true);
 

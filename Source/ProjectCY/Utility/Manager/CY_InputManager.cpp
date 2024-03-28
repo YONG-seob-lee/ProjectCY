@@ -28,7 +28,7 @@ void UCY_InputManager::CreateInputPawn()
 		return;
 	}
 
-	InputPawn = Cast<ACY_Pawn_Input>(UCY_BasicGameUtility::SpawnBlueprintActor(TEXT("InputPawn"), FVector::ZeroVector, FRotator::ZeroRotator, ACY_Pawn_Input::StaticClass()));
+	InputPawn = Cast<ACY_Pawn_Input>(UCY_BasicGameUtility::SpawnBlueprintActor(TEXT("InputPawn"), FVector::ZeroVector, FRotator::ZeroRotator));
 	if(InputPawn)
 	{
 		InputPawn->Create();

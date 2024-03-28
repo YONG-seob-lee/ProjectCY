@@ -28,7 +28,7 @@ public:
 	FORCEINLINE FStreamableManager& GetAssetLoader() { return AssetLoader; }
 
 	TObjectPtr<AActor> SpawnActor(UClass* Class, const FVector& Location, const FRotator& Rotation, const FString &LabelName, ESpawnActorCollisionHandlingMethod CollisionMathod, bool bNeedRootComponent);
-	TObjectPtr<class ACY_CharacterBase> CreateCharacter(const FString& BlueprintPath, const FString& BlueprintName, const FVector& Pos, const FRotator& Rot);
+	TObjectPtr<class ACY_CharacterBase> CreateCharacter(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot);
 
 	TObjectPtr<UCY_UnitBase> GetUnit(CY_Handle UnitHandle);
 	TObjectPtr<ACY_CharacterBase> GetCharacterBase(CY_Handle UnitHandle);
