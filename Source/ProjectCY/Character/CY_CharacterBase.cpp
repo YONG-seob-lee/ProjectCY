@@ -34,9 +34,12 @@ ACY_CharacterBase::ACY_CharacterBase()
 		RootSkeletalMeshComponent->bUseAttachParentBound = true;
 	}
 
-	if(StaticMesh)
+	
+	
+	RootStaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+	if(RootStaticMeshComponent)
 	{
-		RootStaticMeshComponent->SetStaticMesh(StaticMesh);
+		//RootStaticMeshComponent->SetStaticMesh();
 		RootStaticMeshComponent->SetupAttachment(RootComponent);
 		RootSkeletalMeshComponent->SetupAttachment(RootStaticMeshComponent);
 	}
@@ -217,6 +220,7 @@ void ACY_CharacterBase::CreateTestSphere()
 		TestSphere->SetCollisionProfileName(TEXT("NoCollision"));
 		TestSphere->SetupAttachment(RootComponent);
 		RootSkeletalMeshComponent->SetupAttachment(TestSphere);
+		RootStaticMeshComponent->SetupAttachment(TestSphere);
 	}
 	
 }

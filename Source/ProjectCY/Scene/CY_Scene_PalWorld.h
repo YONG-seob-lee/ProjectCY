@@ -37,6 +37,6 @@ private:
 	UPROPERTY()
 	FRotator PlayerDefaultRotator = FRotator::ZeroRotator;
 
-	TWeakObjectPtr<class ACY_Actor_PlayerSpawnPoint> PlayerSpawnPoint = nullptr;
+	TWeakObjectPtr<class ACYPlayerSpawnPoint> PlayerSpawnPoint = nullptr;
 	TMap<int32, FTransform> TeleportPoints;
 };

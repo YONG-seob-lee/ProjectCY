@@ -47,9 +47,6 @@ private:
 	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> RootSkeletalMeshComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, Transient, Category = Mesh)
-	TObjectPtr<UStaticMesh> StaticMesh = nullptr;
-
 	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> RootStaticMeshComponent = nullptr;
 	

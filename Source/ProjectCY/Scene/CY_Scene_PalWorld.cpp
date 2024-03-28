@@ -3,7 +3,7 @@
 
 #include "CY_Scene_PalWorld.h"
 
-#include "CY_Actor_PlayerSpawnPoint.h"
+#include "CYPlayerSpawnPoint.h"
 #include "CY_Actor_TeleportPoint.h"
 #include "CY_GameInstance.h"
 #include "CY_UnitManager.h"
@@ -27,18 +27,18 @@ void UCY_Scene_PalWorld::Begin()
 	Super::Begin();
 
 	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
-	for(TActorIterator<ACY_ActorBase> Iter(World); Iter; ++Iter)
+	for(TActorIterator<AActor> Iter(World); Iter; ++Iter)
 	{
+		const TObjectPtr<ACYPlayerSpawnPoint> _PlayerSpawnPoint = Cast<ACYPlayerSpawnPoint>(*Iter);
+		if(_PlayerSpawnPoint && PlayerSpawnPoint == nullptr)
+		{
+			PlayerSpawnPoint = _PlayerSpawnPoint;
+		}
+		
 		const TObjectPtr<ACY_Actor_TeleportPoint> TeleportPoint = Cast<ACY_Actor_TeleportPoint>(*Iter);
 		if(TeleportPoint && TeleportPoints.Contains(TeleportPoint->GetTeleportPointId()) == false)
 		{
 			TeleportPoints.Emplace(TeleportPoint->GetTeleportPointId(), TeleportPoint->GetTransform());
-		}
-
-		const TObjectPtr<ACY_Actor_PlayerSpawnPoint> _PlayerSpawnPoint = Cast<ACY_Actor_PlayerSpawnPoint>(*Iter);
-		if(_PlayerSpawnPoint && PlayerSpawnPoint == nullptr)
-		{
-			PlayerSpawnPoint = _PlayerSpawnPoint;
 		}
 	}
 	if(PlayerSpawnPoint.IsValid())
@@ -62,7 +62,7 @@ bool UCY_Scene_PalWorld::LoadingPostProcess(float DeltaTime)
 {
 	CreatePlayer();
 	ChangeCamera();
-	TransportPlayer();
+	//TransportPlayer();
 	return true;
 }
 
@@ -70,7 +70,7 @@ void UCY_Scene_PalWorld::CreatePlayer()
 {
 	if(Player.IsValid() == false)
 	{
-		const TObjectPtr<UCY_BasePlayer> NewPlayer = Cast<UCY_BasePlayer>(gUnitMng.CreateUnit(1, UCY_BasePlayer::StaticClass()));
+		const TObjectPtr<UCY_BasePlayer> NewPlayer = Cast<UCY_BasePlayer>(gUnitMng.CreateUnit(1, UCY_BasePlayer::StaticClass(), PlayerDefaultPosition, PlayerDefaultRotator));
 		if(NewPlayer == nullptr)
 		{
 			return;

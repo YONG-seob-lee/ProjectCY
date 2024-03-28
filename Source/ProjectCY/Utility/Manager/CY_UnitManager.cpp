@@ -158,12 +158,12 @@ CY_Handle UCY_UnitManager::GetIsValidBasePlayer()
 CY_Handle UCY_UnitManager::MakeUnitHandle(const TObjectPtr<UCY_UnitBase> Unit) const
 {
 	const int32 UnitNum = Units.Num();
+	const int32 NextUnitIndex = UnitNum + 1;
 
-	if(Units.Contains(UnitNum) == false)
+	if(Units.Contains(NextUnitIndex) == false)
 	{
-		constexpr int32 NextIndex = 1;
-		Unit->SetUnitHandle(UnitNum + NextIndex);
-		return UnitNum + NextIndex;
+		Unit->SetUnitHandle(NextUnitIndex);
+		return NextUnitIndex;
 	}
 
 	return InvalidUnitHandle;
