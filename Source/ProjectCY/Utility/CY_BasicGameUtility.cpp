@@ -3,8 +3,10 @@
 
 #include "CY_BasicGameUtility.h"
 #include "CY_GameInstance.h"
+#include "CY_PlayerController.h"
 #include "CY_Utility.h"
 #include "Kismet/GameplayStatics.h"
+#include "Slate/SceneViewport.h"
 
 TObjectPtr<UCY_BasicGameUtility> UCY_BasicGameUtility::ThisInstance = nullptr;
 
@@ -98,4 +100,17 @@ TObjectPtr<FSceneViewport> UCY_BasicGameUtility::GetGameViewport()
 bool UCY_BasicGameUtility::HasGameInstance()
 {
 	return ThisInstance->GameInstance != nullptr;
+}
+
+void UCY_BasicGameUtility::AssignUnitHandle(CY_Handle _UnitHandle)
+{
+	if(const TObjectPtr<ACY_PlayerController> PlayerController = Cast<ACY_PlayerController>(GetPlayerController()))
+	{
+		PlayerController->SetUnitHandle(_UnitHandle);
+	}
+}
+
+float UCY_BasicGameUtility::GetAspectRatio()
+{
+	return GetGameViewport()->GetDesiredAspectRatio();
 }

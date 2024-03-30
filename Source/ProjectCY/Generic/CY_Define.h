@@ -38,4 +38,34 @@ enum class ECY_LaunchProcessType : uint8
 	End
 };
 
+UENUM(BlueprintType)
+enum class ECY_Axis_Type : uint8
+{
+	Left	UMETA(DisplayName = "Axis_Type_Left"),
+	Right	UMETA(DisplayName = "Axis_Type_Left"),
+	Pinch	UMETA(DisplayName = "Axis_Type_Left"),
+};
+
+UENUM(BlueprintType)
+enum class ECY_Action_Type : uint8
+{
+	ActionUpDown	UMETA(DisplayName = "Action_Type_UpDown"),
+	ActionLeftRight	UMETA(DisplayName = "Action_Type_LeftRight"),
+};
+
+UENUM(BlueprintType)
+enum class ECY_Touch_Event : uint8
+{
+	Down	UMETA(DisplayName = "Touch_Event_Down"),
+	Up		UMETA(DisplayName = "Touch_Event_Up"),
+	Move	UMETA(DisplayName = "Touch_Event_Move"),
+};
+
+UENUM(BlueprintType)
+enum class ECY_AndroidButton_Type : uint8
+{
+	Back	UMETA(DisplayName = "AndroidButton_Back"),
+	Menu	UMETA(DisplayName = "AndroidButton_Menu"),
+};
+
 DECLARE_DELEGATE_TwoParams(FBindAllKeysDelegate, const FKey&, bool);

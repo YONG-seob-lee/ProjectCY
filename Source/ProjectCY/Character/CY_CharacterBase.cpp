@@ -54,7 +54,6 @@ ACY_CharacterBase::ACY_CharacterBase()
 		MovementComponent->bOrientRotationToMovement = true;
 	}
 	
-	CreateCameraComponent();
 	CreateTestSphere();
 	
 }
@@ -168,14 +167,30 @@ void ACY_CharacterBase::SetPositionAndRotator(const FVector& Position, const FRo
 	}
 }
 
-// Called when the game starts or when spawned
+void ACY_CharacterBase::SetActiveMovementComponent(bool bEnable)
+{
+	if(MovementComponent)
+	{
+		MovementComponent->SetActive(bEnable);
+	}
+}
+
+void ACY_CharacterBase::ClearPathFindPoints()
+{
+	if(PathFindingPoints == -1)
+	{
+		return;
+	}
+
+	PathFindingPoints = -1;
+}
+
 void ACY_CharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ACY_CharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -186,26 +201,9 @@ void ACY_CharacterBase::Tick(float DeltaTime)
 	}
 }
 
-// Called to bind functionality to input
 void ACY_CharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-void ACY_CharacterBase::CreateCameraComponent()
-{
-	// Create SpringArm Component
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraSpringArm"));
-	SpringArmComponent->SetupAttachment(RootComponent);
-	RootSkeletalMeshComponent->SetupAttachment(SpringArmComponent);
-
-	SpringArmComponent->TargetArmLength = 400.f;
-	SpringArmComponent->SetRelativeLocation(FVector(0.f, 0.f, 110.f));
-	
-	// Create Camera Component
-	PlayerDefaultCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerDefaultCamera"));
-	PlayerDefaultCamera->SetupAttachment(RootComponent);
-	RootSkeletalMeshComponent->SetupAttachment(PlayerDefaultCamera);
 }
 
 void ACY_CharacterBase::CreateTestSphere()

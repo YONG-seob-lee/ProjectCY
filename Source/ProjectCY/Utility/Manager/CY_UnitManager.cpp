@@ -5,14 +5,13 @@
 
 #include "CY_BasePlayer.h"
 #include "CY_BasicGameUtility.h"
-#include "CY_GameInstance.h"
 #include "CY_UnitBase.h"
 #include "CY_Utility.h"
+#include "Resource_Unit.h"
 #include "Character/CY_CharacterBase.h"
 
 void UCY_UnitManager::Initialize()
 {
-	UCY_Singleton<UCY_UnitManager>::Initialize();
 }
 
 void UCY_UnitManager::Finalize()
@@ -22,7 +21,10 @@ void UCY_UnitManager::Finalize()
 
 void UCY_UnitManager::Tick(float _DeltaTime)
 {
-	UCY_Singleton<UCY_UnitManager>::Tick(_DeltaTime);
+	for(const auto& Unit : Units)
+	{
+		Unit.Value->Tick(_DeltaTime);
+	}
 }
 
 TObjectPtr<UCY_UnitBase> UCY_UnitManager::CreateUnit(int32 UnitTableId, TSubclassOf<UCY_UnitBase> UnitType, const FVector& Position, const FRotator& Rotator)
@@ -78,44 +80,6 @@ void UCY_UnitManager::DestroyAllUnit()
 	}
 }
 
-TObjectPtr<AActor> UCY_UnitManager::SpawnActor(UClass* Class, const FVector& Location, const FRotator& Rotation, const FString& LabelName, ESpawnActorCollisionHandlingMethod CollisionMathod, bool bNeedRootComponent)
-{
-	const TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
-
-	if (World == nullptr || Class == nullptr)
-	{
-		return nullptr;
-	}
-	AActor* NewActor = nullptr;
-	
-	FActorSpawnParameters Params;
-	Params.OverrideLevel = World->GetCurrentLevel();
-	Params.SpawnCollisionHandlingOverride = CollisionMathod;
-	NewActor = World->SpawnActor(Class, &Location, &Rotation, Params);
-	if (NewActor)
-	{
-#if WITH_EDITOR
-		if (LabelName.IsEmpty() == false)
-			NewActor->SetActorLabel(LabelName);
-#endif
-
-		if ((bNeedRootComponent == true) && (NewActor->GetRootComponent() == nullptr))
-		{
-			USceneComponent* RootComponent = NewObject<USceneComponent>(NewActor, USceneComponent::GetDefaultSceneRootVariableName(), RF_Transactional);
-			RootComponent->Mobility = EComponentMobility::Movable;
-#if WITH_EDITORONLY_DATA
-			RootComponent->bVisualizeComponent = false;
-#endif
-			NewActor->SetRootComponent(RootComponent);
-			NewActor->AddInstanceComponent(RootComponent);
-
-			RootComponent->RegisterComponent();
-		}
-	}
-
-	return NewActor;
-}
-
 TObjectPtr<ACY_CharacterBase> UCY_UnitManager::CreateCharacter(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot)
 {
 	const TObjectPtr<ACY_CharacterBase> NewCharacter = Cast<ACY_CharacterBase>(UCY_BasicGameUtility::SpawnBlueprintActor(BlueprintPath, Pos, Rot));
@@ -133,6 +97,13 @@ TObjectPtr<UCY_UnitBase> UCY_UnitManager::GetUnit(CY_Handle UnitHandle)
 	const TObjectPtr<UCY_UnitBase>* pUnit = Units.Find(UnitHandle);
 
 	return pUnit ? *pUnit : nullptr;
+}
+
+CY_Handle UCY_UnitManager::GetUnitHandle(TObjectPtr<UCY_UnitBase> UnitBase) const
+{
+	const CY_Handle* UnitHandle = Units.FindKey(UnitBase);
+
+	return UnitHandle ? *UnitHandle : InvalidUnitHandle;
 }
 
 TObjectPtr<ACY_CharacterBase> UCY_UnitManager::GetCharacterBase(CY_Handle UnitHandle)

@@ -19,7 +19,14 @@ public:
 
 	FORCEINLINE float GetMovingSpeed() const { return MovingSpeed; }
 
-
+	void SetMoveSpeed(float MoveSpeed);
 private:
+	UPROPERTY(Category = AnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float MovingSpeed = 0.f;
+
+	UPROPERTY(Category = AnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float PreviousMovingSpeed = 0.f;
+
+	UPROPERTY(Category = AnimInstance, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float MovingEndSpeed = 0.f;
 };

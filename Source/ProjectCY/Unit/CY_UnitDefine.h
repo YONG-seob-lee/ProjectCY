@@ -10,6 +10,8 @@
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FCY_UnitActorTickDelegate, float, TObjectPtr<class UCY_UnitBase>);
+
 USTRUCT(BlueprintType)
 struct FCY_CharacterLodValues
 {
@@ -43,4 +45,11 @@ enum ECY_UnitState
 {
 	None = 0,
 	PalWorld_Field,
+};
+
+UENUM(BlueprintType)
+enum class ECY_UnitActionState : uint8
+{
+	None = 0			UMETA(DisplayName = "None"),
+	Player_Movement		UMETA(DisplayName = "Player_Movement"),
 };

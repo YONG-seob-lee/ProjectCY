@@ -32,6 +32,11 @@ UCY_SceneManager::~UCY_SceneManager()
 
 void UCY_SceneManager::BuiltInInitialize()
 {
+	if(SceneStateMachine)
+	{
+		return;
+	}
+	
 	SceneStateMachine = CY_NewObject<UCY_StateMachine>(this, UCY_StateMachine::StaticClass());
 	SceneStateMachine->AddToRoot();
 	SceneStateMachine->Create();

@@ -33,5 +33,5 @@ private:
 	bool bIsCreated = false;
 	
 	UPROPERTY(Category = InputPawn, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputComponent> pInputComponent = nullptr;
+	TObjectPtr<UInputComponent> NewInputComponent = nullptr;
 };

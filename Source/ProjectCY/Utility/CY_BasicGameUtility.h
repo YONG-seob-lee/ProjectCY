@@ -30,6 +30,9 @@ public:
 	static TObjectPtr<FSceneViewport> GetGameViewport();
 	static bool HasGameInstance();
 
+	static void AssignUnitHandle(CY_Handle _UnitHandle);
+
+	static float GetAspectRatio();
 private:
 	static TObjectPtr<UCY_BasicGameUtility> ThisInstance;
 	

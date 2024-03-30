@@ -76,14 +76,13 @@ TObjectPtr<AActor> ACY_Actor_EaglePoint::SpawnStatue() const
 		return nullptr;
 	}
 
-	const TObjectPtr<ACY_CharacterBase> StatueActor = Statue->GetCharacterActor();
+	const TObjectPtr<ACY_CharacterBase> StatueActor = Statue->GetCharacterBase();
 	if(StatueActor == nullptr)
 	{
 		return nullptr;
 	}
 
 	TArray<FName>& ComponentTags = StatueActor->GetRootComponent()->ComponentTags;
-
 
 	return StatueActor;
 }

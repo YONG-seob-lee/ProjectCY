@@ -11,6 +11,8 @@
 
 namespace CY_Utility
 {
+	TObjectPtr<AActor> SpawnActor(UClass* Class, const FVector& Location, const FRotator& Rotation, const FString &LabelName, ESpawnActorCollisionHandlingMethod CollisionMathod, bool bNeedRootComponent);
+	
 	// todo 용섭 : Enum 을 FString 으로 변환하는 메소드
 	template<typename TEnum>
 	static FString ConvertEnumToString(const FString& EnumString, TEnum EnumType)
@@ -34,6 +36,8 @@ namespace CY_Utility
 
 	static const TCHAR* AttachPathAsName(FString AssetPath, FString AssetName);
 	FString GetBPNameFromFullPath(const FString& FullPath);
+
+	FRotator MakeRotatorFromForward(const FVector& ForwardVector);
 
 	TObjectPtr<UDataTable> LoadTableObjectFromFile(const FString& ResourcePath, const FString& TableName, FCY_LoadResourceDelegate Delegate);
 	TObjectPtr<UObject> LoadObjectFromFile(const FString& ResourcePath, const FCY_LoadResourceDelegate& Delegate = nullptr, const FString& SubName = TEXT("SubName"), int32 Index = 0, bool SubBool = false);

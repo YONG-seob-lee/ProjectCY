@@ -82,7 +82,7 @@ TObjectPtr<AActor> ACY_Actor_BasePoint::SpawnBasePoint()
 		return nullptr;
 	}
 	
-	const TObjectPtr<ACY_CharacterBase> Character = TeleportPointUnit->GetCharacterActor();
+	const TObjectPtr<ACY_CharacterBase> Character = TeleportPointUnit->GetCharacterBase();
 	if(Character == nullptr)
 	{
 		return nullptr;

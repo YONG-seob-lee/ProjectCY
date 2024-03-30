@@ -19,6 +19,10 @@ public:
 	virtual void Finalize() override;
 	virtual void Tick(float _DeltaTime) override;
 
+	void RegistAxis(ECY_Axis_Type AxisType, ECY_Action_Type ActionType, const FInputAxisUnifiedDelegate& Event);
+	void RegistTouch(ECY_Touch_Event TouchEventType, const FInputTouchBinding& Event);
+	void RegistAndroidButton(ECY_AndroidButton_Type ButtonType, const FSimpleDelegate& Delegate);
+	
 	void CreateInputPawn();
 	void DestroyInputPawn();
 
@@ -29,5 +33,26 @@ private:
 	TObjectPtr<class ACY_Pawn_Input> InputPawn = nullptr;
 
 	FBindAllKeysDelegate AllKeysDelegate;
+
+// todo : 용섭 Input Mapping Part
+	
+public:
+	void LeftAxisUpDown(float Value);
+	void LeftAxisLeftRight(float Value);
+	void OnTouchDown(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void OnTouchUp(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void OnTouchMove(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void AndroidBack();
+	void AndroidMenu();
+
+private:
+	FInputAxisBinding UpDownEvent = FInputAxisBinding(TEXT("UpDown"));
+	FInputAxisBinding LeftRightEvent = FInputAxisBinding(TEXT("LeftRight"));
+	FInputTouchBinding TouchDownEvent = FInputTouchBinding(IE_Pressed);
+	FInputTouchBinding TouchUpEvent = FInputTouchBinding(IE_Released);
+	FInputTouchBinding TouchMoveEvent = FInputTouchBinding(IE_Repeat);
+	FSimpleDelegate AndroidBackDelegate;
+	FSimpleDelegate AndroidMenuDelegate;
+	
 #define gInputMng (*UCY_InputManager::GetInstance())
 };

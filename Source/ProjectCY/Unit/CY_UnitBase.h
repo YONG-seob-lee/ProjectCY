@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CY_Define.h"
 #include "CY_UnitDefine.h"
+#include "Character/CY_CharacterBase.h"
 #include "UObject/Object.h"
 #include "CY_UnitBase.generated.h"
 
@@ -18,6 +19,7 @@ class PROJECTCY_API UCY_UnitBase : public UObject
 public:
 	virtual void Initialize();
 	virtual void Finalize();
+	virtual void Tick(float DeltaTime);
 	
 	virtual bool CreateUnit(int32 UnitTableId, const FVector& Pos = FVector::ZeroVector, const FRotator& Rot = FRotator::ZeroRotator);
 	virtual void DestroyUnit();
@@ -28,18 +30,30 @@ public:
 	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
 	
 	FORCEINLINE TObjectPtr<struct FResource_Unit> GetResourceUnitData() const { return ResourceUnitData; }
-	
 
 	TObjectPtr<class UCY_AnimInstance> GetAnimInstance() const;
-	FORCEINLINE TObjectPtr<class ACY_CharacterBase> GetCharacterBase() const { return CharacterBase.Get(); }
 	
+	FORCEINLINE TObjectPtr<ACY_CharacterBase> GetCharacterBase() const { return CharacterBase.Get(); }
+	FORCEINLINE FVector GetCharacterLocation() const { return CharacterBase->GetCurrentLocation(); }
+
 	float GetMovingSpeed() const;
+	
+	FCY_UnitActorTickDelegate OnActorTickDelegate;
+	
 protected:
+	bool CreateActionStateMachine();
+	void DestroyActionStateMachine();
+	void AddActionState(ECY_UnitActionState State, const FName& Name, TSubclassOf<class UCY_StateBase> ClassType);
+	
 	TWeakObjectPtr<ACY_CharacterBase> CharacterBase = nullptr;
 private:
 	FORCEINLINE bool IsValidCharacterActor() const { return CharacterBase.IsValid(); }
 
+	CY_Handle UnitHandle = InvalidUnitHandle;
+	
 	int32 ResourceUnitTableId = INDEX_NONE;
 	TObjectPtr<FResource_Unit> ResourceUnitData = nullptr;
-	CY_Handle UnitHandle = InvalidUnitHandle;
+	
+	UPROPERTY()
+	TObjectPtr<class UCY_StateMachine> ActionStateMachine = nullptr;
 };

@@ -14,7 +14,8 @@ UCLASS(config = game)
 class PROJECTCY_API UCY_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-
+public:
+	
 	UCY_GameInstance();
 	virtual ~UCY_GameInstance() override;
 
@@ -26,7 +27,7 @@ class PROJECTCY_API UCY_GameInstance : public UGameInstance
 
 	bool Tick(float DeltaSeconds);
 	
-	FORCEINLINE TObjectPtr<UCY_GameInstance> GetGameInstance() { return this; }
+	FORCEINLINE TSubclassOf<class ACY_CameraActor> GetCameraActor() const { return CameraActor; }
 private:
 	
 	void ProcessInitialize();
@@ -50,6 +51,9 @@ private:
 
 	UPROPERTY(Category = UCY_GameInstance, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TSoftObjectPtr<UWorld> BaseWorld;
+
+	UPROPERTY(Category = UCY_GameInstance, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ACY_CameraActor> CameraActor = nullptr;
 	
 	UPROPERTY(Category = UCY_GameInstance, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UBehaviorTree> SceneBTAsset = nullptr;

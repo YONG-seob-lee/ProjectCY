@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_Define.h"
 #include "GameFramework/PlayerController.h"
 #include "CY_PlayerController.generated.h"
 
@@ -25,6 +26,13 @@ public:
 	
 	FORCEINLINE void SetJoyStickVisualCenter(FVector2d Center) { JoyStickVisualCenter = Center; }
 	FORCEINLINE FVector2d SetJoyStickVisualCenter() const { return JoyStickVisualCenter; }
+
+	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
+	FORCEINLINE void SetUnitHandle(CY_Handle _UnitHandle) { UnitHandle = _UnitHandle; }
+	FORCEINLINE void ResetUnitHandle() { UnitHandle = InvalidUnitHandle; }
+	
 private:
+	CY_Handle UnitHandle = InvalidUnitHandle;
+	
 	FVector2d JoyStickVisualCenter = FVector2d();
 };

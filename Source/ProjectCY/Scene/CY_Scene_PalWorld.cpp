@@ -84,10 +84,12 @@ void UCY_Scene_PalWorld::CreatePlayer()
 		// Player->SetPlayerTitle();
 		// Player->ChangeActionState();
 
-		if(const TObjectPtr<ACY_CharacterBase> Character = Player->GetCharacterActor())
+		if(const TObjectPtr<ACY_CharacterBase> Character = Player->GetCharacterBase())
 		{
 			Character->GetRootComponent()->ComponentTags.Emplace(FName("PalWorld.Player"));
 		}
+
+		UCY_BasicGameUtility::AssignUnitHandle(gUnitMng.GetUnitHandle(NewPlayer));
 	}
 }
 

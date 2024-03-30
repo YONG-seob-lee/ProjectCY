@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_SceneDefine.h"
 #include "CY_Singleton.h"
+#include "CY_UnitDefine.h"
 #include "Engine/StreamableManager.h"
 #include "UObject/Object.h"
 #include "CY_UnitManager.generated.h"
@@ -26,19 +28,19 @@ public:
 	void DestroyAllUnit();
 
 	FORCEINLINE FStreamableManager& GetAssetLoader() { return AssetLoader; }
-
-	TObjectPtr<AActor> SpawnActor(UClass* Class, const FVector& Location, const FRotator& Rotation, const FString &LabelName, ESpawnActorCollisionHandlingMethod CollisionMathod, bool bNeedRootComponent);
+	
 	TObjectPtr<class ACY_CharacterBase> CreateCharacter(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot);
 
 	TObjectPtr<UCY_UnitBase> GetUnit(CY_Handle UnitHandle);
+	CY_Handle GetUnitHandle(TObjectPtr<UCY_UnitBase> UnitBase) const;
+	
 	TObjectPtr<ACY_CharacterBase> GetCharacterBase(CY_Handle UnitHandle);
 	CY_Handle GetIsValidBasePlayer();
 
 private:
 	CY_Handle MakeUnitHandle(const TObjectPtr<UCY_UnitBase> Unit) const;
 	
-	UPROPERTY()
-	TMap<int32, TObjectPtr<UCY_UnitBase>> Units;
+	TMap<CY_Handle, TObjectPtr<UCY_UnitBase>> Units;
 
 	float LodScale = 1.f;
 	bool bOutLineModeOn = true;

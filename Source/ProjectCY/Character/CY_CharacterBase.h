@@ -25,18 +25,21 @@ public:
 	
 	void SetLodScaleValues(float CullDistanceScale, float OutLineCullDistanceScale, bool bVisibleOutLine);
 	void SetPositionAndRotator(const FVector& Position, const FRotator& Rotator) const;
+
+	void SetActiveMovementComponent(bool bEnable);
 	
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetRootSkeletalMeshComponent() const { return RootSkeletalMeshComponent; }
+	FORCEINLINE FVector GetCurrentLocation() const { return GetActorLocation(); }
+
+	FORCEINLINE bool IsMovePathFindingPoints() const { return PathFindingPoints >= 0; }
+	void ClearPathFindPoints();
+	
 protected:
 	virtual void BeginPlay() override;
-
-public:
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 private:
-	void CreateCameraComponent();
 	void CreateTestSphere();
 
 	FORCEINLINE void SetName(const FString& Name) { CharacterName = Name; }
@@ -52,12 +55,6 @@ private:
 	
 	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCapsuleComponent> RootCapsuleComponent = nullptr;
-
-	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCameraComponent> PlayerDefaultCamera = nullptr;
-	
-	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class USpringArmComponent> SpringArmComponent = nullptr;
 	
 	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USphereComponent> TestSphere = nullptr;
@@ -76,7 +73,7 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UCY_AnimInstance> AnimInstance = nullptr;
-
-
+	
 	bool bInitialize = false;
+	int32 PathFindingPoints = 0;
 };

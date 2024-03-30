@@ -29,11 +29,29 @@ void ACY_Pawn_Input::Tick(float DeltaTime)
 void ACY_Pawn_Input::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	if(NewInputComponent != PlayerInputComponent)
+	{
+		NewInputComponent = PlayerInputComponent;
+		if(NewInputComponent == nullptr)
+		{
+			return;
+		}
+	}
+	UCY_InputManager* InputManager = gInputMng.GetInstance();
+	NewInputComponent->BindAxis("LEFT_AXIS_UPDOWN", InputManager, &UCY_InputManager::LeftAxisUpDown);
+	NewInputComponent->BindAxis("LEFT_AXIS_LEFTRIGHT", InputManager, &UCY_InputManager::LeftAxisLeftRight);
+
+	NewInputComponent->BindTouch(IE_Pressed, InputManager, &UCY_InputManager::OnTouchDown);
+	NewInputComponent->BindTouch(IE_Released, InputManager, &UCY_InputManager::OnTouchUp);
+	NewInputComponent->BindTouch(IE_Repeat, InputManager, &UCY_InputManager::OnTouchMove);
+
+	NewInputComponent->BindAction("AndroidBack", IE_Pressed, InputManager, &UCY_InputManager::AndroidBack);
+	NewInputComponent->BindAction("AndroidMenu", IE_Pressed, InputManager, &UCY_InputManager::AndroidMenu);
 }
 
 bool ACY_Pawn_Input::Create()
 {
-	if (InputComponent == nullptr) 
+	if (NewInputComponent == nullptr) 
 		return false;
 	
 	const FKey _Key = EKeys::AnyKey;
@@ -46,7 +64,7 @@ bool ACY_Pawn_Input::Create()
 	{
 		gInputMng.GetBindAllKeysDelegate().ExecuteIfBound(Key, true);
 	});
-	InputComponent->KeyBindings.Add(KeyBindPressed);
+	NewInputComponent->KeyBindings.Add(KeyBindPressed);
 
 	// released
 	FInputKeyBinding KeyBindReleased(FInputChord(_Key, false, false, false, false), EInputEvent::IE_Released);
@@ -57,7 +75,7 @@ bool ACY_Pawn_Input::Create()
 		gInputMng.GetBindAllKeysDelegate().ExecuteIfBound(Key, false);
 	});
 	
-	InputComponent->KeyBindings.Add(KeyBindReleased);
+	NewInputComponent->KeyBindings.Add(KeyBindReleased);
 	bIsCreated = true;
 	return true;
 }
@@ -65,6 +83,6 @@ bool ACY_Pawn_Input::Create()
 void ACY_Pawn_Input::Destroy()
 {
 	bIsCreated = false;
-	InputComponent = nullptr;
+	NewInputComponent = nullptr;
 }
 

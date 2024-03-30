@@ -20,6 +20,9 @@ public class ProjectCY : ModuleRules
         PrivateIncludePaths.Add("ProjectCY/Table");
         PrivateIncludePaths.Add("ProjectCY/Table/Mapper");
         PrivateIncludePaths.Add("ProjectCY/Actor");
+        PrivateIncludePaths.Add("ProjectCY/Actor/AnimInstance");
+        PrivateIncludePaths.Add("ProjectCY/Actor/Camera");
+        PrivateIncludePaths.Add("ProjectCY/Actor/Components");
         PrivateIncludePaths.Add("ProjectCY/Actor/TelePort");
         PrivateIncludePaths.Add("ProjectCY/Unit");
         PrivateIncludePaths.Add("ProjectCY/Generic");

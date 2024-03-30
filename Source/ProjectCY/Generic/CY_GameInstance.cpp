@@ -4,6 +4,7 @@
 #include "CY_GameInstance.h"
 
 #include "CY_BasicGameUtility.h"
+#include "CY_CameraManager.h"
 #include "CY_Define.h"
 #include "CY_SingletonManager.h"
 #include "CY_SceneTitle.h"
@@ -198,7 +199,8 @@ bool UCY_GameInstance::RegisterState()
 	}
 
 	gSceneMng.RegisterScenes();
-
+	gCameraMng.RegisterCameras();
+	
 	return true;
 }
 

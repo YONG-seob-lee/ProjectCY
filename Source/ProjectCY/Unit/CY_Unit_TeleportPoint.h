@@ -15,7 +15,6 @@ class PROJECTCY_API UCY_Unit_TeleportPoint : public UCY_UnitBase
 {
 	GENERATED_BODY()
 public:
-	FORCEINLINE TObjectPtr<ACY_CharacterBase> GetCharacterActor() const { return CharacterBase.Get(); }
 	
 private:
 	TWeakObjectPtr<ACY_CharacterBase> CharacterBase = nullptr;

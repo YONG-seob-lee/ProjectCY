@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_Define.h"
 #include "CY_SceneBase.h"
 #include "CY_Scene_PalWorld.generated.h"
 
@@ -31,6 +32,8 @@ private:
 
 	TWeakObjectPtr<class UCY_BasePlayer> Player;
 
+	CY_Handle NewPlayerHandle = InvalidUnitHandle;
+	
 	UPROPERTY()
 	FVector PlayerDefaultPosition = FVector::ZeroVector;
 

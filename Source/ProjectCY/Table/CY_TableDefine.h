@@ -24,6 +24,8 @@ enum class ECY_TableDataType : uint8
 	BasePath_Directory				UMETA(DisplayName = "BasePath_Directory"),
 	BasePath_BP_File				UMETA(DisplayName = "BasePath_BP_File"),
 	BasePath_Level_File				UMETA(DisplayName = "BasePath_Level_File"),
+
+	Camera							UMETA(DisplayName = "Camera"),
 };
 
 namespace CommonContents

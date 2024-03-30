@@ -12,6 +12,7 @@
 #include "CY_TableMapper.h"
 #include "CY_Mapper_PalCharacter.h"
 #include "CY_Define.h"
+#include "CY_Mapper_Camera.h"
 #include "CY_Mapper_Common.h"
 #include "CY_Mapper_Resource_Unit.h"
 #include "CY_Mapper_Resource_Widget.h"
@@ -206,9 +207,11 @@ void UCY_TableManager::MakeTableStructData()
 	CreateTableData(ECY_TableDataType::BasePath_BP_File, "/Game/TableData/BasePath_BP_File.BasePath_BP_File");
 	CreateTableData(ECY_TableDataType::BasePath_Level_File, "/Game/TableData/BasePath_Level_File.BasePath_Level_File");
 
-	CreateTableData(ECY_TableDataType::Pal_Character, "/Game/TableData/Pal_Character.Pal_Character", UCY_Mapper_PalCharacter::StaticClass());
 	CreateTableData(ECY_TableDataType::Resource_Widget, "/Game/TableData/Resource_Widget.Resource_Widget", UCY_Mapper_Resource_Widget::StaticClass());
 	CreateTableData(ECY_TableDataType::Resource_Unit, "/Game/TableData/Resource_Unit.Resource_Unit", UCY_Mapper_Resource_Unit::StaticClass());
+	
+	CreateTableData(ECY_TableDataType::Camera, "/Game/TableData/Camera.Camera", UCY_Mapper_Camera::StaticClass());
+	CreateTableData(ECY_TableDataType::Pal_Character, "/Game/TableData/Pal_Character.Pal_Character", UCY_Mapper_PalCharacter::StaticClass());
 }
 
 void UCY_TableManager::LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData)

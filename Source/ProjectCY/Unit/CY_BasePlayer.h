@@ -15,6 +15,8 @@ class PROJECTCY_API UCY_BasePlayer : public UCY_UnitBase
 public:
 	virtual void Initialize() override;
 	virtual void Finalize() override;
+	virtual bool CreateUnit(int32 UnitTableId, const FVector& Pos, const FRotator& Rot) override;
+	virtual void DestroyUnit() override;
 
 	bool CreatePlayerStateMachine();
 	
@@ -23,11 +25,11 @@ public:
 	void SetPositionAndRotator(const FVector& Position, const FRotator& Rotator) const;
 	
 	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
-	FORCEINLINE TObjectPtr<class ACY_CharacterBase> GetCharacterActor() const { return CharacterActor.Get(); }
 
 	void SetActorEnableCollision(bool bUnitEnableCollision) const;
 	void ClearComponentOverlaps() const;
-
+	
+	void SetMoveSpeed(float MoveSpeed);
 protected:
 
 	bool bSelfPlayer = false;
@@ -37,5 +39,4 @@ private:
 	TObjectPtr<class UCY_StateMachine> PlayerStateMachine = nullptr;
 	
 	CY_Handle UnitHandle = InvalidUnitHandle;
-	TWeakObjectPtr<ACY_CharacterBase> CharacterActor = nullptr;
 };

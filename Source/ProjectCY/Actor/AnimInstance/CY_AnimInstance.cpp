@@ -12,3 +12,14 @@ void UCY_AnimInstance::Finalize()
 {
 	MovingSpeed = 0.f;
 }
+
+void UCY_AnimInstance::SetMoveSpeed(float MoveSpeed)
+{
+	if(FMath::IsNearlyZero(MoveSpeed) == true && FMath::IsNearlyZero(PreviousMovingSpeed) == false)
+	{
+		MovingEndSpeed = PreviousMovingSpeed;
+	}
+
+	PreviousMovingSpeed = MovingSpeed;
+	MovingSpeed = MoveSpeed;
+}
