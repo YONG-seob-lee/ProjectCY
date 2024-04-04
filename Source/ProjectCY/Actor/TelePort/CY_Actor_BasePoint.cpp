@@ -70,7 +70,7 @@ void ACY_Actor_BasePoint::BeginPlay()
 		return;
 	}
 	
-	SpawnBasePoint();
+	//SpawnBasePoint();
 }
 
 TObjectPtr<AActor> ACY_Actor_BasePoint::SpawnBasePoint()

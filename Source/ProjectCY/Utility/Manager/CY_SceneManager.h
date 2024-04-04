@@ -74,7 +74,7 @@ private:
 	TObjectPtr<class ACY_LevelLogicBase> SceneLogic = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<class UBehaviorTree> SceneBehaviorTree = nullptr;
+	TObjectPtr<UBehaviorTree> SceneBehaviorTree = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<class ACY_SceneBT> CustomSceneBT = nullptr;

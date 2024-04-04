@@ -17,7 +17,7 @@ class PROJECTCY_API UCY_StateMachine : public UObject
 public:
 	void Create();
 	void Destroy();
-	void Tick(float _fDeltaTime);
+	void Tick(float DeltaTime);
 
 	void RegistState(int8 Index, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType, UObject* Outer = nullptr);
 	void UnRegistStates();

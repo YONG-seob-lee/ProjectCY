@@ -87,6 +87,7 @@ void UCY_Scene_PalWorld::CreatePlayer()
 		if(const TObjectPtr<ACY_CharacterBase> Character = Player->GetCharacterBase())
 		{
 			Character->GetRootComponent()->ComponentTags.Emplace(FName("PalWorld.Player"));
+			Character->SetRotator(FRotator(0.f, 90.f, 0.f));
 		}
 
 		UCY_BasicGameUtility::AssignUnitHandle(gUnitMng.GetUnitHandle(NewPlayer));

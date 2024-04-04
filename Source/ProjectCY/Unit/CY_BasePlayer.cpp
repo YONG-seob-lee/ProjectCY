@@ -4,12 +4,13 @@
 #include "CY_BasePlayer.h"
 
 #include "CY_AnimInstance.h"
+#include "CY_BasicGameUtility.h"
 #include "CY_StateBase.h"
 #include "CY_StateMachine.h"
-#include "CY_State_PlayerMovement.h"
 #include "CY_UnitManager.h"
 #include "Character/CY_CharacterBase.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "UnitState/CY_State_PlayerMove.h"
+#include "UnitState/CY_State_PlayerMovement.h"
 
 
 void UCY_BasePlayer::Initialize()
@@ -19,12 +20,26 @@ void UCY_BasePlayer::Initialize()
 
 void UCY_BasePlayer::Finalize()
 {
+	PlayerStateMachine->Destroy();
+	PlayerStateMachine->RemoveFromRoot();
+	PlayerStateMachine = nullptr;
+	
 	Super::Finalize();
+}
+
+void UCY_BasePlayer::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if(PlayerStateMachine)
+	{
+		PlayerStateMachine->Tick(DeltaTime);
+	}
 }
 
 bool UCY_BasePlayer::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRotator& Rot)
 {
-	UnitHandle = UnitTableId;
+	SetUnitHandle(UnitTableId);
 	if(Super::CreateUnit(UnitTableId, Pos, Rot) == false)
 	{
 		return false;
@@ -34,7 +49,12 @@ bool UCY_BasePlayer::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRo
 	{
 		AddActionState(ECY_UnitActionState::None, TEXT("None"), UCY_StateBase::StaticClass());
 		AddActionState(ECY_UnitActionState::Player_Movement, TEXT("Player_Movement"), UCY_State_PlayerMovement::StaticClass());
+		AddActionState(ECY_UnitActionState::Player_Move, TEXT("Player_Move"), UCY_State_PlayerMove::StaticClass());
 	}
+
+	ChangeActionState(ECY_UnitActionState::Player_Move);
+
+	CreatePlayerStateMachine();
 
 	if(CharacterBase.IsValid())
 	{
@@ -46,13 +66,13 @@ bool UCY_BasePlayer::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRo
 
 void UCY_BasePlayer::DestroyUnit()
 {
-	UnitHandle = InvalidUnitHandle;
+	SetUnitHandle(InvalidUnitHandle);
 	Super::DestroyUnit();
 }
 
 bool UCY_BasePlayer::CreatePlayerStateMachine()
 {
-	if(UnitHandle == InvalidUnitHandle)
+	if(GetUnitHandle() == InvalidUnitHandle)
 	{
 		return false;
 	}
@@ -88,7 +108,7 @@ void UCY_BasePlayer::SetPositionAndRotator(const FVector& Position, const FRotat
 void UCY_BasePlayer::SetActorEnableCollision(bool bUnitEnableCollision) const
 {
 	const TObjectPtr<ACY_CharacterBase> Character = GetCharacterBase();
-	if (UnitHandle != InvalidUnitHandle && IsValid(Character))
+	if (GetUnitHandle() != InvalidUnitHandle && IsValid(Character))
 	{
 		Character->SetActorEnableCollision(bUnitEnableCollision);
 	}
@@ -97,17 +117,24 @@ void UCY_BasePlayer::SetActorEnableCollision(bool bUnitEnableCollision) const
 void UCY_BasePlayer::ClearComponentOverlaps() const
 {
 	const TObjectPtr<ACY_CharacterBase> Character = GetCharacterBase();
-	if (UnitHandle != InvalidUnitHandle && IsValid(Character))
+	if (GetUnitHandle() != InvalidUnitHandle && IsValid(Character))
 	{
 		Character->ClearComponentOverlaps();
 		Character->UpdateOverlaps();
 	}
 }
 
-void UCY_BasePlayer::SetMoveSpeed(float MoveSpeed)
+void UCY_BasePlayer::SetMoveSpeed(float MoveSpeed) const
 {
 	if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
 	{
 		AnimInstance->SetMoveSpeed(MoveSpeed);
 	}
+}
+
+void UCY_BasePlayer::ChangeActionState(ECY_UnitActionState ActionType) const
+{
+	UCY_BasicGameUtility::FlushPressedKeys();
+	
+	Super::ChangeActionState(ActionType);
 }

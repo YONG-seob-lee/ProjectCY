@@ -10,6 +10,10 @@ ACY_Pawn_Input::ACY_Pawn_Input()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PrePhysics;
+
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	AIControllerClass = APlayerController::StaticClass();
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +44,8 @@ void ACY_Pawn_Input::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	UCY_InputManager* InputManager = gInputMng.GetInstance();
 	NewInputComponent->BindAxis("LEFT_AXIS_UPDOWN", InputManager, &UCY_InputManager::LeftAxisUpDown);
 	NewInputComponent->BindAxis("LEFT_AXIS_LEFTRIGHT", InputManager, &UCY_InputManager::LeftAxisLeftRight);
+	NewInputComponent->BindAxis("RIGHT_AXIS_UPDOWN", InputManager, &UCY_InputManager::RightAxisUpDown);
+	NewInputComponent->BindAxis("RIGHT_AXIS_LEFTRIGHT", InputManager, &UCY_InputManager::RightAxisLeftRight);
 
 	NewInputComponent->BindTouch(IE_Pressed, InputManager, &UCY_InputManager::OnTouchDown);
 	NewInputComponent->BindTouch(IE_Released, InputManager, &UCY_InputManager::OnTouchUp);

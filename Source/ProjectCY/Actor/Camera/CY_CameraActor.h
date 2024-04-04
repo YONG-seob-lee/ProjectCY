@@ -24,20 +24,32 @@ public:
 	FORCEINLINE const FTransform& GetTransform() const { return CameraComponent->GetComponentTransform(); }
 	FORCEINLINE void SetCameraAspectRatio(float AspectRatio) const { CameraComponent->SetAspectRatio(AspectRatio); }
 
+	void InitializeInput(const FString& _CameraName);
+	
 	bool Create(const FString& _CameraName, const FVector& Position, const FVector& TargetPosition, float Fov, float AspectRatio, bool bPerspective = true);
 	void Destroy();
 	void PreProcess(float DeltaSeconds);
 	void Active(float BlendTime = -1.f);
+
 	
 	virtual void Tick(float DeltaTime) override;
 
 	FORCEINLINE void SetFieldOfView(float FieldOfView) const { CameraComponent->SetFieldOfView(FieldOfView); }
 	FORCEINLINE void SetSpringOffset(const FVector& TargetOffset) const { SpringArmComponent->SocketOffset = TargetOffset;  SpringArmComponent->TargetOffset = TargetOffset; }
-	FORCEINLINE void SetCameraDistance(float Distance) { MaxIntervalDistance = Distance; }
-	void SetTargetPosition(const FVector& CameraVector, const FVector& TargetPosition, float CameraRoll = 0.f);
-	
+	FORCEINLINE void SetCameraDistance(float Distance) const { SpringArmComponent->TargetArmLength = Distance; }
+	void SetTargetPosition(const FVector& TargetPosition);
+	void SetTargetRotator(const FRotator& TargetRotator);
+	void RotateCamera();
+
 protected:
 	virtual void BeginPlay() override;
+
+	void RegistAxis();
+
+	void CameraMoveProcess();
+	
+	void OnAxisUpDown(float Value);
+	void OnAxisLeftRight(float Value);
 
 	UPROPERTY(Category = ACY_CameraActor, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USceneComponent> SceneComponent = nullptr;
@@ -56,8 +68,10 @@ protected:
 
 private:
 	void SetAspectRatio(float AspectRatio) const;
-	
 	void SetTargetArmLength(float IntervalDistance) const;
 	
 	CY_Handle CameraHandle = InvalidUnitHandle;
+	FRotator CachedMovedCameraRotator = FRotator::ZeroRotator;
+	FRotator FirstCameraRotator = FRotator::ZeroRotator;
+	FVector2d CameraJoyStickDistance = FVector2d::ZeroVector;
 };

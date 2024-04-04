@@ -13,11 +13,15 @@ void UCY_StateMachine::Destroy()
 {
 }
 
-void UCY_StateMachine::Tick(float _fDeltaTime)
+void UCY_StateMachine::Tick(float DeltaTime)
 {
+	for(const auto& State : EntireState)
+	{
+		State.Value->Tick(DeltaTime);
+	}
 }
 
-void UCY_StateMachine::RegistState(int8 Index, const FName& Name, TSubclassOf<class UCY_StateBase> SceneType, UObject* Outer)
+void UCY_StateMachine::RegistState(int8 Index, const FName& Name, TSubclassOf<UCY_StateBase> SceneType, UObject* Outer)
 {
 	if (EntireState.Find(Index) != nullptr)
 	{
@@ -25,7 +29,7 @@ void UCY_StateMachine::RegistState(int8 Index, const FName& Name, TSubclassOf<cl
 		return;
 	}
 
-	TObjectPtr<UObject> CustomOuter = Outer != nullptr ? Outer : this;
+	const TObjectPtr<UObject> CustomOuter = Outer != nullptr ? Outer : this;
 	TObjectPtr<UCY_StateBase> State = CY_NewObject<UCY_StateBase>(CustomOuter, SceneType);
 
 	State->AddToRoot();

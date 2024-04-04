@@ -39,6 +39,9 @@ private:
 public:
 	void LeftAxisUpDown(float Value);
 	void LeftAxisLeftRight(float Value);
+	void RightAxisUpDown(float Value);
+	void RightAxisLeftRight(float Value);
+	
 	void OnTouchDown(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchUp(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchMove(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -46,8 +49,11 @@ public:
 	void AndroidMenu();
 
 private:
-	FInputAxisBinding UpDownEvent = FInputAxisBinding(TEXT("UpDown"));
-	FInputAxisBinding LeftRightEvent = FInputAxisBinding(TEXT("LeftRight"));
+	FInputAxisBinding CharacterMove_UpDownEvent = FInputAxisBinding(TEXT("CharacterMove_UpDown"));
+	FInputAxisBinding CharacterMove_LeftRightEvent = FInputAxisBinding(TEXT("CharacterMove_LeftRight"));
+	FInputAxisBinding CameraMove_UpDownEvent = FInputAxisBinding(TEXT("CameraMove_UpDown"));
+	FInputAxisBinding CameraMove_LeftRightEvent = FInputAxisBinding(TEXT("CameraMove_LeftRight"));
+	
 	FInputTouchBinding TouchDownEvent = FInputTouchBinding(IE_Pressed);
 	FInputTouchBinding TouchUpEvent = FInputTouchBinding(IE_Released);
 	FInputTouchBinding TouchMoveEvent = FInputTouchBinding(IE_Repeat);

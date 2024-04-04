@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
 #include "CY_UnitDefine.generated.h"
 
 /**
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FCY_UnitActorTickDelegate, float, TObjectPtr<class UCY_UnitBase>);
+DECLARE_MULTICAST_DELEGATE_OneParam(FCY_UnitActorTickDelegate, TObjectPtr<class UCY_UnitBase>);
 
 USTRUCT(BlueprintType)
 struct FCY_CharacterLodValues
@@ -52,4 +51,5 @@ enum class ECY_UnitActionState : uint8
 {
 	None = 0			UMETA(DisplayName = "None"),
 	Player_Movement		UMETA(DisplayName = "Player_Movement"),
+	Player_Move			UMETA(DisplayName = "Player_Move"),
 };

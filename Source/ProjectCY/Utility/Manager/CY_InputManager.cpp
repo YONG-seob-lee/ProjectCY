@@ -5,6 +5,7 @@
 
 #include "CY_BasicGameUtility.h"
 #include "CY_Pawn_Input.h"
+#include "CY_Utility.h"
 
 void UCY_InputManager::Initialize()
 {
@@ -23,13 +24,27 @@ void UCY_InputManager::Tick(float _DeltaTime)
 
 void UCY_InputManager::RegistAxis(ECY_Axis_Type AxisType, ECY_Action_Type ActionType, const FInputAxisUnifiedDelegate& Event)
 {
-	if(ActionType == ECY_Action_Type::ActionUpDown)
+	if(AxisType == ECY_Axis_Type::Left)
 	{
-		UpDownEvent.AxisDelegate = Event;
+		if(ActionType == ECY_Action_Type::ActionUpDown)
+		{
+			CharacterMove_UpDownEvent.AxisDelegate = Event;
+		}
+		else if(ActionType == ECY_Action_Type::ActionLeftRight)
+		{
+			CharacterMove_LeftRightEvent.AxisDelegate = Event;
+		}	
 	}
-	else if(ActionType == ECY_Action_Type::ActionLeftRight)
+	else if(AxisType == ECY_Axis_Type::Right)
 	{
-		LeftRightEvent.AxisDelegate = Event;
+		if(ActionType == ECY_Action_Type::ActionUpDown)
+		{
+			CameraMove_UpDownEvent.AxisDelegate = Event;
+		}
+		else if(ActionType == ECY_Action_Type::ActionLeftRight)
+		{
+			CameraMove_LeftRightEvent.AxisDelegate = Event;
+		}
 	}
 }
 
@@ -68,7 +83,7 @@ void UCY_InputManager::CreateInputPawn()
 		return;
 	}
 
-	InputPawn = Cast<ACY_Pawn_Input>(UCY_BasicGameUtility::SpawnBlueprintActor(TEXT("InputPawn"), FVector::ZeroVector, FRotator::ZeroRotator));
+	InputPawn = Cast<ACY_Pawn_Input>(CY_Utility::SpawnActor(ACY_Pawn_Input::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, TEXT("InputPawn"), ESpawnActorCollisionHandlingMethod::AlwaysSpawn, true));
 	if(InputPawn)
 	{
 		InputPawn->Create();
@@ -94,12 +109,22 @@ void UCY_InputManager::DestroyInputPawn()
 
 void UCY_InputManager::LeftAxisUpDown(float Value)
 {
-	UpDownEvent.AxisDelegate.Execute(Value);
+	CharacterMove_UpDownEvent.AxisDelegate.Execute(Value);
 }
 
 void UCY_InputManager::LeftAxisLeftRight(float Value)
 {
-	LeftRightEvent.AxisDelegate.Execute(Value);
+	CharacterMove_LeftRightEvent.AxisDelegate.Execute(Value);
+}
+
+void UCY_InputManager::RightAxisUpDown(float Value)
+{
+	CameraMove_UpDownEvent.AxisDelegate.Execute(Value);
+}
+
+void UCY_InputManager::RightAxisLeftRight(float Value)
+{
+	CameraMove_LeftRightEvent.AxisDelegate.Execute(Value);
 }
 
 void UCY_InputManager::OnTouchDown(const ETouchIndex::Type FingerIndex, const FVector Location)

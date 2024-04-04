@@ -22,7 +22,12 @@ void UCY_UnitBase::Finalize()
 
 void UCY_UnitBase::Tick(float DeltaTime)
 {
-	OnActorTickDelegate.Broadcast(DeltaTime, this);
+	OnActorTickDelegate.Broadcast(this);
+
+	if(ActionStateMachine)
+	{
+		ActionStateMachine->Tick(DeltaTime);
+	}
 }
 
 bool UCY_UnitBase::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRotator& Rot)
@@ -38,6 +43,12 @@ bool UCY_UnitBase::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRota
 	if(const TObjectPtr<ACY_CharacterBase> NewCharacter = gUnitMng.CreateCharacter(BPPath, Pos, Rot))
 	{
 		CharacterBase = NewCharacter;
+
+		if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
+		{
+			AnimInstance->SetMoveSpeedInfo(ResourceUnitData->WalkSpeed, ResourceUnitData->RunSpeed);
+			AnimInstance->InitializeAnimation();
+		}
 	}
 	
 	return true;
@@ -102,6 +113,16 @@ void UCY_UnitBase::AddActionState(ECY_UnitActionState State, const FName& Name, 
 	}
 
 	ActionStateMachine->RegistState(static_cast<uint8>(State), Name, ClassType, this);
+}
+
+void UCY_UnitBase::ChangeActionState(ECY_UnitActionState ActionType) const
+{
+	if(ActionStateMachine == nullptr)
+	{
+		return;
+	}
+	
+	ActionStateMachine->SetState(static_cast<uint8>(ActionType));
 }
 
 TObjectPtr<UCY_AnimInstance> UCY_UnitBase::GetAnimInstance() const

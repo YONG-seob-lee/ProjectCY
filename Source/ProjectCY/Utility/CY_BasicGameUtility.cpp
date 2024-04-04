@@ -20,7 +20,7 @@ void UCY_BasicGameUtility::Finalize()
 	GameInstance = nullptr;
 }
 
-void UCY_BasicGameUtility::ShowMessageOnScreen(const FString& Message, float ElapsedTime /* = 3.f */, FColor DisplayColor /* = FColor::Green */)
+void UCY_BasicGameUtility::ShowMessageOnScreen(const FString& Message, bool bNewerOnTop /* = true */, float ElapsedTime /* = 3.f */, FColor DisplayColor /* = FColor::Green */)
 {
 	GEngine->AddOnScreenDebugMessage(-1, ElapsedTime, DisplayColor, Message);
 }
@@ -113,4 +113,15 @@ void UCY_BasicGameUtility::AssignUnitHandle(CY_Handle _UnitHandle)
 float UCY_BasicGameUtility::GetAspectRatio()
 {
 	return GetGameViewport()->GetDesiredAspectRatio();
+}
+
+void UCY_BasicGameUtility::FlushPressedKeys()
+{
+	if(GetGameWorld())
+	{
+		if(const TObjectPtr<APlayerController> PlayerController = GetPlayerController())
+		{
+			PlayerController->FlushPressedKeys();
+		}
+	}
 }

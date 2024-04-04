@@ -9,6 +9,15 @@
  * 
  */
 
+namespace CameraSubType
+{
+	const FString Main = TEXT("Main");
+	const FString Back = TEXT("Back"); 
+	const FString Drone_01 = TEXT("Drone_01");
+	const FString Drone_02 = TEXT("Drone_02");
+	const FString Drone_03 = TEXT("Drone_03");
+}
+
 USTRUCT()
 struct FCY_CameraData
 {
@@ -16,14 +25,10 @@ struct FCY_CameraData
 
 	FCY_CameraData() {}
 	FCY_CameraData(float _FieldOfView, float _Distance, const FRotator& _Rotate, const FVector& _TargetOffset)
-		: FieldOfView(_FieldOfView), Distance(_Distance), Rotate(_Rotate), TargetOffset(_TargetOffset)
-    {
-    	ComputeRotateVector = Rotate.RotateVector(FVector(0.f, 1.f, 0.f) * Distance);
-    }
-	
+		: FieldOfView(_FieldOfView), Distance(_Distance), Rotate(_Rotate), TargetOffset(_TargetOffset) {}
+
 	float FieldOfView = 0.f;
 	float Distance = 0.f;
 	FRotator Rotate = FRotator::ZeroRotator;
 	FVector TargetOffset = FVector::ZeroVector;
-	FVector ComputeRotateVector = FVector::ZeroVector; 
 };

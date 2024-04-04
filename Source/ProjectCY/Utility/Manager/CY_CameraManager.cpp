@@ -12,14 +12,14 @@
 
 void UCY_CameraManager::BuiltInInitialize()
 {
-	if(CameraState)
+	if(CameraStateMachine)
 	{
 		return;
 	}
 	
-	CameraState = CY_NewObject<UCY_StateMachine>(this, UCY_StateMachine::StaticClass());
-	CameraState->Create();
-	CameraState->AddToRoot();
+	CameraStateMachine = CY_NewObject<UCY_StateMachine>(this, UCY_StateMachine::StaticClass());
+	CameraStateMachine->Create();
+	CameraStateMachine->AddToRoot();
 }
 
 void UCY_CameraManager::Initialize()
@@ -34,19 +34,19 @@ void UCY_CameraManager::Finalize()
 
 void UCY_CameraManager::BuiltInFinalize()
 {
-	if(CameraState)
+	if(CameraStateMachine)
 	{
-		CameraState->Destroy();
-		CameraState->RemoveFromRoot();
-		CameraState = nullptr;
+		CameraStateMachine->Destroy();
+		CameraStateMachine->RemoveFromRoot();
+		CameraStateMachine = nullptr;
 	}	
 }
 
 void UCY_CameraManager::Tick(float _DeltaTime)
 {
-	if(CameraState)
+	if(CameraStateMachine)
 	{
-		CameraState->Tick(_DeltaTime);
+		CameraStateMachine->Tick(_DeltaTime);
 	}
 }
 
@@ -65,11 +65,47 @@ void UCY_CameraManager::DestroyAllCameras()
 	CameraActors.Empty();
 }
 
+TObjectPtr<ACY_CameraActor> UCY_CameraManager::GetCameraActor(const FString& CameraType, const FString& CameraSubType)
+{
+	if(TMap<FString, TObjectPtr<ACY_CameraActor>>* TargetCameraActors = CameraActors.Find(CameraType))
+	{
+		if(const TObjectPtr<ACY_CameraActor>* CameraActor = TargetCameraActors->Find(CameraSubType))
+		{
+			return *CameraActor;
+		}
+	}
+
+	return nullptr;
+}
+
+TObjectPtr<ACY_CameraActor> UCY_CameraManager::GetCameraActor(const TTuple<FString, FString>& CameraType)
+{
+	if(TMap<FString, TObjectPtr<ACY_CameraActor>>* TargetCameraActors = CameraActors.Find(CameraType.Key))
+	{
+		if(const TObjectPtr<ACY_CameraActor>* CameraActor = TargetCameraActors->Find(CameraType.Value))
+		{
+			return *CameraActor;
+		}
+	}
+
+	return nullptr;
+}
+
+TObjectPtr<ACY_CameraActor> UCY_CameraManager::GetCurrentActiveCameraActor()
+{
+	if(const TObjectPtr<ACY_CameraActor> CurrentCameraActor = GetCameraActor(GetCurrentActiveCameraType()))
+	{
+		return CurrentCameraActor;
+	}
+
+	return nullptr;
+}
+
 void UCY_CameraManager::ChangeCamera(uint8 Index, bool bInstant /* = true */) const
 {
-	if(CameraState)
+	if(CameraStateMachine)
 	{
-		CameraState->SetState(Index, bInstant);
+		CameraStateMachine->SetState(Index, bInstant);
 	}
 }
 
@@ -101,7 +137,6 @@ TMap<FString, TObjectPtr<ACY_CameraActor>> UCY_CameraManager::CreateCameraActor(
 		{
 			return {};
 		}
-	
 #if WITH_EDITOR
 		CameraActor->SetActorLabel(CameraActor->GetName());
 #endif
@@ -147,14 +182,14 @@ TObjectPtr<ACY_CameraActor> UCY_CameraManager::ActiveCamera(ECY_GameCameraType _
 
 TObjectPtr<UCY_StateBase> UCY_CameraManager::GetCurrentState() const
 {
-	return CameraState ? CameraState->GetCurrentState() : nullptr;
+	return CameraStateMachine ? CameraStateMachine->GetCurrentState() : nullptr;
 }
 
 void UCY_CameraManager::RegistCameraState(uint8 Index, const FName& Name, TSubclassOf<UCY_StateBase> SceneType)
 {
-	if(CameraState)
+	if(CameraStateMachine)
 	{
-		CameraState->RegistState(Index, Name, SceneType);
+		CameraStateMachine->RegistState(Index, Name, SceneType);
 	}
 }
 

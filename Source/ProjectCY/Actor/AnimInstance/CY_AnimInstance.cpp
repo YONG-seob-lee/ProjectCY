@@ -5,7 +5,11 @@
 
 void UCY_AnimInstance::Initialize()
 {
-	MovingSpeed = 0.f;	
+	MovingSpeed = 0.f;
+	MaxWalkSpeed = 0.f;
+	MaxRunSpeed = 0.f;
+	PreviousMovingSpeed = 0.f;
+	MovingEndSpeed = 0.f;
 }
 
 void UCY_AnimInstance::Finalize()

@@ -27,9 +27,7 @@ public:
 	virtual void Exit() override;
 
 private:
-	void ActorTickFunc(float DeltaTime, TObjectPtr<class UCY_UnitBase> Unit);
-	
-	void ComputeCameraData(const FVector& UnitVector) const;
+	void ActorTickFunc(TObjectPtr<class UCY_UnitBase> Unit);
 	
 	TMap<FString, TObjectPtr<class ACY_CameraActor>> Cameras;
 	TObjectPtr<ACY_CameraActor> MainCamera = nullptr;
@@ -38,4 +36,6 @@ private:
 	TWeakObjectPtr<UCapsuleComponent> CameraCapsuleComponent;
 
 	FDelegateHandle ActorTickEvent;
+
+	bool bChanged = false;
 };

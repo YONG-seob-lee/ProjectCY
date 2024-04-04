@@ -31,7 +31,7 @@ public:
 	
 	FORCEINLINE TObjectPtr<struct FResource_Unit> GetResourceUnitData() const { return ResourceUnitData; }
 
-	TObjectPtr<class UCY_AnimInstance> GetAnimInstance() const;
+	TObjectPtr<UCY_AnimInstance> GetAnimInstance() const;
 	
 	FORCEINLINE TObjectPtr<ACY_CharacterBase> GetCharacterBase() const { return CharacterBase.Get(); }
 	FORCEINLINE FVector GetCharacterLocation() const { return CharacterBase->GetCurrentLocation(); }
@@ -39,11 +39,14 @@ public:
 	float GetMovingSpeed() const;
 	
 	FCY_UnitActorTickDelegate OnActorTickDelegate;
+
 	
 protected:
 	bool CreateActionStateMachine();
 	void DestroyActionStateMachine();
 	void AddActionState(ECY_UnitActionState State, const FName& Name, TSubclassOf<class UCY_StateBase> ClassType);
+
+	virtual void ChangeActionState(ECY_UnitActionState ActionType) const;
 	
 	TWeakObjectPtr<ACY_CharacterBase> CharacterBase = nullptr;
 private:

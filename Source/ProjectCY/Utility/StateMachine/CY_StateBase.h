@@ -18,6 +18,7 @@ public:
 	virtual void Initialize(uint8 Index, const FName& Name);
 	virtual void Finalize();
 
+	virtual void Tick(float DeltaTime) {}
 	UFUNCTION()
 	void OnBeginState();
 	UFUNCTION()
@@ -32,7 +33,6 @@ public:
 
 protected:
 	virtual void Begin() {}
-	virtual void Tick(float DeltaTime) {}
 	virtual void Exit() {}
 
 private:	

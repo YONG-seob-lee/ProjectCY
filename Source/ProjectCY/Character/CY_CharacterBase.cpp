@@ -5,12 +5,10 @@
 
 #include "AnimInstance/CY_AnimInstance.h"
 #include "Components/CY_MontageComponent.h"
-#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/CY_CollisionBoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 
 
 // Sets default values
@@ -44,18 +42,20 @@ ACY_CharacterBase::ACY_CharacterBase()
 		RootSkeletalMeshComponent->SetupAttachment(RootStaticMeshComponent);
 	}
 
+	bUseControllerRotationYaw = true;
+	bUseControllerRotationPitch = true;
+	bUseControllerRotationRoll = true;
+	
 	MovementComponent = GetCharacterMovement();
 	if(MovementComponent)
 	{
 		MovementComponent->bRunPhysicsWithNoController = true;
 		MovementComponent->SetIsReplicated(true);
-		MovementComponent->RotationRate = FRotator(0.f, 0.f, 360.f);
-		MovementComponent->bUseControllerDesiredRotation = true;
+		MovementComponent->RotationRate = FRotator(0.f, 360.f, 0.f);
 		MovementComponent->bOrientRotationToMovement = true;
 	}
 	
 	CreateTestSphere();
-	
 }
 
 bool ACY_CharacterBase::Create(const FString& LabelName)
@@ -100,17 +100,20 @@ void ACY_CharacterBase::Initialize()
 		MovementComponent->Deactivate();
 	}
 
-	// 몽타주 컴포넌트 추가
+	// Add Anim Instance
+	if(const TObjectPtr<UCY_AnimInstance> _AnimInstance = Cast<UCY_AnimInstance>(RootSkeletalMeshComponent->GetAnimInstance()))
+	{
+		AnimInstance = _AnimInstance;
+	}
+	
+	// Add Anim Montage
 	if(const TObjectPtr<UCY_MontageComponent> NewMontageComponent = FindComponentByClass<UCY_MontageComponent>())
 	{
 		MontageComponent = NewMontageComponent;
-		if(const TObjectPtr<UCY_AnimInstance> _AnimInstance = Cast<UCY_AnimInstance>(RootSkeletalMeshComponent->GetAnimInstance()))
-		{
-			MontageComponent->SetAnimInstance(_AnimInstance);
-		}
+		MontageComponent->SetAnimInstance(AnimInstance);
 	}
 
-	// 콜리전 박스 추가
+	// Add Collision Box
 	CollisionBoxComponent = FindComponentByClass<UCY_CollisionBoxComponent>();
 	if(CollisionBoxComponent)
 	{
@@ -139,14 +142,14 @@ void ACY_CharacterBase::Finalize()
 	}
 }
 
-TObjectPtr<UCY_AnimInstance> ACY_CharacterBase::GetAnimInstance() const
+TObjectPtr<UCY_AnimInstance> ACY_CharacterBase::GetAnimInstance()
 {
 	if(RootSkeletalMeshComponent == nullptr)
 	{
 		return nullptr;
 	}
 
-	return AnimInstance == nullptr ? Cast<UCY_AnimInstance>(RootSkeletalMeshComponent->GetAnimInstance()) : AnimInstance;
+	return AnimInstance ? AnimInstance : Cast<UCY_AnimInstance>(RootSkeletalMeshComponent->GetAnimInstance());
 }
 
 void ACY_CharacterBase::SetLodScaleValues(float CullDistanceScale, float OutLineCullDistanceScale, bool bVisibleOutLine)
@@ -167,11 +170,34 @@ void ACY_CharacterBase::SetPositionAndRotator(const FVector& Position, const FRo
 	}
 }
 
-void ACY_CharacterBase::SetActiveMovementComponent(bool bEnable)
+void ACY_CharacterBase::SetRotator(const FRotator& Rotator) const
+{
+	if(MovementComponent)
+	{
+		FHitResult Hit(1.f);
+		MovementComponent->SafeMoveUpdatedComponent(FVector::ZeroVector, Rotator, false, Hit);
+	}
+}
+
+void ACY_CharacterBase::SetActiveMovementComponent(bool bEnable) const
 {
 	if(MovementComponent)
 	{
 		MovementComponent->SetActive(bEnable);
+	}
+}
+
+void ACY_CharacterBase::MoveDirection(const FVector& Direction, float Scale /* = 1.f */, bool bForce /* = false */)
+{
+	if(MovementComponent)
+	{
+		//////														   /////
+		/// 부드럽게 회전하는 방법이 필요함 ( 어떻게 해야하는지 진짜 모르겠음 ) ///
+		/////														   /////
+		
+		//MovementComponent->AddInputVector(Direction * Scale, bForce);
+		AddMovementInput(Direction * Scale);
+		SetRotator(FRotationMatrix::MakeFromX(Direction).Rotator());
 	}
 }
 
@@ -188,7 +214,6 @@ void ACY_CharacterBase::ClearPathFindPoints()
 void ACY_CharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ACY_CharacterBase::Tick(float DeltaTime)

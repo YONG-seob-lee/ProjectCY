@@ -28,6 +28,12 @@ public:
 
 	void DestroyAllCameras();
 
+	FORCEINLINE TTuple<FString, FString> GetCurrentActiveCameraType() { return CurrentActiveCamera; }
+	TObjectPtr<class ACY_CameraActor> GetCameraActor(const FString& CameraType, const FString& CameraSubType);
+	TObjectPtr<ACY_CameraActor> GetCameraActor(const TTuple<FString, FString>& CameraType);
+
+	TObjectPtr<ACY_CameraActor> GetCurrentActiveCameraActor();
+
 	// step1. Activate Camera State
 	void ChangeCamera(uint8 Index, bool bInstant = true) const;
 
@@ -47,7 +53,7 @@ private:
 	void AddCameraActor(const FString& CameraType, const FString& CameraSubType, TObjectPtr<ACY_CameraActor> CameraActor);
 	
 	UPROPERTY()
-	TObjectPtr<class UCY_StateMachine> CameraState = nullptr;
+	TObjectPtr<class UCY_StateMachine> CameraStateMachine = nullptr;
 	
 	TMap<FString, TMap<FString, TObjectPtr<ACY_CameraActor>>> CameraActors;
 

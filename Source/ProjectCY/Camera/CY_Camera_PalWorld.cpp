@@ -11,22 +11,14 @@
 #include "CY_UnitManager.h"
 #include "Components/CapsuleComponent.h"
 
-namespace CameraSubType
-{
-	const FString Main = TEXT("Main");
-	const FString Back = TEXT("Back"); 
-	const FString Drone_01 = TEXT("Drone_01");
-	const FString Drone_02 = TEXT("Drone_02");
-	const FString Drone_03 = TEXT("Drone_03");
-}
-
 UCY_Camera_PalWorld::UCY_Camera_PalWorld()
 {
-	CameraData = FCY_CameraData(80.f, 50.f, FRotator(0.f, 0.f, 0.f), FVector(-300.f, -300.f, 40.f));
+	CameraData = FCY_CameraData(80.f, 90.f, FRotator(0.f, 0.f, 0.f), FVector(0.f, 0.f, 140.f));
 }
 
 UCY_Camera_PalWorld::~UCY_Camera_PalWorld()
 {
+	
 }
 
 void UCY_Camera_PalWorld::Initialize(uint8 Index, const FName& Name)
@@ -53,6 +45,8 @@ void UCY_Camera_PalWorld::Begin()
 		}
 
 		MainCamera = gCameraMng.ActiveCamera(ECY_GameCameraType::PalWorld, CameraSubType::Main);
+		MainCamera->InitializeInput(CameraSubType::Main);
+		
 		if(MainCamera != nullptr)
 		{
 			TArray<UActorComponent*> CapsuleComponents = MainCamera->GetComponentsByTag(UCapsuleComponent::StaticClass(), TEXT("CameraCollision"));
@@ -76,6 +70,7 @@ void UCY_Camera_PalWorld::Begin()
 		if(const TObjectPtr<UCY_UnitBase> UnitBase = gUnitMng.GetUnit(PlayerController->GetUnitHandle()))
 		{
 			ActorTickEvent = UnitBase->OnActorTickDelegate.AddUObject(this, &UCY_Camera_PalWorld::ActorTickFunc);
+			IsValid(UnitBase);
 		}
 	}
 	else
@@ -115,7 +110,7 @@ void UCY_Camera_PalWorld::Exit()
 	ActorTickEvent.Reset();
 }
 
-void UCY_Camera_PalWorld::ActorTickFunc(float DeltaTime, TObjectPtr<UCY_UnitBase> Unit)
+void UCY_Camera_PalWorld::ActorTickFunc(TObjectPtr<UCY_UnitBase> Unit)
 {
 	if(Unit == nullptr)
 	{
@@ -129,15 +124,17 @@ void UCY_Camera_PalWorld::ActorTickFunc(float DeltaTime, TObjectPtr<UCY_UnitBase
 		return;
 	}
 
-	ComputeCameraData(Unit->GetCharacterLocation());
-}
+	if(bChanged == false)
+	{
+		MainCamera->SetCameraAspectRatio(UCY_BasicGameUtility::GetAspectRatio());
+		MainCamera->SetFieldOfView(CameraData.FieldOfView);
+		MainCamera->SetSpringOffset(CameraData.TargetOffset);
+		MainCamera->SetCameraDistance(CameraData.TargetOffset.Size());
+		MainCamera->SetTargetRotator(Character->GetActorRotation());
+		
+		bChanged = true;
+	}
 
-void UCY_Camera_PalWorld::ComputeCameraData(const FVector& UnitVector) const
-{
-	MainCamera->SetCameraAspectRatio(UCY_BasicGameUtility::GetAspectRatio());
-	MainCamera->SetFieldOfView(CameraData.FieldOfView);
-	MainCamera->SetSpringOffset(CameraData.TargetOffset);
-	MainCamera->SetCameraDistance(CameraData.Distance);
-
-	MainCamera->SetTargetPosition(UnitVector - CameraData.ComputeRotateVector, UnitVector);
+	// Camera Step - 카메라의 위치 "UnitVector" 은 계속 따라다녀야하는데, 유닛의 방향은 알 필요가 없다. 하지만 최초 캐릭터와 카메라는 같은 방향을 바라보아야하기 때문에 딱 한번 맞춰주어야함
+	MainCamera->SetTargetPosition(Character->GetCurrentLocation());
 }
