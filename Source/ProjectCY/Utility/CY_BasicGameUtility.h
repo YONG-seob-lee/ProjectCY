@@ -19,6 +19,7 @@ class PROJECTCY_API UCY_BasicGameUtility : public UObject
 public:
 	void Initialize(TObjectPtr<UCY_GameInstance> _GameInstance);
 	void Finalize();
+	
 	static void ShowMessageOnScreen(const FString& Message, bool bNewerOnTop = true, float ElapsedTime = 3.f, FColor DisplayColor = FColor::Green);
 
 	static TObjectPtr<AActor> SpawnBlueprintActor(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,

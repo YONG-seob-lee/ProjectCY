@@ -5,12 +5,14 @@
 
 #include "CYPlayerSpawnPoint.h"
 #include "CY_Actor_TeleportPoint.h"
-#include "CY_GameInstance.h"
 #include "CY_UnitManager.h"
 #include "CY_BasePlayer.h"
 #include "CY_BasicGameUtility.h"
+#include "CY_BuiltInWidgetTool.h"
 #include "CY_CameraManager.h"
 #include "CY_SceneDefine.h"
+#include "CY_WidgetManager.h"
+#include "CY_Widget_Compass.h"
 #include "EngineUtils.h"
 #include "Character/CY_CharacterBase.h"
 
@@ -46,6 +48,13 @@ void UCY_Scene_PalWorld::Begin()
 		PlayerDefaultPosition = PlayerSpawnPoint->GetActorLocation();
 		PlayerDefaultRotator = PlayerSpawnPoint->GetActorRotation();
 	}
+
+	if(const TObjectPtr<UCY_Widget_Compass> CompassWidget = gWidgetMng.GetBuiltInWidgetTool()->GetCompassWidget())
+	{
+		CompassWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CompassWidget->Active();
+	}
+	
 }
 
 void UCY_Scene_PalWorld::Exit()

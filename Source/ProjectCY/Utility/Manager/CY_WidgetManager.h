@@ -49,6 +49,8 @@ private:
 	void RemoveExclusiveLayerWidget(TObjectPtr<UCY_Widget> Widget);
 
 	void LoadComplete(const FString& TableName, TObjectPtr<UObject> WidgetData);
+
+	void ProcessBuiltInCompass();
 	
 	UPROPERTY()
 	TObjectPtr<UCY_BuiltInWidgetTool> BuiltInTool = nullptr;

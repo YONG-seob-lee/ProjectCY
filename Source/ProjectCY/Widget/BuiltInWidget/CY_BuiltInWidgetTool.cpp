@@ -3,7 +3,10 @@
 
 #include "CY_BuiltInWidgetTool.h"
 
+#include "CY_CameraActor.h"
+#include "CY_CameraManager.h"
 #include "CY_WidgetManager.h"
+#include "CY_Widget_Compass.h"
 #include "CY_Widget_DialogScreenFader.h"
 #include "Input/CY_PreTouchProcessor.h"
 
@@ -16,6 +19,14 @@ void UCY_BuiltInWidgetTool::Initialize()
 		DialogScreenFader->AddToViewport(500);
 		DialogScreenFader->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	CompassWidget = Cast<UCY_Widget_Compass>(gWidgetMng.CreateWidgetNotManagingBySOP(UCY_Widget_Compass::GetWidgetPath()));
+	if(CompassWidget)
+	{
+		CompassWidget->AddToViewport(100);
+		CompassWidget->SetVisibility(ESlateVisibility::Collapsed);
+		CompassWidget->Init();
+	}
 	
 	PreTouchProcessor = MakeShareable(new FCY_PreTouchProcessor());
 	FSlateApplication::Get().RegisterInputPreProcessor(PreTouchProcessor);
@@ -26,4 +37,20 @@ void UCY_BuiltInWidgetTool::Finalize()
 {
 	PreTouchProcessor->Finalize();
 	FSlateApplication::Get().UnregisterInputPreProcessor(PreTouchProcessor);
+}
+
+void UCY_BuiltInWidgetTool::Tick(float DeltaTime)
+{
+	ProcessBuiltInCompass();
+}
+
+void UCY_BuiltInWidgetTool::ProcessBuiltInCompass() const
+{
+	if(const TObjectPtr<ACY_CameraActor> CameraActor = gCameraMng.GetCurrentActiveCameraActor())
+	{
+		if(CompassWidget)
+		{
+			CompassWidget->SetCompass(CameraActor->GetRotation().Yaw);
+		}
+	}	
 }

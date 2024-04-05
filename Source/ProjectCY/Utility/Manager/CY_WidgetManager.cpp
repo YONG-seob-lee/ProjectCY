@@ -55,7 +55,10 @@ void UCY_WidgetManager::BuiltInFinalize()
 
 void UCY_WidgetManager::Tick(float DeltaTime)
 {
-
+	if(BuiltInTool)
+	{
+		BuiltInTool->Tick(DeltaTime);
+	}
 }
 
 void UCY_WidgetManager::ClearExclusiveLayer()
