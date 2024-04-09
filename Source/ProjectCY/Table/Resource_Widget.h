@@ -12,7 +12,7 @@ public:
    UPROPERTY(EditAnywhere)
     int32 Index = 0;
    UPROPERTY(EditAnywhere)
-    FName TypeName;
+    FName TypeName = FName();
    UPROPERTY(EditAnywhere)
     int32 zOrder = 0;
    UPROPERTY(EditAnywhere)

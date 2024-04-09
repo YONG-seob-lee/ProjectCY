@@ -22,6 +22,8 @@ public:
 	void RegistAxis(ECY_Axis_Type AxisType, ECY_Action_Type ActionType, const FInputAxisUnifiedDelegate& Event);
 	void RegistTouch(ECY_Touch_Event TouchEventType, const FInputTouchBinding& Event);
 	void RegistAndroidButton(ECY_AndroidButton_Type ButtonType, const FSimpleDelegate& Delegate);
+	void RegistInteractionButton(const FSimpleDelegate& Delegate);
+	void RegistWorldMapButton(const FSimpleDelegate& Delegate);
 	
 	void CreateInputPawn();
 	void DestroyInputPawn();
@@ -48,6 +50,9 @@ public:
 	void AndroidBack();
 	void AndroidMenu();
 
+	void Interaction();
+	void WorldMap();
+
 private:
 	FInputAxisBinding CharacterMove_UpDownEvent = FInputAxisBinding(TEXT("CharacterMove_UpDown"));
 	FInputAxisBinding CharacterMove_LeftRightEvent = FInputAxisBinding(TEXT("CharacterMove_LeftRight"));
@@ -59,6 +64,9 @@ private:
 	FInputTouchBinding TouchMoveEvent = FInputTouchBinding(IE_Repeat);
 	FSimpleDelegate AndroidBackDelegate;
 	FSimpleDelegate AndroidMenuDelegate;
+
+	FSimpleDelegate InteractionDelegate;
+	FSimpleDelegate WorldMapDelegate;
 	
 #define gInputMng (*UCY_InputManager::GetInstance())
 };

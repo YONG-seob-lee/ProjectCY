@@ -66,6 +66,16 @@ void UCY_UnitBase::SetLodScaleValues(float CullDistanceScale, float OutLineCullD
 	}
 }
 
+void UCY_UnitBase::SetUnitPosition(const FVector& NewSpawnUnitPosition) const
+{
+	if(CharacterBase == nullptr)
+	{
+		return;
+	}
+
+	CharacterBase->SetActorLocation(NewSpawnUnitPosition);
+}
+
 float UCY_UnitBase::GetMovingSpeed() const
 {
 	if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())

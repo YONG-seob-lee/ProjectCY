@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_BuiltInWidgetTool.h"
 #include "CY_Singleton.h"
 #include "CY_WidgetDefine.h"
 #include "CY_WidgetManager.generated.h"
@@ -35,7 +36,9 @@ public:
 	TObjectPtr<UCY_Widget> CreateWidgetNotManaging(const FString& Path);
 	TObjectPtr<UCY_Widget> CreateWidgetNotManagingBySOP(const FSoftObjectPath& SoftObjectPath);
 	
-	TObjectPtr<class UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
+	TObjectPtr<UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
+
+	FORCEINLINE bool IsFinishedWorldMapProcess() const { return BuiltInTool->IsFinishedWorldMapProcess(); }
 
 	FCY_CreateWidget OnCreateWidget;
 	FCY_DestroyWidget OnDestroyWidget;

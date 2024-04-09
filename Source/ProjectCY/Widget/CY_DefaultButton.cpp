@@ -39,6 +39,7 @@ void UCY_DefaultButton::SetButtonText(const FString& ButtonText) const
 {
 	if(CPP_ButtonBase)
 	{
+		CPP_ButtonBase->SetVisibility(ESlateVisibility::Visible);
 		CPP_ButtonBase->SetText(ButtonText);
 	}
 }

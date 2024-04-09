@@ -50,6 +50,12 @@ UENUM(BlueprintType)
 enum class ECY_UnitActionState : uint8
 {
 	None = 0			UMETA(DisplayName = "None"),
-	Player_Movement		UMETA(DisplayName = "Player_Movement"),
-	Player_Move			UMETA(DisplayName = "Player_Move"),
+	Player_Normal				UMETA(DisplayName = "Player_Normal"),
+};
+
+UENUM()
+enum class ECY_InteractionType : uint8
+{
+	None = 0			UMETA(DisplayName = "None"),
+	Teleport_Map		UMETA(DisplayName = "Teleport_Map"),
 };

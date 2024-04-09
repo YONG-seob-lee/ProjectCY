@@ -61,16 +61,10 @@ void UCY_Camera_PalWorld::Begin()
 			}
 		}
 
-		const TObjectPtr<ACY_PlayerController> PlayerController = Cast<ACY_PlayerController>(UCY_BasicGameUtility::GetPlayerController());
-		if(PlayerController == nullptr)
+		if(const TObjectPtr<UCY_UnitBase> PlayerUnit = UCY_BasicGameUtility::GetCurrentPlayerUnit())
 		{
-			return;
-		}
-		
-		if(const TObjectPtr<UCY_UnitBase> UnitBase = gUnitMng.GetUnit(PlayerController->GetUnitHandle()))
-		{
-			ActorTickEvent = UnitBase->OnActorTickDelegate.AddUObject(this, &UCY_Camera_PalWorld::ActorTickFunc);
-			IsValid(UnitBase);
+			ActorTickEvent = PlayerUnit->OnActorTickDelegate.AddUObject(this, &UCY_Camera_PalWorld::ActorTickFunc);
+			IsValid(PlayerUnit);
 		}
 	}
 	else

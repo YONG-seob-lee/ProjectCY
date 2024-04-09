@@ -4,7 +4,6 @@
 #include "CY_WidgetManager.h"
 
 #include "CY_BasicGameUtility.h"
-#include "CY_BuiltInWidgetTool.h"
 #include "CY_StateMachine.h"
 #include "CY_Define.h"
 #include "CY_Mapper_Resource_Widget.h"
@@ -29,11 +28,12 @@ void UCY_WidgetManager::BuiltInInitialize()
 		return;
 	}
 
-	BuiltInTool->Initialize();
+	BuiltInTool->BuiltInitialize();
 }
 
 void UCY_WidgetManager::Initialize()
 {
+	BuiltInTool->Initialize();
 }
 
 void UCY_WidgetManager::Finalize()

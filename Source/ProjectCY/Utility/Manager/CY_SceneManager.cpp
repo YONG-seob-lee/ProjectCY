@@ -50,7 +50,7 @@ void UCY_SceneManager::Initialize()
 		FadeTool->Initialize();
 		
 		TArray<int8> ActiveSceneId;
-		SceneStateMachine->GetActiveSceneId(ActiveSceneId);
+		SceneStateMachine->GetActiveStateId(ActiveSceneId);
 
 		for(const int8 SceneId : ActiveSceneId)
 		{
@@ -227,7 +227,7 @@ void UCY_SceneManager::ChangeScene(ECY_GameSceneType SceneType, TObjectPtr<UCY_F
 	ChangeSceneData.SceneType = SceneType;
 	ChangeSceneData.LevelPackagePath = FName(LevelPackagePath);
 
-	if(LevelPackagePath.Len() != 0 && Command != nullptr)
+	if(Command != nullptr)
 	{
 		ChangeSceneStep_Fade(Command);
 	}

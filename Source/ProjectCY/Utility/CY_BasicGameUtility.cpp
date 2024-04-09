@@ -4,6 +4,7 @@
 #include "CY_BasicGameUtility.h"
 #include "CY_GameInstance.h"
 #include "CY_PlayerController.h"
+#include "CY_UnitManager.h"
 #include "CY_Utility.h"
 #include "Kismet/GameplayStatics.h"
 #include "Slate/SceneViewport.h"
@@ -62,6 +63,17 @@ TObjectPtr<AActor> UCY_BasicGameUtility::SpawnBlueprintActor(const FString& Blue
 	}
 
 	return ResultActor != nullptr ? ResultActor : nullptr;
+}
+
+TObjectPtr<UCY_UnitBase> UCY_BasicGameUtility::GetCurrentPlayerUnit()
+{
+	const TObjectPtr<ACY_PlayerController> PlayerController = Cast<ACY_PlayerController>(GetPlayerController());
+	if(PlayerController == nullptr)
+	{
+		return nullptr;
+	}
+	
+	return gUnitMng.GetUnit(PlayerController->GetUnitHandle());
 }
 
 TObjectPtr<UWorld> UCY_BasicGameUtility::GetGameWorld()

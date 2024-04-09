@@ -6,7 +6,7 @@ void UCY_Widget_Compass::Init()
 {
 }
 
-void UCY_Widget_Compass::SetCompass(float AngleInDegrees)
+void UCY_Widget_Compass::SetCompass(float AngleInDegrees) const
 {
 	// Default Degree = 0 Degree -> East
 	// + Degree -> South -> West (양수)
@@ -17,7 +17,7 @@ void UCY_Widget_Compass::SetCompass(float AngleInDegrees)
 	// 1 일 때 180이어야 한다
 	
 	const float Value = AngleInDegrees / 360.f;
-	CY_LOG(TEXT("Compass InValue = %f"), Value );
+	//CY_LOG(TEXT("Compass InValue = %f"), Value );
 
 	if(CPP_Compass)
 	{

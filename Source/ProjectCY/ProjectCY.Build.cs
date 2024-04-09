@@ -30,7 +30,8 @@ public class ProjectCY : ModuleRules
         PublicDependencyModuleNames.AddRange(new string[]
         {
 	        "Core", "CoreUObject", "Engine", "InputCore", "Sequencer",
-	        "MessageLog", "AIModule", "Slate", "SlateCore", "UMG", "CommonUI"
+	        "MessageLog", "AIModule", "Slate", "SlateCore", "UMG", "CommonUI",
+	        "LandScape"
         });
         
 		PrivateDependencyModuleNames.AddRange(new string[] { "EditorStyle", "Niagara", "NiagaraUIRenderer", "CommonUI", "Synthesis"});

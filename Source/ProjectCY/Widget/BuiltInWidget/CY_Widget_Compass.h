@@ -18,7 +18,7 @@ public:
 
 	void Init();
 
-	void SetCompass(float AngleInDegrees);
+	void SetCompass(float AngleInDegrees) const;
 private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UImage> CPP_Compass = nullptr;

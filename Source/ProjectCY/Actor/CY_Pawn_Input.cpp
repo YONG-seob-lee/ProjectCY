@@ -53,6 +53,9 @@ void ACY_Pawn_Input::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	NewInputComponent->BindAction("AndroidBack", IE_Pressed, InputManager, &UCY_InputManager::AndroidBack);
 	NewInputComponent->BindAction("AndroidMenu", IE_Pressed, InputManager, &UCY_InputManager::AndroidMenu);
+	
+	NewInputComponent->BindAction("Interaction", IE_Pressed, InputManager, &UCY_InputManager::Interaction);
+	NewInputComponent->BindAction("WorldMap", IE_Pressed, InputManager, &UCY_InputManager::WorldMap);
 }
 
 bool ACY_Pawn_Input::Create()

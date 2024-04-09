@@ -20,6 +20,8 @@ public:
    UPROPERTY(EditAnywhere)
     float RunSpeed;
    UPROPERTY(EditAnywhere)
+    float SprintSpeed;
+   UPROPERTY(EditAnywhere)
     float AngleVelocity;
    UPROPERTY(EditAnywhere)
     float CameraZoomSpeed;

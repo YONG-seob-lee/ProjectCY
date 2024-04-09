@@ -17,6 +17,7 @@ enum class ECY_GameSceneType : uint8
 
 	Logo		UMETA(DisplayName = "Logo"),
 	Title		UMETA(DisplayName = "Title"),
+	WorldMap	UMETA(DisplayName = "WorldMap"),
 	PalWorld	UMETA(DisplayName = "PalWorld"),
 };
 
@@ -26,7 +27,9 @@ enum class ECY_GameCameraType : uint8
 	None = 0	UMETA(DisplayName = "None"),
 	
 	Title		UMETA(DisplayName = "Title"),
+	WorldMap	UMETA(DisplayName = "WorldMap"),
 	PalWorld	UMETA(DisplayName = "PalWorld"),
+	
 };
 
 enum class ECY_FadeType
@@ -56,13 +59,14 @@ enum class ECY_FadeStyle
 {
 	None = 0,
 	Dialog,
-	
+	Drone,
 };
 
 enum class ECY_LoadingPageType
 {
 	None = 0,
 	EnterFirst,
+	ShowWorldMap,
 };
 
 enum class ECY_ChangeSceneStep

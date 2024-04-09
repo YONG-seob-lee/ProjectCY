@@ -28,7 +28,7 @@ public:
 	void SetRotator(const FRotator& Rotator) const;
 
 	void SetActiveMovementComponent(bool bEnable) const;
-	void MoveDirection(const FVector& Direction, float Scale = 1.f, bool bForce = false);
+	void MoveDirection(const FVector& Direction, float Scale = 1.f, bool bForce = false) const;
 	
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetRootSkeletalMeshComponent() const { return RootSkeletalMeshComponent; }
 	FORCEINLINE FVector GetCurrentLocation() const { return GetActorLocation(); }

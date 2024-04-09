@@ -3,6 +3,7 @@
 
 #include "CY_CameraManager.h"
 
+#include "CY_BasicGameUtility.h"
 #include "CY_Mapper_Camera.h"
 #include "CY_StateMachine.h"
 #include "CY_UnitManager.h"
@@ -89,6 +90,23 @@ TObjectPtr<ACY_CameraActor> UCY_CameraManager::GetCameraActor(const TTuple<FStri
 	}
 
 	return nullptr;
+}
+
+void UCY_CameraManager::GetDronesCamera(ECY_GameCameraType _CameraType, TArray<TObjectPtr<ACY_CameraActor>>& DroneCameras)
+{
+	DroneCameras.Empty();
+	const FString CameraType = CY_Utility::ConvertEnumToString<ECY_GameCameraType>("ECY_GameCameraType", _CameraType);
+	
+	const TMap<FString, TObjectPtr<ACY_CameraActor>>* TargetCameraActors = CameraActors.Find(CameraType);
+	if(TargetCameraActors == nullptr)
+	{
+		return;
+	}
+
+	if(const TObjectPtr<ACY_CameraActor>* DroneCamera = TargetCameraActors->Find(CameraSubType::Drone_01))
+	{
+		DroneCameras.Emplace(*DroneCamera);
+	}
 }
 
 TObjectPtr<ACY_CameraActor> UCY_CameraManager::GetCurrentActiveCameraActor()
@@ -185,6 +203,21 @@ TObjectPtr<UCY_StateBase> UCY_CameraManager::GetCurrentState() const
 	return CameraStateMachine ? CameraStateMachine->GetCurrentState() : nullptr;
 }
 
+void UCY_CameraManager::ShowCameraFadeStep(ECY_GameCameraType CameraType, const TFunction<void()>& StepFinishedCallback, float BlendTime /* =1.f */)
+{
+	if(bCompleteDroneProcess == true)
+	{
+		bCompleteDroneProcess = false;
+	}
+	TArray<TObjectPtr<ACY_CameraActor>> DroneCameras;
+	GetDronesCamera(CameraType, DroneCameras);
+	StackCameraActors = DroneCameras;
+
+	OnStepFinishedCallback = StepFinishedCallback;
+	
+	ShowCameraFadeStep_Internal(BlendTime);
+}
+
 void UCY_CameraManager::RegistCameraState(uint8 Index, const FName& Name, TSubclassOf<UCY_StateBase> SceneType)
 {
 	if(CameraStateMachine)
@@ -205,4 +238,28 @@ void UCY_CameraManager::AddCameraActor(const FString& CameraType, const FString&
 		NewCameraActors.Emplace(CameraSubType, CameraActor);
 		CameraActors.Emplace(CameraType, NewCameraActors);
 	}
+}
+
+void UCY_CameraManager::ShowCameraFadeStep_Internal(float BlendTime /* = 1.f */)
+{
+	if(StackCameraActors.Num() <= 0)
+	{
+		bCompleteDroneProcess = true;
+		if(OnStepFinishedCallback)
+		{
+			OnStepFinishedCallback();
+		}
+		return;
+	}
+
+	StackCameraActors[0]->Active();
+	
+	UCY_BasicGameUtility::GetGameWorld()->GetTimerManager().SetTimer(StackShowCamerasHandler, [this]()
+	{
+		if(const TObjectPtr<ACY_CameraActor> CameraActor = StackCameraActors.Last())
+		{
+			StackCameraActors.Remove(CameraActor);
+			ShowCameraFadeStep_Internal();
+		}
+	}, BlendTime, false, -1.f);
 }

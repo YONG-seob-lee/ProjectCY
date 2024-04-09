@@ -10,12 +10,13 @@
 
 void UCY_Widget::NativeConstruct()
 {
+	Super::NativeConstruct();
 	MakeButtonPool();
 }
 
 void UCY_Widget::NativeDestruct()
 {
-
+	Super::NativeDestruct();
 }
 
 void UCY_Widget::InitWidget(const FName& TypeName, bool _bManaged, bool bActivate /* = true */)
@@ -42,6 +43,11 @@ void UCY_Widget::FinishWidget()
 	}
 
 	
+}
+
+void UCY_Widget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 void UCY_Widget::Active(int32 _ZOrder /* = 0 */)

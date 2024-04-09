@@ -30,8 +30,12 @@ private:
 	void StartFadeOut();
 
 	void PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, bool bDirectFadeIn);
+	void PlayDrone();
 	void OnWidgetFadeInFinished();
 	void OnWidgetFadeOutFinished();
+
+	void OnCameraFadeInFinished();
+	void OnCameraFadeOutFinished();
 	
 	ECY_FadeStep CurrentStep = ECY_FadeStep::Ready;
 	bool bLoadStart = false;

@@ -76,6 +76,16 @@ void UCY_InputManager::RegistAndroidButton(ECY_AndroidButton_Type ButtonType, co
 	}
 }
 
+void UCY_InputManager::RegistInteractionButton(const FSimpleDelegate& Delegate)
+{
+	InteractionDelegate = Delegate;
+}
+
+void UCY_InputManager::RegistWorldMapButton(const FSimpleDelegate& Delegate)
+{
+	WorldMapDelegate = Delegate;
+}
+
 void UCY_InputManager::CreateInputPawn()
 {
 	if(InputPawn != nullptr)
@@ -155,5 +165,21 @@ void UCY_InputManager::AndroidMenu()
 	if(AndroidMenuDelegate.IsBound())
 	{
 		AndroidMenuDelegate.Execute();
+	}
+}
+
+void UCY_InputManager::Interaction()
+{
+	if(InteractionDelegate.IsBound())
+	{
+		InteractionDelegate.Execute();
+	}
+}
+
+void UCY_InputManager::WorldMap()
+{
+	if(WorldMapDelegate.IsBound())
+	{
+		WorldMapDelegate.Execute();
 	}
 }

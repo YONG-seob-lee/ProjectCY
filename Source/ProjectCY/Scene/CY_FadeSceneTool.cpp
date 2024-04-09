@@ -4,6 +4,7 @@
 #include "CY_FadeSceneTool.h"
 
 #include "CY_BuiltInWidgetTool.h"
+#include "CY_CameraManager.h"
 #include "CY_FadeCommand.h"
 #include "CY_Mapper_Common.h"
 #include "CY_StateMachine.h"
@@ -134,7 +135,14 @@ void UCY_FadeSceneTool::StartFadeIn()
 
 	CurrentStep = ECY_FadeStep::EnterFadeIn;
 
-	PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), true, FadeWidgetCommand->GetIsDirectFadeIn());
+	if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Drone)
+	{
+		PlayDrone();
+	}
+	else
+	{
+		PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), true, FadeWidgetCommand->GetIsDirectFadeIn());
+	}
 }
 
 void UCY_FadeSceneTool::StartFadeOut()
@@ -176,27 +184,42 @@ void UCY_FadeSceneTool::PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, 
 	}
 }
 
+void UCY_FadeSceneTool::PlayDrone()
+{
+	gCameraMng.ShowCameraFadeStep(ECY_GameCameraType::PalWorld, [this]()
+	{
+		OnCameraFadeInFinished();
+	});
+}
+
 void UCY_FadeSceneTool::OnWidgetFadeInFinished()
 {
 	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
 	{
 		CurrentStep = ECY_FadeStep::ExitFadeIn;
-		
-		if(FadeWidgetCommand && FadeWidgetCommand->GetLoadingPageType() != ECY_LoadingPageType::None)
+		if(!FadeWidgetCommand)
 		{
-			const TObjectPtr<UCY_Widget_Loading> LoadingWidget = gWidgetMng.GetBuiltInWidgetTool()->GetLoadingWidget();
-			if(LoadingWidget == nullptr)
-			{
-				return;
-			}
-			LoadingWidget->SetLoadingData(FadeWidgetCommand->GetLoadingPageType());
-			LoadingWidget->ShowLoading();
-
-			//PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), false, false);
+			return;
 		}
-		else
+		
+		if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Dialog)
 		{
-			bLoadStart = true;
+			if(FadeWidgetCommand->GetLoadingPageType() != ECY_LoadingPageType::None)
+			{
+				const TObjectPtr<UCY_Widget_Loading> LoadingWidget = gWidgetMng.GetBuiltInWidgetTool()->GetLoadingWidget();
+				if(LoadingWidget == nullptr)
+				{
+					return;
+				}
+				LoadingWidget->SetLoadingData(FadeWidgetCommand->GetLoadingPageType());
+				LoadingWidget->ShowLoading();
+
+				//PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), false, false);
+			}
+			else
+			{
+				bLoadStart = true;
+			}	
 		}
 	}
 }
@@ -216,4 +239,29 @@ void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
 
 		FinishRequest();
 	}
+}
+
+void UCY_FadeSceneTool::OnCameraFadeInFinished()
+{
+	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
+	{
+		CurrentStep = ECY_FadeStep::ExitFadeIn;
+
+		// 맵 위젯 활성화
+		if(FadeWidgetCommand->GetLoadingPageType() == ECY_LoadingPageType::ShowWorldMap)
+		{
+			if(const TObjectPtr<UCY_Widget_WorldMap> WorldMap = gWidgetMng.GetBuiltInWidgetTool()->GetWorldMapWidget())
+			{
+				WorldMap->RebuildWorldMap();
+				WorldMap->OnFinishedWorldMapFunc([this]()
+				{
+					bLoadStart = true;
+				});
+			}		
+		}
+	}
+}
+
+void UCY_FadeSceneTool::OnCameraFadeOutFinished()
+{
 }

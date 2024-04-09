@@ -51,6 +51,7 @@ enum class ECY_Action_Type : uint8
 {
 	ActionUpDown	UMETA(DisplayName = "Action_Type_UpDown"),
 	ActionLeftRight	UMETA(DisplayName = "Action_Type_LeftRight"),
+	Interaction		UMETA(DiaplayName = "Interaction"),
 };
 
 UENUM(BlueprintType)

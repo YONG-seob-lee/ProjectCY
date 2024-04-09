@@ -52,6 +52,7 @@ ACY_CharacterBase::ACY_CharacterBase()
 		MovementComponent->bRunPhysicsWithNoController = true;
 		MovementComponent->SetIsReplicated(true);
 		MovementComponent->RotationRate = FRotator(0.f, 360.f, 0.f);
+		MovementComponent->bUseControllerDesiredRotation = true;
 		MovementComponent->bOrientRotationToMovement = true;
 	}
 	
@@ -187,17 +188,11 @@ void ACY_CharacterBase::SetActiveMovementComponent(bool bEnable) const
 	}
 }
 
-void ACY_CharacterBase::MoveDirection(const FVector& Direction, float Scale /* = 1.f */, bool bForce /* = false */)
+void ACY_CharacterBase::MoveDirection(const FVector& Direction, float Scale /* = 1.f */, bool bForce /* = false */) const
 {
 	if(MovementComponent)
 	{
-		//////														   /////
-		/// 부드럽게 회전하는 방법이 필요함 ( 어떻게 해야하는지 진짜 모르겠음 ) ///
-		/////														   /////
-		
-		//MovementComponent->AddInputVector(Direction * Scale, bForce);
-		AddMovementInput(Direction * Scale);
-		SetRotator(FRotationMatrix::MakeFromX(Direction).Rotator());
+		MovementComponent->AddInputVector(Direction * Scale, bForce);
 	}
 }
 

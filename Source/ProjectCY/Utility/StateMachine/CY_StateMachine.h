@@ -24,7 +24,7 @@ public:
 
 	TObjectPtr<UCY_StateBase> GetCurrentState();
 
-	void GetActiveSceneId(TArray<int8>& ActiveSceneState) const;
+	void GetActiveStateId(TArray<int8>& ActiveState) const;
 
 	void SetState(int32 Index, bool _bInstant = true);
 

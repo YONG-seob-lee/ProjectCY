@@ -59,15 +59,15 @@ TObjectPtr<UCY_StateBase> UCY_StateMachine::GetCurrentState()
 	return pCurrentStateBase ? *pCurrentStateBase : nullptr;
 }
 
-void UCY_StateMachine::GetActiveSceneId(TArray<int8>& ActiveSceneState) const
+void UCY_StateMachine::GetActiveStateId(TArray<int8>& ActiveState) const
 {
 	if(EntireState.IsEmpty())
 	{
 		return;
 	}
 	
-	ActiveSceneState.Empty();
-	return EntireState.GenerateKeyArray(ActiveSceneState);
+	ActiveState.Empty();
+	return EntireState.GenerateKeyArray(ActiveState);
 }
 
 void UCY_StateMachine::SetState(int32 Index, bool _bInstant /* = true */)

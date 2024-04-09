@@ -8,9 +8,10 @@
 #include "CY_WidgetManager.h"
 #include "CY_Widget_Compass.h"
 #include "CY_Widget_DialogScreenFader.h"
+#include "CY_Widget_WorldMap.h"
 #include "Input/CY_PreTouchProcessor.h"
 
-void UCY_BuiltInWidgetTool::Initialize()
+void UCY_BuiltInWidgetTool::BuiltInitialize()
 {
 	DialogScreenFader = Cast<UCY_Widget_DialogScreenFader>(gWidgetMng.CreateWidgetNotManagingBySOP(UCY_Widget_DialogScreenFader::GetWidgetPath()));
 	if(DialogScreenFader)
@@ -31,6 +32,15 @@ void UCY_BuiltInWidgetTool::Initialize()
 	PreTouchProcessor = MakeShareable(new FCY_PreTouchProcessor());
 	FSlateApplication::Get().RegisterInputPreProcessor(PreTouchProcessor);
 	PreTouchProcessor->Initialize();
+}
+
+void UCY_BuiltInWidgetTool::Initialize()
+{
+	WorldMapWidget = Cast<UCY_Widget_WorldMap>(gWidgetMng.CY_CreateWidget(UCY_Widget_WorldMap::GetWidgetName()));
+	if(WorldMapWidget == nullptr)
+	{
+		CY_CHECK(false);
+	}
 }
 
 void UCY_BuiltInWidgetTool::Finalize()

@@ -5,6 +5,7 @@
 
 #include "BasePath_BP_File.h"
 #include "BasePath_Directory.h"
+#include "BasePath_Img_File.h"
 #include "BasePath_Level_File.h"
 #include "CY_Utility.h"
 #include "Engine/DataTable.h"
@@ -97,6 +98,7 @@ FString UCY_TableManager::GetPath(ECY_TableDataType TableType, int32 Key, bool b
 			// 관리 안하는 경우 : 레퍼런스 경로
 				: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->BP_File_Name.ToString()});
 		}
+		break;
 	case ECY_TableDataType::BasePath_Level_File:
 		{
 			const int32 TotalKeyIndex = GetTableRowNum(TableType) + 1;
@@ -113,10 +115,22 @@ FString UCY_TableManager::GetPath(ECY_TableDataType TableType, int32 Key, bool b
 				}
 			}
 		}
+		break;
+	case ECY_TableDataType::BasePath_Img_File:
+		{
+			const TObjectPtr<FBasePath_Img_File> RowData = GetTableRowData<FBasePath_Img_File>(TableType, Key);
+
+			// 테이블로 관리하는 경우 : 경로 + 파일 이름
+			return bResourcePath ? GetDirectory(RowData->Directory_Table_Id) + RowData->Img_File_Name + '.' + RowData->Img_File_Name + TEXT("_C")
+			// 관리 안하는 경우 : 레퍼런스 경로
+				: FString::Format(TEXT("{0}{1}.{1}"), {GetDirectory(RowData->Directory_Table_Id), RowData->Img_File_Name});
+		}
+		break;
 	default:
 		return FString();
 	}
-	
+
+	return FString();
 }
 
 FString UCY_TableManager::GetDirectory(int32 DirectoryTableId)
@@ -206,6 +220,7 @@ void UCY_TableManager::MakeTableStructData()
 	CreateTableData(ECY_TableDataType::BasePath_Directory, "/Game/TableData/BasePath_Directory.BasePath_Directory");
 	CreateTableData(ECY_TableDataType::BasePath_BP_File, "/Game/TableData/BasePath_BP_File.BasePath_BP_File");
 	CreateTableData(ECY_TableDataType::BasePath_Level_File, "/Game/TableData/BasePath_Level_File.BasePath_Level_File");
+	CreateTableData(ECY_TableDataType::BasePath_Img_File, "/Game/TableData/BasePath_Img_File.BasePath_Img_File");
 
 	CreateTableData(ECY_TableDataType::Resource_Widget, "/Game/TableData/Resource_Widget.Resource_Widget", UCY_Mapper_Resource_Widget::StaticClass());
 	CreateTableData(ECY_TableDataType::Resource_Unit, "/Game/TableData/Resource_Unit.Resource_Unit", UCY_Mapper_Resource_Unit::StaticClass());

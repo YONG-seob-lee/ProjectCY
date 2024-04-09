@@ -25,7 +25,8 @@ public:
 	virtual void DestroyUnit();
 
 	void SetLodScaleValues(float CullDistanceScale, float OutLineCullDistanceScale, bool bVisibleOutLine) const;
-
+	void SetUnitPosition(const FVector& NewSpawnUnitPosition) const;
+	
 	FORCEINLINE void SetUnitHandle(CY_Handle _UnitHandle) { UnitHandle = _UnitHandle; }
 	FORCEINLINE CY_Handle GetUnitHandle() const { return UnitHandle; }
 	

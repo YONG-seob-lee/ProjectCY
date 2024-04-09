@@ -9,7 +9,7 @@
 #include "CY_StateMachine.h"
 #include "CY_UnitManager.h"
 #include "Character/CY_CharacterBase.h"
-#include "UnitState/CY_State_PlayerMove.h"
+#include "UnitState/CY_State_PlayerNormal.h"
 #include "UnitState/CY_State_PlayerMovement.h"
 
 
@@ -48,11 +48,10 @@ bool UCY_BasePlayer::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRo
 	if(CreateActionStateMachine())
 	{
 		AddActionState(ECY_UnitActionState::None, TEXT("None"), UCY_StateBase::StaticClass());
-		AddActionState(ECY_UnitActionState::Player_Movement, TEXT("Player_Movement"), UCY_State_PlayerMovement::StaticClass());
-		AddActionState(ECY_UnitActionState::Player_Move, TEXT("Player_Move"), UCY_State_PlayerMove::StaticClass());
+		AddActionState(ECY_UnitActionState::Player_Normal, TEXT("Player_Normal"), UCY_State_PlayerNormal::StaticClass());
 	}
 
-	ChangeActionState(ECY_UnitActionState::Player_Move);
+	ChangeActionState(ECY_UnitActionState::Player_Normal);
 
 	CreatePlayerStateMachine();
 

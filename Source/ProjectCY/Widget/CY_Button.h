@@ -29,7 +29,7 @@ public:
 	FORCEINLINE void UnbindClickedDelegate() { CY_OnClickedDelegate.Clear(); }
 	void SetOnPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnPressedDelegate = Delegate; }
 	FORCEINLINE void UnbindPressedDelegate() { CY_OnPressedDelegate.Clear(); }
-	void SetOnReleasedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnReleasedDelegate = Delegate; };
+	void SetOnReleasedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnReleasedDelegate = Delegate; }
 	FORCEINLINE void UnbindReleasedDelegate() { CY_OnReleasedDelegate.Clear(); }
 	void SetOnHoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnHoveredDelegate = Delegate; };
 	FORCEINLINE void UnbindHoveredDelegate() { CY_OnHoveredDelegate.Clear(); }
@@ -46,6 +46,8 @@ public:
 	void SetOnLongPressedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnLongPressedDelegate = Delegate; };
 	FORCEINLINE void UnbindLongPressedDelegate() { CY_OnLongPressedDelegate.Clear(); }
 
+	FORCEINLINE void SetCustomVector(const FVector& Vector) { CustomVector = Vector;}
+	FORCEINLINE FVector GetCustomVector() const { return CustomVector; }
 private:
 	void SetDelegates();
 	
@@ -89,6 +91,8 @@ protected:
 
 	float LastClickedTime = 0.f;
 	float LastReleasedTime = 0.f;
+
+	FVector CustomVector = FVector::ZeroVector;
 
 private:
 	UPROPERTY(meta = (BindWidget))

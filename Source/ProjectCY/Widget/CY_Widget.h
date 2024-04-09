@@ -21,6 +21,8 @@ public:
 	virtual void NativeDestruct() override;
 	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate = true);
 	virtual void FinishWidget();
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void Active(int32 _ZOrder = 0);
 
 	virtual void OnAnimationStarted_Implementation(const UWidgetAnimation* Animation) override;

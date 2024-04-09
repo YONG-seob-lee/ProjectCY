@@ -31,6 +31,7 @@ public:
 	FORCEINLINE TTuple<FString, FString> GetCurrentActiveCameraType() { return CurrentActiveCamera; }
 	TObjectPtr<class ACY_CameraActor> GetCameraActor(const FString& CameraType, const FString& CameraSubType);
 	TObjectPtr<ACY_CameraActor> GetCameraActor(const TTuple<FString, FString>& CameraType);
+	void GetDronesCamera(ECY_GameCameraType _CameraType, TArray<TObjectPtr<ACY_CameraActor>>& DroneCameras);
 
 	TObjectPtr<ACY_CameraActor> GetCurrentActiveCameraActor();
 
@@ -47,10 +48,16 @@ public:
 	TObjectPtr<ACY_CameraActor> ActiveCamera(ECY_GameCameraType _CameraType, const FString& CameraSubType, float BlendTime = 0.f);
 	
 	TObjectPtr<class UCY_StateBase> GetCurrentState() const;
+
+	FORCEINLINE bool IsCompleteDroneFadeStep() const { return bCompleteDroneProcess; }
+
+	void ShowCameraFadeStep(ECY_GameCameraType CameraType, const TFunction<void()>& StepFinishedCallback, float BlendTime = 1.f);
 private:
 	void RegistCameraState(uint8 Index, const FName& Name, TSubclassOf<UCY_StateBase> SceneType);
 
 	void AddCameraActor(const FString& CameraType, const FString& CameraSubType, TObjectPtr<ACY_CameraActor> CameraActor);
+
+	void ShowCameraFadeStep_Internal(float BlendTime = 1.f);
 	
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> CameraStateMachine = nullptr;
@@ -58,6 +65,11 @@ private:
 	TMap<FString, TMap<FString, TObjectPtr<ACY_CameraActor>>> CameraActors;
 
 	TTuple<FString, FString> CurrentActiveCamera = {};
+
+	FTimerHandle StackShowCamerasHandler;
+	TArray<TObjectPtr<ACY_CameraActor>> StackCameraActors;
+	bool bCompleteDroneProcess = false;
+	TFunction<void()> OnStepFinishedCallback = nullptr;
 	
 #define gCameraMng (*UCY_CameraManager::GetInstance())
 };

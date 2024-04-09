@@ -104,8 +104,8 @@ void UCY_SingletonManager::RegisterSingletons()
 {
     Singletons.Reset();
 
-    Singletons.Emplace(UCY_ContentsProcessManager::MakeInstance());
     Singletons.Emplace(UCY_TableManager::MakeInstance());
+    Singletons.Emplace(UCY_ContentsProcessManager::MakeInstance());
     Singletons.Emplace(UCY_CameraManager::MakeInstance());
     Singletons.Emplace(UCY_InputManager::MakeInstance());
     Singletons.Emplace(UCY_SceneManager::MakeInstance());
@@ -117,11 +117,11 @@ void UCY_SingletonManager::RegisterSingletonsForTick()
 {
     SingletonsForTick.Reset();
 
+    SingletonsForTick.Emplace(UCY_TableManager::GetInstance());
     SingletonsForTick.Emplace(UCY_CameraManager::GetInstance());
     SingletonsForTick.Emplace(UCY_ContentsProcessManager::GetInstance());
     SingletonsForTick.Emplace(UCY_InputManager::GetInstance());
     SingletonsForTick.Emplace(UCY_SceneManager::GetInstance());
-    SingletonsForTick.Emplace(UCY_TableManager::GetInstance());
     SingletonsForTick.Emplace(UCY_UnitManager::GetInstance());
     SingletonsForTick.Emplace(UCY_WidgetManager::GetInstance());
 }

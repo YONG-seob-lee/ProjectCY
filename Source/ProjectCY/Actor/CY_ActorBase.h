@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_UnitDefine.h"
 #include "GameFramework/Actor.h"
 #include "CY_ActorBase.generated.h"
 
@@ -12,14 +13,18 @@ class PROJECTCY_API ACY_ActorBase : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ACY_ActorBase(const FObjectInitializer& ObjectInitializer);
 
+	FORCEINLINE ECY_InteractionType GetInteractionType() const { return ActorInteractionType; }
+	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	FORCEINLINE virtual void SetInteractionType(ECY_InteractionType Type) { ActorInteractionType = Type; }
+
 public:
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	ECY_InteractionType ActorInteractionType = ECY_InteractionType::None;
 };

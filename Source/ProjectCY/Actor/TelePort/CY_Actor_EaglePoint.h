@@ -14,16 +14,16 @@ class PROJECTCY_API ACY_Actor_EaglePoint : public ACY_Actor_TeleportPoint
 public:
 	ACY_Actor_EaglePoint(const FObjectInitializer& ObjectInitializer);
 
-	UPROPERTY(Category = APC_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 WayPointIndex = 0;
 
-	UPROPERTY(Category = APC_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bLockNpaCamera = false;
 
-	UPROPERTY(Category = APC_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FString Tag;
 
-	UPROPERTY(Category = APC_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UArrowComponent> TalkArrowComponent;
 	
 protected:

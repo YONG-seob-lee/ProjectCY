@@ -1,4 +1,4 @@
-Index,Base_Path,Montage_Path,WalkSpeed,RunSpeed,AngleVelocity,CameraZoomSpeed
-1,10001,30001,300,1000,700,700
-2,2,30002,300,1000,700,700
-3,301, ,300,1000,700,700
+Index,Base_Path,Montage_Path,WalkSpeed,RunSpeed,SprintSpeed,AngleVelocity,CameraZoomSpeed
+1,10001,30001,300,1000,1500,700,700
+2,2,30002,300,1000,1500,700,700
+3,301, ,300,1000,1500,700,700

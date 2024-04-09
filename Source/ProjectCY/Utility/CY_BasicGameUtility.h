@@ -25,6 +25,8 @@ public:
 	static TObjectPtr<AActor> SpawnBlueprintActor(const FString& BlueprintPath, const FVector& Pos, const FRotator& Rot, bool bNeedRootComponent = true,
 	                                              ESpawnActorCollisionHandlingMethod Method = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
+	static TObjectPtr<UCY_UnitBase> GetCurrentPlayerUnit();
+	
 	static TObjectPtr<UWorld> GetGameWorld();
 	static TObjectPtr<UCY_GameInstance> GetGameInstance();
 	static TObjectPtr<APlayerController> GetPlayerController();
