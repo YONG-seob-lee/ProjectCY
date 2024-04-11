@@ -65,7 +65,7 @@ ACY_Actor_EaglePoint::ACY_Actor_EaglePoint(const FObjectInitializer& ObjectIniti
 void ACY_Actor_EaglePoint::BeginPlay()
 {
 	SetInteractionType(ECY_InteractionType::Teleport_Map);
-	//SpawnStatue();	
+	SpawnStatue();	
 }
 
 TObjectPtr<AActor> ACY_Actor_EaglePoint::SpawnStatue() const

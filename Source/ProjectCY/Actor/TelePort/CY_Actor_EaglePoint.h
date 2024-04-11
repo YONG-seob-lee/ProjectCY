@@ -24,7 +24,7 @@ public:
 	FString Tag;
 
 	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UArrowComponent> TalkArrowComponent;
+	TObjectPtr<class UArrowComponent> TalkArrowComponent = nullptr;
 	
 protected:
 	virtual void BeginPlay() override;

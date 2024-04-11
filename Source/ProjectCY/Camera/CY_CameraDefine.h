@@ -18,6 +18,13 @@ namespace CameraSubType
 	const FString Drone_03 = TEXT("Drone_03");
 }
 
+namespace DroneHeight
+{
+	constexpr float Drone_01 = 100.f;
+	constexpr float Drone_02 = 500.f;
+	constexpr float Drone_03 = 900.f;
+}
+
 USTRUCT()
 struct FCY_CameraData
 {

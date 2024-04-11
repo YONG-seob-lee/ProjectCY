@@ -27,7 +27,7 @@ void UCY_Widget::InitWidget(const FName& TypeName, bool _bManaged, bool bActivat
 	
 	if(bActivate)
 	{
-		Active(ResourceWidgetInfo.zOrder);
+		Active(true);
 	}
 
 	SetOriginVisible(GetVisibility());
@@ -50,13 +50,13 @@ void UCY_Widget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
-void UCY_Widget::Active(int32 _ZOrder /* = 0 */)
+void UCY_Widget::Active(bool _bActive /* = true */)
 {
 	if(bAddToViewport == false)
 	{
-		AddToViewport(_ZOrder == 0 ? ZOrder : _ZOrder);
+		AddToViewport(_bActive ? ZOrder : 0);
 	}
-
+	
 	if(IsVisible())
 	{
 		if(IsExistAnim(DefaultWidgetAnimation::Appearance) == true)
@@ -65,7 +65,22 @@ void UCY_Widget::Active(int32 _ZOrder /* = 0 */)
 		}
 	}
 
-	bActive = true;
+	bActive = _bActive;
+}
+
+void UCY_Widget::ActiveDirect(bool _bActive /* = true */)
+{
+	if(bAddToViewport == false)
+	{
+		AddToViewport(_bActive ? ZOrder : 0);
+	}
+
+	if(IsExistAnim(DefaultWidgetAnimation::AppearanceDirect) == true)
+	{
+		PlayAnimationByName(DefaultWidgetAnimation::AppearanceDirect);
+	}
+	
+	bActive = _bActive;
 }
 
 void UCY_Widget::OnAnimationStarted_Implementation(const UWidgetAnimation* Animation)

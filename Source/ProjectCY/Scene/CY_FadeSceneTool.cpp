@@ -3,6 +3,8 @@
 
 #include "CY_FadeSceneTool.h"
 
+#include "CY_BasePlayer.h"
+#include "CY_BasicGameUtility.h"
 #include "CY_BuiltInWidgetTool.h"
 #include "CY_CameraManager.h"
 #include "CY_FadeCommand.h"
@@ -47,7 +49,11 @@ void UCY_FadeSceneTool::Request(UCY_FadeCommand* Command)
 void UCY_FadeSceneTool::FinishRequest()
 {
 	CurrentStep = ECY_FadeStep::Ready;
-
+	bLoadStart = false;
+	bLoadComplete = false;
+	LoadingMinimumTime = 0.f;
+	LoadElapsedTime = 0.f;
+	
 	for(int32 i = 0 ; i < Commands.Num(); i++)
 	{
 		Commands[i]->RemoveFromRoot();
@@ -170,7 +176,7 @@ void UCY_FadeSceneTool::PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, 
 			return;
 		}
 
-		DialogScreenFader->Active(500);
+		DialogScreenFader->Active(true);
 		
 		if(bFadeIn)
 		{
@@ -255,6 +261,10 @@ void UCY_FadeSceneTool::OnCameraFadeInFinished()
 				WorldMap->RebuildWorldMap();
 				WorldMap->OnFinishedWorldMapFunc([this]()
 				{
+					if(const TObjectPtr<UCY_BasePlayer> PlayerUnit = Cast<UCY_BasePlayer>(UCY_BasicGameUtility::GetCurrentPlayerUnit()))
+					{
+						PlayerUnit->SetActionState(ECY_UnitActionState::Player_Normal);
+					}
 					bLoadStart = true;
 				});
 			}		

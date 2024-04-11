@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CY_Define.h"
 #include "Camera/CameraComponent.h"
+#include "Camera/CY_CameraDefine.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "CY_CameraActor.generated.h"

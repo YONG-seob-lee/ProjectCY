@@ -66,7 +66,11 @@ void UCY_Widget_WorldMap::FinishWidget()
 
 void UCY_Widget_WorldMap::RebuildWorldMap(bool _bActive /* = true */)
 {
+	StopAllAnimations();
+	
 	bActive = _bActive;
+	SetVisibility(bActive ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	Active(bActive);
 }
 
 void UCY_Widget_WorldMap::OnClickEaglePoint(TObjectPtr<UCY_Button> Button)
@@ -87,8 +91,8 @@ void UCY_Widget_WorldMap::OnClickEaglePoint(TObjectPtr<UCY_Button> Button)
 		// Step 2. 월드맵 제거, 로드 컴플리트
 		if(OnFinishedWorldMapProcess)
 		{
-			OnFinishedWorldMapProcess();
 			RebuildWorldMap(false);
+			OnFinishedWorldMapProcess();
 		}
 	}	
 }

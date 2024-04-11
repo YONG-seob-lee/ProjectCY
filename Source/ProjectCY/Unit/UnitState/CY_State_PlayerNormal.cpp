@@ -122,7 +122,7 @@ void UCY_State_PlayerNormal::InteractionProcess()
 	FHitResult HitResult;
 	FCollisionQueryParams asdf;
 	
-	if(CameraActor->ActorLineTraceSingle(HitResult, LineTraceStartLocation, LineTraceEndLocation, ECollisionChannel::ECC_EngineTraceChannel1, FCollisionQueryParams::DefaultQueryParam))
+	if(CameraActor->ActorLineTraceSingle(HitResult, LineTraceStartLocation, LineTraceEndLocation, ECollisionChannel::ECC_GameTraceChannel1, FCollisionQueryParams::DefaultQueryParam))
 	{
 		if(TObjectPtr<ACY_ActorBase> TargetActor =  Cast<ACY_ActorBase>(HitResult.GetActor()))
 		{
@@ -172,6 +172,22 @@ void UCY_State_PlayerNormal::OnAxisLeftRight(float AxisValue)
 
 void UCY_State_PlayerNormal::OnClickInteraction()
 {
+	// Reset Input Keys
+	OwnerUnit->SetActionState(ECY_UnitActionState::None);
+
+	// Play Fade & Change Scene
+	CREATE_FADE_COMMAND(Command);
+	Command->SetFadeStyle(ECY_FadeStyle::Drone);
+	Command->SetIsDirectFadeIn(false);
+	Command->SetLoadingPageType(ECY_LoadingPageType::ShowWorldMap);
+	Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
+	{
+		// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
+		return gWidgetMng.IsFinishedWorldMapProcess();
+	});
+            
+	gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);
+	
 	// Step 1. Check Enable Interaction
 	if(OnInteractionCallback)
 	{
@@ -188,13 +204,13 @@ void UCY_State_PlayerNormal::OnClickWorldMap()
 	{
 		if(WorldMapWidget->IsVisible())
 		{
+			WorldMapWidget->ActiveDirect(false);
 			WorldMapWidget->SetVisibility(ESlateVisibility::Collapsed);
-			WorldMapWidget->Active(false);
 		}
 		else
 		{
 			WorldMapWidget->SetVisibility(ESlateVisibility::Visible);
-			WorldMapWidget->Active(true);
+			WorldMapWidget->ActiveDirect(true);
 		}
 	}
 }

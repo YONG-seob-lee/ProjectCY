@@ -59,6 +59,8 @@ private:
 
 	void ShowCameraFadeStep_Internal(float BlendTime = 1.f);
 	
+	void SettingFadeDrone();
+	
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> CameraStateMachine = nullptr;
 	

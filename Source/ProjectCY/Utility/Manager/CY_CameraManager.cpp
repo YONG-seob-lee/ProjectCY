@@ -6,6 +6,7 @@
 #include "CY_BasicGameUtility.h"
 #include "CY_Mapper_Camera.h"
 #include "CY_StateMachine.h"
+#include "CY_UnitBase.h"
 #include "CY_UnitManager.h"
 #include "CY_Utility.h"
 #include "Camera/CY_CameraActor.h"
@@ -103,9 +104,12 @@ void UCY_CameraManager::GetDronesCamera(ECY_GameCameraType _CameraType, TArray<T
 		return;
 	}
 
-	if(const TObjectPtr<ACY_CameraActor>* DroneCamera = TargetCameraActors->Find(CameraSubType::Drone_01))
+	for(const auto& Camera : *TargetCameraActors)
 	{
-		DroneCameras.Emplace(*DroneCamera);
+		if(Camera.Key == CameraSubType::Drone_01 || Camera.Key == CameraSubType::Drone_02 || Camera.Key == CameraSubType::Drone_03)
+		{
+			DroneCameras.Emplace(Camera.Value);
+		}
 	}
 }
 
@@ -209,12 +213,14 @@ void UCY_CameraManager::ShowCameraFadeStep(ECY_GameCameraType CameraType, const 
 	{
 		bCompleteDroneProcess = false;
 	}
-	TArray<TObjectPtr<ACY_CameraActor>> DroneCameras;
-	GetDronesCamera(CameraType, DroneCameras);
-	StackCameraActors = DroneCameras;
 
+	// Bind FinishedDelegate
 	OnStepFinishedCallback = StepFinishedCallback;
-	
+
+	// SetDronePosition & Stack
+	SettingFadeDrone();
+
+	// Fade Drones
 	ShowCameraFadeStep_Internal(BlendTime);
 }
 
@@ -242,10 +248,10 @@ void UCY_CameraManager::AddCameraActor(const FString& CameraType, const FString&
 
 void UCY_CameraManager::ShowCameraFadeStep_Internal(float BlendTime /* = 1.f */)
 {
-	if(StackCameraActors.Num() <= 0)
+	if(StackCameraActors.IsValidIndex(0) == false)
 	{
 		bCompleteDroneProcess = true;
-		if(OnStepFinishedCallback)
+		if(OnStepFinishedCallback)	
 		{
 			OnStepFinishedCallback();
 		}
@@ -258,8 +264,33 @@ void UCY_CameraManager::ShowCameraFadeStep_Internal(float BlendTime /* = 1.f */)
 	{
 		if(const TObjectPtr<ACY_CameraActor> CameraActor = StackCameraActors.Last())
 		{
-			StackCameraActors.Remove(CameraActor);
+			if(StackCameraActors.IsValidIndex(0))
+			{
+				StackCameraActors.RemoveAt(0);
+			}
 			ShowCameraFadeStep_Internal();
 		}
 	}, BlendTime, false, -1.f);
+}
+
+void UCY_CameraManager::SettingFadeDrone()
+{
+	const TObjectPtr<UCY_UnitBase> UnitBase = UCY_BasicGameUtility::GetCurrentPlayerUnit();
+	if(UnitBase == nullptr)
+	{
+		return;
+	}
+	
+	const FVector PlayerLocation = UnitBase->GetCharacterLocation();
+	
+	TArray<TObjectPtr<ACY_CameraActor>> DroneCameras;
+	GetDronesCamera(ECY_GameCameraType::PalWorld, DroneCameras);
+	DroneCameras[0]->SetTargetPosition(PlayerLocation + FVector(0.f, 0.f, DroneHeight::Drone_01));
+	DroneCameras[0]->SetTargetRotator(FRotator(-45.f, 0.f, 0.f));
+	DroneCameras[1]->SetTargetPosition(PlayerLocation + FVector(0.f, 0.f, DroneHeight::Drone_02));
+	DroneCameras[1]->SetTargetRotator(FRotator(-45.f, 0.f, 0.f));
+	DroneCameras[2]->SetTargetPosition(PlayerLocation + FVector(0.f, 0.f, DroneHeight::Drone_03));
+	DroneCameras[2]->SetTargetRotator(FRotator(-45.f, 0.f, 0.f));
+
+	StackCameraActors = DroneCameras;
 }

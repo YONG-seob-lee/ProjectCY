@@ -28,6 +28,8 @@ public:
 
 	void SetActorEnableCollision(bool bUnitEnableCollision) const;
 	void ClearComponentOverlaps() const;
+
+	void SetActionState(ECY_UnitActionState _ActionState) const;
 	
 	void SetMoveSpeed(float MoveSpeed) const;
 protected:

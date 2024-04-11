@@ -18,6 +18,10 @@ namespace DefaultWidgetAnimation
 {
 	const FName Appearance = TEXT("Appearance");
 	const FName DisAppearance = TEXT("DisAppearance");
+	
+	const FName AppearanceDirect = TEXT("AppearanceDirect");
+	const FName DisAppearanceDirect = TEXT("DisAppearanceDirect");
+	
 	const FName Idle = TEXT("Idle");
 }
 

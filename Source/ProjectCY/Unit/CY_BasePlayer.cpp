@@ -123,6 +123,11 @@ void UCY_BasePlayer::ClearComponentOverlaps() const
 	}
 }
 
+void UCY_BasePlayer::SetActionState(ECY_UnitActionState _ActionState) const
+{
+	ChangeActionState(_ActionState);
+}
+
 void UCY_BasePlayer::SetMoveSpeed(float MoveSpeed) const
 {
 	if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
