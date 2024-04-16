@@ -2,8 +2,6 @@
 
 
 #include "CY_UnitBase.h"
-
-#include "CY_StateMachine.h"
 #include "CY_TableManager.h"
 #include "CY_UnitManager.h"
 #include "Resource_Unit.h"
@@ -43,7 +41,8 @@ bool UCY_UnitBase::CreateUnit(int32 UnitTableId, const FVector& Pos, const FRota
 	if(const TObjectPtr<ACY_CharacterBase> NewCharacter = gUnitMng.CreateCharacter(BPPath, Pos, Rot))
 	{
 		CharacterBase = NewCharacter;
-
+		CharacterBase->SetOwnerUnitBase(this);
+		
 		if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
 		{
 			AnimInstance->SetMoveSpeedInfo(ResourceUnitData->WalkSpeed, ResourceUnitData->RunSpeed);
@@ -133,6 +132,28 @@ void UCY_UnitBase::ChangeActionState(ECY_UnitActionState ActionType) const
 	}
 	
 	ActionStateMachine->SetState(static_cast<uint8>(ActionType));
+}
+
+TObjectPtr<UActorComponent> UCY_UnitBase::GetActorComponentByTag(TSubclassOf<UActorComponent> ClassType, FName TabName, bool bIncludeFromChildActors /* = false */) const
+{
+	const TObjectPtr<ACY_CharacterBase> TargetCharacter = GetCharacterBase();
+	if(TargetCharacter == nullptr)
+	{
+		return nullptr;
+	}
+
+	TInlineComponentArray<UActorComponent*> Components;
+	TargetCharacter->GetComponents(ClassType, Components, bIncludeFromChildActors);
+
+	for(int32 i = 0; i < Components.Num() ; ++i)
+	{
+		if(Components[i]->ComponentHasTag(TabName))
+		{
+			return Components[i];
+		}
+	}
+
+	return nullptr;
 }
 
 TObjectPtr<UCY_AnimInstance> UCY_UnitBase::GetAnimInstance() const

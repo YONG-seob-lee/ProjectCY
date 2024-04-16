@@ -32,6 +32,10 @@ public:
 	void SetActionState(ECY_UnitActionState _ActionState) const;
 	
 	void SetMoveSpeed(float MoveSpeed) const;
+	
+	void BindInteractionEvent();
+	void UnBindInteractionEvent() const;
+	
 protected:
 	virtual void ChangeActionState(ECY_UnitActionState ActionType) const override;
 	

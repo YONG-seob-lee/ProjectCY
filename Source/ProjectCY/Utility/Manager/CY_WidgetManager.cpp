@@ -109,6 +109,22 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CY_CreateWidget(const FName& TypeName)
 	return Widget;
 }
 
+TObjectPtr<UCY_Widget> UCY_WidgetManager::CY_CreateWidgetNotManaging(const FName& TypeName)
+{
+	GEngine->ForceGarbageCollection(true);
+
+	const TObjectPtr<UCY_Widget> Widget = Cast<UCY_Widget>(CreateWidget_Internal(TypeName, true));
+	if(Widget == nullptr)
+	{
+		CY_CHECK(false);
+		return nullptr;
+	}
+
+	AddExclusiveLayerWidget(Widget);
+	
+	return Widget;
+}
+
 void UCY_WidgetManager::PreDestroyWidget(TObjectPtr<UCY_Widget> Widget)
 {
 	if(IsValid(Widget) == false)
@@ -153,12 +169,12 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::GetWidget(const FName& TypeName)
 	return nullptr;
 }
 
-TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManaging(const FString& Path)
+TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManaging(const FString& Path) const
 {
 	return CreateWidget_Internal_NotManaging(Path);
 }
 
-TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManagingBySOP(const FSoftObjectPath& SoftObjectPath)
+TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManagingBySOP(const FSoftObjectPath& SoftObjectPath) const
 {
 	const TObjectPtr<UCY_Widget> Widget = CreateWidgetNotManaging(SoftObjectPath.ToString());
 	if(Widget == nullptr)
@@ -168,6 +184,21 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManagingBySOP(const FSo
 	}
 	
 	return Widget;
+}
+
+void UCY_WidgetManager::OnNpcInteractionOverlap(int32 NpcUnitId, bool bBegin) const
+{
+	if(const TObjectPtr<UCY_BuiltInWidgetTool> BuiltInWidgetTool = BuiltInTool.Get())
+	{
+		const TObjectPtr<UCY_Widget_NpcInteraction> NpcInteractionWidget = BuiltInWidgetTool->GetNpcInteractionWidget();
+		if(NpcInteractionWidget == nullptr)
+		{
+			CY_LOG(TEXT("Not Exist Npc Interaction Widget. Please Check Blueprint"));
+			return;
+		}
+
+		NpcInteractionWidget->OnNpcInteractionOverlap(NpcUnitId, bBegin);
+	}
 }
 
 TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidget_Internal(const FName& TypeName, bool bManaged)

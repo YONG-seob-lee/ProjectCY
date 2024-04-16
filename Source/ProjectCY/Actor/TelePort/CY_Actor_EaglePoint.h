@@ -15,6 +15,9 @@ public:
 	ACY_Actor_EaglePoint(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int32 NpcUnitId = 0;
+	
+	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 WayPointIndex = 0;
 
 	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -31,4 +34,7 @@ protected:
 
 private:
 	TObjectPtr<AActor> SpawnStatue() const;
+
+	UPROPERTY()
+	TObjectPtr<AActor> SpawnedActor = nullptr;
 };

@@ -18,6 +18,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Exit() override;
 
+	void SetOnInteractionEventFunc(const TFunction<void()>& _Func) { OnInteractionCallback = _Func; }
+	
 private:
 	void PlayerMove();
 	
@@ -29,7 +31,6 @@ private:
 	void OnClickInteraction();
 	void OnClickWorldMap();
 
-	void SetOnInteractionEventFunc(const TFunction<void()>& _Func) { OnInteractionCallback = _Func; }
 	
 	TObjectPtr<class UCY_BasePlayer> OwnerUnit = nullptr;
 	TObjectPtr<class ACY_CameraActor> CameraActor = nullptr;

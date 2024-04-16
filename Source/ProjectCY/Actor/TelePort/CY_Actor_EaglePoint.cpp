@@ -3,11 +3,13 @@
 
 #include "CY_Actor_EaglePoint.h"
 
+#include "CY_TableManager.h"
 #include "CY_UnitManager.h"
 #include "CY_Unit_TeleportPoint.h"
 #include "Character/CY_CharacterBase.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BillboardComponent.h"
+#include "Components/SphereComponent.h"
 
 
 ACY_Actor_EaglePoint::ACY_Actor_EaglePoint(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -58,19 +60,23 @@ ACY_Actor_EaglePoint::ACY_Actor_EaglePoint(const FObjectInitializer& ObjectIniti
 			ArrowComponent->SetupAttachment(RootComponent);
 			ArrowComponent->SetUsingAbsoluteScale(true);
 		}
-	}
 #endif
+	}
 }
 
 void ACY_Actor_EaglePoint::BeginPlay()
 {
-	SetInteractionType(ECY_InteractionType::Teleport_Map);
-	SpawnStatue();	
+	ACY_ActorBase::SetInteractionType(ECY_InteractionType::Teleport_Map);
+
+	if(SpawnedActor == nullptr)
+	{
+		SpawnedActor = SpawnStatue();
+	}
 }
 
 TObjectPtr<AActor> ACY_Actor_EaglePoint::SpawnStatue() const
 {
-	const TObjectPtr<UCY_Unit_TeleportPoint> Statue = Cast<UCY_Unit_TeleportPoint>(gUnitMng.CreateUnit(WayPointIndex, UCY_Unit_TeleportPoint::StaticClass(), GetActorLocation(), GetActorRotation()));
+	const TObjectPtr<UCY_Unit_TeleportPoint> Statue = Cast<UCY_Unit_TeleportPoint>(gUnitMng.CreateUnit(NpcUnitId, UCY_Unit_TeleportPoint::StaticClass(), GetActorLocation(), GetActorRotation()));
 	if(IsValid(Statue) == false)
 	{
 		return nullptr;

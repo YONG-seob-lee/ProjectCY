@@ -15,6 +15,7 @@
 #include "CY_WidgetManager.h"
 #include "CY_Widget_WorldMap.h"
 #include "Resource_Unit.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void UCY_State_PlayerNormal::Begin()
 {
@@ -53,7 +54,7 @@ void UCY_State_PlayerNormal::Tick(float DeltaTime)
 	if(OwnerUnit)
 	{
 		PlayerMove();
-		InteractionProcess();
+		//InteractionProcess();
 	}
 }
 
@@ -116,36 +117,47 @@ void UCY_State_PlayerNormal::InteractionProcess()
 	{
 		CameraActor = gCameraMng.GetCurrentActiveCameraActor(); 
 	}
-	constexpr float LineTraceDistance = 3000.f;
-	const FVector LineTraceStartLocation = CameraActor->GetActorLocation();
-	const FVector LineTraceEndLocation = LineTraceStartLocation + CameraActor->GetActorForwardVector() * LineTraceDistance;
-	FHitResult HitResult;
-	FCollisionQueryParams asdf;
-	
-	if(CameraActor->ActorLineTraceSingle(HitResult, LineTraceStartLocation, LineTraceEndLocation, ECollisionChannel::ECC_GameTraceChannel1, FCollisionQueryParams::DefaultQueryParam))
+
+	TObjectPtr<UWorld> World = UCY_BasicGameUtility::GetGameWorld();
+	if(World == nullptr)
 	{
-		if(TObjectPtr<ACY_ActorBase> TargetActor =  Cast<ACY_ActorBase>(HitResult.GetActor()))
+		return;
+	}
+
+	constexpr float LineTraceDistance = 3000.f;
+	const FVector StartLocation = CameraActor->GetActorLocation();
+	const FVector EndLocation = StartLocation + OwnerUnit->GetCharacterBase()->GetActorRotation().Vector() * LineTraceDistance;
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypesArray;
+	ObjectTypesArray.Emplace(ECollisionChannel::ECC_GameTraceChannel1);
+	FHitResult OutHit;
+	
+	if(UKismetSystemLibrary::SphereTraceSingleForObjects(World, StartLocation, EndLocation, 500.f, ObjectTypesArray, false, {}, EDrawDebugTrace::ForDuration, OutHit, true))
+	{
+		TObjectPtr<ACY_ActorBase> TargetActor =  Cast<ACY_ActorBase>(OutHit.GetActor());
+		if(!TargetActor)
 		{
-			switch(TargetActor->GetInteractionType())
+			return;
+		}
+		
+		switch(TargetActor->GetInteractionType())
+		{
+		case ECY_InteractionType::Teleport_Map:
 			{
-			case ECY_InteractionType::Teleport_Map:
+				CREATE_FADE_COMMAND(Command);
+				Command->SetFadeStyle(ECY_FadeStyle::Drone);
+				Command->SetIsDirectFadeIn(false);
+				Command->SetLoadingPageType(ECY_LoadingPageType::EnterFirst);
+				Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
 				{
-					CREATE_FADE_COMMAND(Command);
-					Command->SetFadeStyle(ECY_FadeStyle::Drone);
-					Command->SetIsDirectFadeIn(false);
-					Command->SetLoadingPageType(ECY_LoadingPageType::EnterFirst);
-					Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
-					{
-						// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
-						return gWidgetMng.IsFinishedWorldMapProcess();
-					});
+					// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
+					return gWidgetMng.IsFinishedWorldMapProcess();
+				});
             
-					gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);
-					break;
-				}
-			default:
+				gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);
 				break;
 			}
+		default:
+			break;
 		}
 	}
 	else
@@ -172,30 +184,10 @@ void UCY_State_PlayerNormal::OnAxisLeftRight(float AxisValue)
 
 void UCY_State_PlayerNormal::OnClickInteraction()
 {
-	// Reset Input Keys
-	OwnerUnit->SetActionState(ECY_UnitActionState::None);
-
-	// Play Fade & Change Scene
-	CREATE_FADE_COMMAND(Command);
-	Command->SetFadeStyle(ECY_FadeStyle::Drone);
-	Command->SetIsDirectFadeIn(false);
-	Command->SetLoadingPageType(ECY_LoadingPageType::ShowWorldMap);
-	Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
-	{
-		// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
-		return gWidgetMng.IsFinishedWorldMapProcess();
-	});
-            
-	gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);
-	
-	// Step 1. Check Enable Interaction
 	if(OnInteractionCallback)
 	{
 		OnInteractionCallback();
 	}
-	// Step 2. Check Binding
-
-	// Step 3. BroadCast
 }
 
 void UCY_State_PlayerNormal::OnClickWorldMap()

@@ -41,6 +41,12 @@ void UCY_BuiltInWidgetTool::Initialize()
 	{
 		CY_CHECK(false);
 	}
+
+	NpcInteractionWidget = Cast<UCY_Widget_NpcInteraction>(gWidgetMng.CY_CreateWidget(UCY_Widget_NpcInteraction::GetWidgetName()));
+	if(NpcInteractionWidget == nullptr)
+	{
+		CY_CHECK(false);
+	}
 }
 
 void UCY_BuiltInWidgetTool::Finalize()

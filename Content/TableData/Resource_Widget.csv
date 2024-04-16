@@ -3,3 +3,5 @@ Index,TypeName,zOrder,Path_File,NotRender3D,ExclusiveGroup
 2,Logo,100,2,False,0
 3,WorldMap,102,3,False,0
 4,WorldMapIcon,102,4,False,0
+5,NpcInteraction,105,5,False,0
+6,NpcInteractionItem,106,6,False,0

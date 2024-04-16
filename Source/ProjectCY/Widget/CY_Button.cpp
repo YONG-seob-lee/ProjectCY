@@ -4,6 +4,8 @@
 #include "CY_Button.h"
 #include "CommonTextBlock.h"
 #include "CY_BasicGameUtility.h"
+#include "Components/CanvasPanel.h"
+#include "Components/Image.h"
 
 UCY_Button::UCY_Button()
 {
@@ -16,8 +18,10 @@ UCY_Button::~UCY_Button()
 void UCY_Button::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	CPP_CommonText->SetVisibility(bUseButtonText ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	CPP_Image_Panel->SetVisibility(bUseButtonImage ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	CPP_ButtonImage->SetVisibility(bUseButtonImage ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	CPP_Text_Panel->SetVisibility(bUseButtonText ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	CPP_CommonText->SetVisibility(bUseButtonText ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 }
 
 void UCY_Button::NativeOnCurrentTextStyleChanged()
@@ -33,9 +37,18 @@ const FText UCY_Button::GetPaletteCategory()
 
 void UCY_Button::SetText(const FString& ButtonString) const
 {
-	if(CPP_CommonText)
+	if(CPP_Text_Panel && CPP_CommonText)
 	{
 		CPP_CommonText->SetText(FText::FromString(ButtonString));
+	}
+}
+
+void UCY_Button::SetButtonImage(const TObjectPtr<UTexture2D>& ButtonImageTexture2D) const
+{
+	if(CPP_Image_Panel && CPP_ButtonImage && ButtonImageTexture2D)
+	{
+		CPP_ButtonImage->SetVisibility(ESlateVisibility::HitTestInvisible);
+		CPP_ButtonImage->SetBrushFromTexture(ButtonImageTexture2D);
 	}
 }
 

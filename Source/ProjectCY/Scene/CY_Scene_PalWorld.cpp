@@ -54,6 +54,11 @@ void UCY_Scene_PalWorld::Begin()
 		CompassWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 		CompassWidget->Active();
 	}
+	if(const TObjectPtr<UCY_Widget_NpcInteraction> NpcInteractionWidget = gWidgetMng.GetBuiltInWidgetTool()->GetNpcInteractionWidget())
+	{
+		NpcInteractionWidget->SetVisibility(ESlateVisibility::Visible);
+		NpcInteractionWidget->Active();
+	}
 	
 }
 

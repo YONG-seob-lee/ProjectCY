@@ -24,6 +24,7 @@ public:
 	virtual const FText GetPaletteCategory() override;
 
 	void SetText(const FString& ButtonString) const;
+	void SetButtonImage(const TObjectPtr<UTexture2D>& ButtonImageTexture2D) const;
 
 	void SetOnClickedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnClickedDelegate = Delegate; }
 	FORCEINLINE void UnbindClickedDelegate() { CY_OnClickedDelegate.Clear(); }
@@ -31,7 +32,7 @@ public:
 	FORCEINLINE void UnbindPressedDelegate() { CY_OnPressedDelegate.Clear(); }
 	void SetOnReleasedDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnReleasedDelegate = Delegate; }
 	FORCEINLINE void UnbindReleasedDelegate() { CY_OnReleasedDelegate.Clear(); }
-	void SetOnHoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnHoveredDelegate = Delegate; };
+	void SetOnHoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnHoveredDelegate = Delegate; }
 	FORCEINLINE void UnbindHoveredDelegate() { CY_OnHoveredDelegate.Clear(); }
 	void SetOnUnhoveredDelegate(const FCommonButtonEvent& Delegate) { SetDelegates(); CY_OnUnhoveredDelegate = Delegate; };
 	FORCEINLINE void UnbindUnhoveredDelegate() { CY_OnUnhoveredDelegate.Clear(); }
@@ -65,6 +66,8 @@ protected:
 	bool bUseClickedDelay = false;
 	UPROPERTY(Category = UCY_Button, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool bUseButtonText = true;
+	UPROPERTY(Category = UCY_Button, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool bUseButtonImage = true;
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", EditCondition = "bUseClickedDelay"))
 	float ClickedDelayTime = 0.f;
 	UPROPERTY(Category = UCY_Button, EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -96,5 +99,11 @@ protected:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UCommonTextBlock* CPP_CommonText = nullptr;
+	TObjectPtr<class UCanvasPanel> CPP_Image_Panel = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UCanvasPanel> CPP_Text_Panel = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UImage> CPP_ButtonImage = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UCommonTextBlock> CPP_CommonText = nullptr;
 };

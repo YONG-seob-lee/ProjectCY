@@ -63,8 +63,12 @@ void UCY_Widget::Active(bool _bActive /* = true */)
 		{
 			PlayAnimationByName(DefaultWidgetAnimation::Appearance);
 		}
-	}
 
+		if(_bActive == false)
+		{
+			SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
 	bActive = _bActive;
 }
 

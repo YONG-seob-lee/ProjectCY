@@ -3,6 +3,8 @@ Id,Directory
 101,Widget/BuiltInWidget
 102,Widget/BuiltInWidget/WorldMap
 103,Widget/BuiltInWidget/WorldMap/Textures
+104,Widget/BuiltInWidget/Interaction
+105,Widget/BuiltInWidget/Interaction/Textures
 1000,Maps
 10000,Unit/BasePlayer/Blueprints
 10001,Character/Npc/Blueprints

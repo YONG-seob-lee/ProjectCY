@@ -32,6 +32,8 @@ TObjectPtr<AActor> UCY_BasicGameUtility::SpawnBlueprintActor(const FString& Blue
 	UClass* BlueprintClass = StaticLoadClass(UObject::StaticClass(), nullptr, *BlueprintPath);
 	if(IsValid(BlueprintClass) == false)
 	{
+		CY_CHECK(false);
+		CY_LOG(TEXT("Blueprint Path or Name is not Correct. Please Check Blueprint Path"));
 		return nullptr;
 	}
 	

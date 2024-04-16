@@ -59,3 +59,9 @@ enum class ECY_InteractionType : uint8
 	None = 0			UMETA(DisplayName = "None"),
 	Teleport_Map		UMETA(DisplayName = "Teleport_Map"),
 };
+
+namespace NpcRoleType
+{
+	const FString Interaction = TEXT("Interaction");
+	const FString Bubble = TEXT("Bubble");
+};

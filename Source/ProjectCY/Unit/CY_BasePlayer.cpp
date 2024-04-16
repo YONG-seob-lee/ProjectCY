@@ -5,12 +5,15 @@
 
 #include "CY_AnimInstance.h"
 #include "CY_BasicGameUtility.h"
+#include "CY_FadeCommand.h"
+#include "CY_FadeSceneTool.h"
+#include "CY_SceneManager.h"
 #include "CY_StateBase.h"
 #include "CY_StateMachine.h"
 #include "CY_UnitManager.h"
+#include "CY_WidgetManager.h"
 #include "Character/CY_CharacterBase.h"
 #include "UnitState/CY_State_PlayerNormal.h"
-#include "UnitState/CY_State_PlayerMovement.h"
 
 
 void UCY_BasePlayer::Initialize()
@@ -133,6 +136,43 @@ void UCY_BasePlayer::SetMoveSpeed(float MoveSpeed) const
 	if(const TObjectPtr<UCY_AnimInstance> AnimInstance = GetAnimInstance())
 	{
 		AnimInstance->SetMoveSpeed(MoveSpeed);
+	}
+}
+
+void UCY_BasePlayer::BindInteractionEvent()
+{
+	if(const TObjectPtr<UCY_State_PlayerNormal> PlayerNormalState = Cast<UCY_State_PlayerNormal>(GetActionState(ECY_UnitActionState::Player_Normal)))
+	{
+		PlayerNormalState->SetOnInteractionEventFunc([this]()
+		{
+			// Reset Input Keys & Widgets
+			SetActionState(ECY_UnitActionState::None);
+			if(const TObjectPtr<UCY_Widget_NpcInteraction> NpcInteractionWidget = gWidgetMng.GetBuiltInWidgetTool()->GetNpcInteractionWidget())
+			{
+				NpcInteractionWidget->Active(false);
+			}
+
+			// Play Fade & Change Scene
+			CREATE_FADE_COMMAND(Command);
+			Command->SetFadeStyle(ECY_FadeStyle::Drone);
+			Command->SetIsDirectFadeIn(false);
+			Command->SetLoadingPageType(ECY_LoadingPageType::ShowWorldMap);
+			Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
+			{
+				// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
+				return gWidgetMng.IsFinishedWorldMapProcess();
+			});
+			            
+			gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);
+		});
+	}
+}
+
+void UCY_BasePlayer::UnBindInteractionEvent() const
+{
+	if(const TObjectPtr<UCY_State_PlayerNormal> PlayerNormalState = Cast<UCY_State_PlayerNormal>(GetActionState(ECY_UnitActionState::Player_Normal)))
+	{
+		PlayerNormalState->SetOnInteractionEventFunc(nullptr);
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CY_Define.h"
+#include "CY_StateMachine.h"
 #include "CY_UnitDefine.h"
 #include "Character/CY_CharacterBase.h"
 #include "UObject/Object.h"
@@ -46,8 +47,11 @@ protected:
 	bool CreateActionStateMachine();
 	void DestroyActionStateMachine();
 	void AddActionState(ECY_UnitActionState State, const FName& Name, TSubclassOf<class UCY_StateBase> ClassType);
+	FORCEINLINE TObjectPtr<UCY_StateBase> GetActionState(ECY_UnitActionState State) const { return ActionStateMachine->GetState(static_cast<uint8>(State)); }
 
 	virtual void ChangeActionState(ECY_UnitActionState ActionType) const;
+
+	TObjectPtr<UActorComponent> GetActorComponentByTag(TSubclassOf<UActorComponent> ClassType, FName TabName, bool bIncludeFromChildActors = false) const;
 	
 	TWeakObjectPtr<ACY_CharacterBase> CharacterBase = nullptr;
 private:

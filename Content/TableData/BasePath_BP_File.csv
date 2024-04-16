@@ -3,5 +3,7 @@ Id,Directory_Table_Id,BP_File_Name
 2,100,LogoWidget
 3,102,WorldMapWidget
 4,102,WorldMapIconWidget
-301,10001,BP_EaglePoint
+5,104,NpcInteractionWidget
+6,104,NpcInteractionItemWidget
+301,10001,BP_Base_Npc
 10001,10000,BP_BaseCharacter

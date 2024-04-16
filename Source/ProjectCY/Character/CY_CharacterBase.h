@@ -29,11 +29,17 @@ public:
 
 	void SetActiveMovementComponent(bool bEnable) const;
 	void MoveDirection(const FVector& Direction, float Scale = 1.f, bool bForce = false) const;
+
+	void SetStaticMeshComponent(TObjectPtr<UStaticMesh> StaticMesh) const;
 	
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetRootSkeletalMeshComponent() const { return RootSkeletalMeshComponent; }
 	FORCEINLINE FVector GetCurrentLocation() const { return GetActorLocation(); }
 
 	FORCEINLINE bool IsMovePathFindingPoints() const { return PathFindingPoints >= 0; }
+
+	FORCEINLINE void SetOwnerUnitBase(TObjectPtr<class UObject> _UnitBase) { OwnerUnitBase = _UnitBase; } 
+	FORCEINLINE TObjectPtr<class UObject> GetOwnerUnitBase() const { return OwnerUnitBase.Get(); }
+	
 	void ClearPathFindPoints();
 	
 protected:
@@ -71,10 +77,12 @@ private:
 	TObjectPtr<class UCY_MontageComponent> MontageComponent = nullptr;
 
 	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCY_CollisionBoxComponent> CollisionBoxComponent = nullptr;
+	TObjectPtr<class USphereComponent> CollisionSphereComponent = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<UCY_AnimInstance> AnimInstance = nullptr;
+
+	TWeakObjectPtr<UObject> OwnerUnitBase = nullptr;
 	
 	bool bInitialize = false;
 	int32 PathFindingPoints = 0;

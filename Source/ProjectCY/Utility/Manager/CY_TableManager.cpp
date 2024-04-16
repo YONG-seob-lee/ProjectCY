@@ -15,6 +15,7 @@
 #include "CY_Define.h"
 #include "CY_Mapper_Camera.h"
 #include "CY_Mapper_Common.h"
+#include "CY_Mapper_NpcContents.h"
 #include "CY_Mapper_Resource_Unit.h"
 #include "CY_Mapper_Resource_Widget.h"
 #include "CY_SceneDefine.h"
@@ -57,13 +58,13 @@ void UCY_TableManager::GetRowDataMap(ECY_TableDataType TableType, TMap<FName, ui
 {
 	const FString& Name = CY_Utility::ConvertEnumToString<ECY_TableDataType>("ECY_TableDataType", TableType);
 
-	const TObjectPtr<FCY_TableMapperData> pTable = TableMappers.Find(TableType);
-	if (pTable == nullptr)
+	const TObjectPtr<FCY_TableMapperData> TableMapper = TableMappers.Find(TableType);
+	if (TableMapper == nullptr)
 	{
 		return;
 	}
 
-	const TObjectPtr<UDataTable> TableData = pTable->GetTableData();
+	const TObjectPtr<UDataTable> TableData = TableMapper->GetTableData();
 	if (TableData == nullptr)
 	{
 		return;
@@ -227,6 +228,8 @@ void UCY_TableManager::MakeTableStructData()
 	
 	CreateTableData(ECY_TableDataType::Camera, "/Game/TableData/Camera.Camera", UCY_Mapper_Camera::StaticClass());
 	CreateTableData(ECY_TableDataType::Pal_Character, "/Game/TableData/Pal_Character.Pal_Character", UCY_Mapper_PalCharacter::StaticClass());
+	CreateTableData(ECY_TableDataType::Npc, "/Game/TableData/Npc.Npc");
+	CreateTableData(ECY_TableDataType::Npc_Contents, "/Game/TableData/Npc_Contents.Npc_Contents", UCY_Mapper_NpcContents::StaticClass());
 }
 
 void UCY_TableManager::LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData)

@@ -6,7 +6,6 @@
 #include "AnimInstance/CY_AnimInstance.h"
 #include "Components/CY_MontageComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/CY_CollisionBoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -54,6 +53,18 @@ ACY_CharacterBase::ACY_CharacterBase()
 		MovementComponent->RotationRate = FRotator(0.f, 360.f, 0.f);
 		MovementComponent->bUseControllerDesiredRotation = true;
 		MovementComponent->bOrientRotationToMovement = true;
+	}
+
+	// Add Collision Box
+	CollisionSphereComponent = CreateDefaultSubobject<USphereComponent>("CollisionSphereComponent");
+	if(CollisionSphereComponent)
+	{
+		CollisionSphereComponent->OnComponentBeginOverlap.Clear();
+		CollisionSphereComponent->OnComponentEndOverlap.Clear();
+		CollisionSphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+		//CollisionSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		//CollisionSphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECR_Block);
+		CollisionSphereComponent->SetupAttachment(RootComponent);
 	}
 	
 	CreateTestSphere();
@@ -112,14 +123,6 @@ void ACY_CharacterBase::Initialize()
 	{
 		MontageComponent = NewMontageComponent;
 		MontageComponent->SetAnimInstance(AnimInstance);
-	}
-
-	// Add Collision Box
-	CollisionBoxComponent = FindComponentByClass<UCY_CollisionBoxComponent>();
-	if(CollisionBoxComponent)
-	{
-		CollisionBoxComponent->OnComponentBeginOverlap.Clear();
-		CollisionBoxComponent->OnComponentEndOverlap.Clear();
 	}
 
 	bInitialize = true;
@@ -194,6 +197,11 @@ void ACY_CharacterBase::MoveDirection(const FVector& Direction, float Scale /* =
 	{
 		MovementComponent->AddInputVector(Direction * Scale, bForce);
 	}
+}
+
+void ACY_CharacterBase::SetStaticMeshComponent(TObjectPtr<UStaticMesh> StaticMesh) const
+{
+	RootStaticMeshComponent->SetStaticMesh(StaticMesh);
 }
 
 void ACY_CharacterBase::ClearPathFindPoints()

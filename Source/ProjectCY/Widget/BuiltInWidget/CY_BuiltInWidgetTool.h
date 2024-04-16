@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CY_Widget_NpcInteraction.h"
 #include "CY_Widget_WorldMap.h"
 #include "UObject/Object.h"
 #include "CY_BuiltInWidgetTool.generated.h"
@@ -20,6 +21,7 @@ public:
 	FORCEINLINE TObjectPtr<class UCY_Widget_Compass> GetCompassWidget() const { return CompassWidget; }
 	FORCEINLINE TObjectPtr<class UCY_Widget_Loading> GetLoadingWidget() const { return LoadingWidget; }
 	FORCEINLINE TObjectPtr<UCY_Widget_WorldMap> GetWorldMapWidget() const { return WorldMapWidget; }
+	FORCEINLINE TObjectPtr<UCY_Widget_NpcInteraction> GetNpcInteractionWidget() const { return NpcInteractionWidget; }
 	
 	FORCEINLINE TSharedPtr<class FCY_PreTouchProcessor> GetPreTouchProcessor() const { return PreTouchProcessor; }
 
@@ -44,6 +46,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UCY_Widget_WorldMap> WorldMapWidget = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UCY_Widget_NpcInteraction> NpcInteractionWidget = nullptr;
 	
 	TSharedPtr<FCY_PreTouchProcessor> PreTouchProcessor;
 };
