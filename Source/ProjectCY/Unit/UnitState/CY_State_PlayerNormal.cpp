@@ -88,11 +88,15 @@ void UCY_State_PlayerNormal::PlayerMove()
 	// Step 2. 캐릭터 정면벡터와 조이스틱을 바인딩
 	if(DetectJoyStickValue > 0.001f)
 	{
+		if(JoyStickDistance.Y != 0)
+		{
+			CachedUnitForward = CameraActor->GetForward();
+			CachedUnitRight = CameraActor->GetCross();
+		}
+		
 		FVector NewMoveDirection = JoyStickDistance.Y * CachedUnitForward + JoyStickDistance.X * CachedUnitRight;
 		CY_LOG(TEXT("%f"), NewMoveDirection.Size());
 		NewMoveDirection.Z = 0.f;
-		
-		FRotator Rotator = NewMoveDirection.Rotation();
 		
 		// 시계, 반시계
 		
