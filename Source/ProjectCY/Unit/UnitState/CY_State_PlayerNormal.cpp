@@ -149,7 +149,7 @@ void UCY_State_PlayerNormal::InteractionProcess()
 			{
 				CREATE_FADE_COMMAND(Command);
 				Command->SetFadeStyle(ECY_FadeStyle::Drone);
-				Command->SetIsDirectFadeIn(false);
+				Command->SetIsDirectFadeOut(false);
 				Command->SetLoadingPageType(ECY_LoadingPageType::EnterFirst);
 				Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
 				{

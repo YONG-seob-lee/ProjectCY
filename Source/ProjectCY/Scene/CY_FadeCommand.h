@@ -19,16 +19,16 @@ class PROJECTCY_API UCY_FadeCommand : public UObject
 	GENERATED_BODY()
 public:
 	FORCEINLINE void SetFadeStyle(ECY_FadeStyle FadeStyle) { Fade = FadeStyle; }
-	FORCEINLINE void SetIsDirectFadeIn(bool _bDirectFadeIn) { bDirectFadeIn = _bDirectFadeIn; }
+	FORCEINLINE void SetIsDirectFadeOut(bool _bDirectFadeOut) { bDirectFadeOut = _bDirectFadeOut; }
 	FORCEINLINE void SetLoadingPageType(ECY_LoadingPageType Type) { LoadingPageType = Type; }
 	
 	FORCEINLINE ECY_FadeStyle GetFadeType() const { return Fade; }
-	FORCEINLINE bool GetIsDirectFadeIn() const { return bDirectFadeIn; }
+	FORCEINLINE bool GetIsDirectFadeOut() const { return bDirectFadeOut; }
 	FORCEINLINE ECY_LoadingPageType GetLoadingPageType() const { return LoadingPageType; }
 	
-	FCY_FadeEventDelegate OnFadeInComplete;
-	FCY_FadeEventDelegate OnFadeOutStart;
 	FCY_FadeEventDelegate OnFadeOutComplete;
+	FCY_FadeEventDelegate OnFadeInStart;
+	FCY_FadeEventDelegate OnFadeInComplete;
 
 	FCY_FadeCheckLoadDelegate OnCheckLoadComplete;
 	
@@ -36,7 +36,7 @@ public:
 private:
 	ECY_FadeStyle Fade = ECY_FadeStyle::None;
 	ECY_LoadingPageType LoadingPageType = ECY_LoadingPageType::None;
-	bool bDirectFadeIn = false;
+	bool bDirectFadeOut = false;
 	
 	FString CreateFileLine = FString();
 };

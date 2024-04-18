@@ -42,7 +42,7 @@ void UCY_FadeSceneTool::Request(UCY_FadeCommand* Command)
 
 	if(CurrentStep == ECY_FadeStep::Ready)
 	{
-		StartFadeIn();
+		StartFadeOut();
 	}
 }
 
@@ -66,10 +66,10 @@ void UCY_FadeSceneTool::Tick(float DeltaTime)
 {
 	if(bLoadComplete)
 	{
-		if(CurrentStep == ECY_FadeStep::ExitFadeIn)
+		if(CurrentStep == ECY_FadeStep::ExitFadeOut)
 		{
-			CurrentStep = ECY_FadeStep::EnterFadeOut;
-			StartFadeOut();
+			CurrentStep = ECY_FadeStep::EnterFadeIn;
+			StartFadeIn();
 			return;
 		}
 	}
@@ -81,10 +81,10 @@ void UCY_FadeSceneTool::Tick(float DeltaTime)
     		for(int32 i = 0 ; i < Commands.Num() ; ++i)
     		{
 			    const TObjectPtr<UCY_FadeCommand> Command = Commands[i];
-    			if(Command->OnFadeInComplete.IsBound())
+    			if(Command->OnFadeOutComplete.IsBound())
     			{
-    				Command->OnFadeInComplete.Execute();
-    				Command->OnFadeInComplete.Unbind();
+    				Command->OnFadeOutComplete.Execute();
+    				Command->OnFadeOutComplete.Unbind();
     			}
     			if(Command->OnCheckLoadComplete.IsBound())
     			{
@@ -117,7 +117,7 @@ FString UCY_FadeSceneTool::GetLevelPath(ECY_GameSceneType SceneType)
 	return pLevelPath ? *pLevelPath : FString();
 }
 
-void UCY_FadeSceneTool::StartFadeIn()
+void UCY_FadeSceneTool::StartFadeOut()
 {
 	if(Commands.Num() <= 0)
 	{
@@ -139,7 +139,7 @@ void UCY_FadeSceneTool::StartFadeIn()
 		return;
 	}
 
-	CurrentStep = ECY_FadeStep::EnterFadeIn;
+	CurrentStep = ECY_FadeStep::EnterFadeOut;
 
 	if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Drone)
 	{
@@ -147,17 +147,17 @@ void UCY_FadeSceneTool::StartFadeIn()
 	}
 	else
 	{
-		PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), true, FadeWidgetCommand->GetIsDirectFadeIn());
+		PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), true, FadeWidgetCommand->GetIsDirectFadeOut());
 	}
 }
 
-void UCY_FadeSceneTool::StartFadeOut()
+void UCY_FadeSceneTool::StartFadeIn()
 {
 	for(const TObjectPtr<UCY_FadeCommand> Command : Commands)
 	{
-		if(Command->OnFadeOutStart.IsBound())
+		if(Command->OnFadeInStart.IsBound())
 		{
-			Command->OnFadeOutStart.Execute();
+			Command->OnFadeInStart.Execute();
 		}
 	}
 
@@ -180,11 +180,11 @@ void UCY_FadeSceneTool::PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, 
 		
 		if(bFadeIn)
 		{
-			DialogScreenFader->StartScreenFade(ECY_FadeType::FadeIn,[this](){ OnWidgetFadeInFinished();});	
+			DialogScreenFader->StartScreenFade(ECY_FadeType::FadeIn,[this](){ OnWidgetFadeOutFinished();});	
 		}
 		else
 		{
-			DialogScreenFader->StartScreenFade(ECY_FadeType::FadeOut,[this](){ OnWidgetFadeOutFinished();});
+			DialogScreenFader->StartScreenFade(ECY_FadeType::FadeOut,[this](){ OnWidgetFadeInFinished();});
 		}
 		
 	}
@@ -194,15 +194,15 @@ void UCY_FadeSceneTool::PlayDrone()
 {
 	gCameraMng.ShowCameraFadeStep(ECY_GameCameraType::PalWorld, [this]()
 	{
-		OnCameraFadeInFinished();
+		OnCameraFadeOutFinished();
 	});
 }
 
-void UCY_FadeSceneTool::OnWidgetFadeInFinished()
+void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
 {
-	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
+	if(CurrentStep == ECY_FadeStep::EnterFadeOut)
 	{
-		CurrentStep = ECY_FadeStep::ExitFadeIn;
+		CurrentStep = ECY_FadeStep::ExitFadeOut;
 		if(!FadeWidgetCommand)
 		{
 			return;
@@ -230,16 +230,16 @@ void UCY_FadeSceneTool::OnWidgetFadeInFinished()
 	}
 }
 
-void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
+void UCY_FadeSceneTool::OnWidgetFadeInFinished()
 {
-	if(CurrentStep == ECY_FadeStep::EnterFadeOut)
+	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
 	{
-		CurrentStep = ECY_FadeStep::ExitFadeOut;
+		CurrentStep = ECY_FadeStep::ExitFadeIn;
 		for(const TObjectPtr<UCY_FadeCommand> Command : Commands)
 		{
-			if(Command->OnFadeOutComplete.IsBound())
+			if(Command->OnFadeInComplete.IsBound())
 			{
-				Command->OnFadeOutComplete.Execute();
+				Command->OnFadeInComplete.Execute();
 			}
 		}
 
@@ -247,11 +247,11 @@ void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
 	}
 }
 
-void UCY_FadeSceneTool::OnCameraFadeInFinished()
+void UCY_FadeSceneTool::OnCameraFadeOutFinished()
 {
-	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
+	if(CurrentStep == ECY_FadeStep::EnterFadeOut)
 	{
-		CurrentStep = ECY_FadeStep::ExitFadeIn;
+		CurrentStep = ECY_FadeStep::ExitFadeOut;
 
 		// 맵 위젯 활성화
 		if(FadeWidgetCommand->GetLoadingPageType() == ECY_LoadingPageType::ShowWorldMap)
@@ -272,6 +272,6 @@ void UCY_FadeSceneTool::OnCameraFadeInFinished()
 	}
 }
 
-void UCY_FadeSceneTool::OnCameraFadeOutFinished()
+void UCY_FadeSceneTool::OnCameraFadeInFinished()
 {
 }

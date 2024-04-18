@@ -49,10 +49,10 @@ enum class ECY_FadeStatus
 enum class ECY_FadeStep
 {
     Ready = 0,
-	EnterFadeIn,
-	ExitFadeIn,
 	EnterFadeOut,
 	ExitFadeOut,
+	EnterFadeIn,
+	ExitFadeIn,
 };
 
 enum class ECY_FadeStyle

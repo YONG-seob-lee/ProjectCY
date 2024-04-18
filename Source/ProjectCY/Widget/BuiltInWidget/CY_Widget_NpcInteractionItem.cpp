@@ -69,7 +69,7 @@ void UCY_Widget_NpcInteractionItem::OnClickInteractionButton()
 		// Play Fade & Change Scene
 		CREATE_FADE_COMMAND(Command);
 		Command->SetFadeStyle(ECY_FadeStyle::Drone);
-		Command->SetIsDirectFadeIn(false);
+		Command->SetIsDirectFadeOut(false);
 		Command->SetLoadingPageType(ECY_LoadingPageType::ShowWorldMap);
 		Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
 		{

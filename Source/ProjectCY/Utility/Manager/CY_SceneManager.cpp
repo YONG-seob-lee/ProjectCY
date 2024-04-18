@@ -262,7 +262,7 @@ bool UCY_SceneManager::ChangeSceneStep_Fade(TObjectPtr<UCY_FadeCommand> Command)
 
 	if(ChangeSceneData.Step == ECY_ChangeSceneStep::Ready)
 	{
-		Command->OnFadeInComplete = FCY_FadeEventDelegate::CreateWeakLambda(this, [this]()
+		Command->OnFadeOutComplete = FCY_FadeEventDelegate::CreateWeakLambda(this, [this]()
 			{
 				ChangeSceneStep_LoadLevel();
 			});

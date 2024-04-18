@@ -38,7 +38,7 @@ void UCY_Widget_Title::OnClickStartButton()
 {
 	CREATE_FADE_COMMAND(Command);
 	Command->SetFadeStyle(ECY_FadeStyle::Dialog);
-	Command->SetIsDirectFadeIn(false);
+	Command->SetIsDirectFadeOut(false);
 	Command->SetLoadingPageType(ECY_LoadingPageType::None);
 	Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateLambda([]()
 	{
