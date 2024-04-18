@@ -8,6 +8,7 @@
 #include "CY_WidgetManager.h"
 #include "CY_Widget_Compass.h"
 #include "CY_Widget_DialogScreenFader.h"
+#include "CY_Widget_Toast.h"
 #include "CY_Widget_WorldMap.h"
 #include "Input/CY_PreTouchProcessor.h"
 
@@ -19,6 +20,15 @@ void UCY_BuiltInWidgetTool::BuiltInitialize()
 		DialogScreenFader->FillDefaultAnimations();
 		DialogScreenFader->AddToViewport(500);
 		DialogScreenFader->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	ToastWidget = Cast<UCY_Widget_Toast>(gWidgetMng.CreateWidgetNotManagingBySOP(UCY_Widget_Toast::GetWidgetPath()));
+	if(ToastWidget)
+	{
+		ToastWidget->FillDefaultAnimations();
+		ToastWidget->AddToViewport(1000);
+		ToastWidget->SetZOrder(1000);
+		ToastWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 	CompassWidget = Cast<UCY_Widget_Compass>(gWidgetMng.CreateWidgetNotManagingBySOP(UCY_Widget_Compass::GetWidgetPath()));

@@ -18,6 +18,7 @@ class PROJECTCY_API UCY_BuiltInWidgetTool : public UObject
 
 public:
 	FORCEINLINE TObjectPtr<class UCY_Widget_DialogScreenFader> GetDialogScreenFader() const { return DialogScreenFader;}
+	FORCEINLINE TObjectPtr<class UCY_Widget_Toast> GetToastWidget() const { return ToastWidget; }
 	FORCEINLINE TObjectPtr<class UCY_Widget_Compass> GetCompassWidget() const { return CompassWidget; }
 	FORCEINLINE TObjectPtr<class UCY_Widget_Loading> GetLoadingWidget() const { return LoadingWidget; }
 	FORCEINLINE TObjectPtr<UCY_Widget_WorldMap> GetWorldMapWidget() const { return WorldMapWidget; }
@@ -38,6 +39,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UCY_Widget_DialogScreenFader> DialogScreenFader = nullptr;
 
+	UPROPERTY()
+	TObjectPtr<UCY_Widget_Toast> ToastWidget = nullptr;
+	
 	UPROPERTY()
 	TObjectPtr<UCY_Widget_Compass> CompassWidget = nullptr;
 	

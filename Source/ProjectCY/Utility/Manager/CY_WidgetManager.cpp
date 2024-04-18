@@ -11,6 +11,7 @@
 #include "CY_Utility.h"
 #include "CY_Widget.h"
 #include "CY_WidgetDefine.h"
+#include "CY_Widget_Toast.h"
 
 UCY_WidgetManager::UCY_WidgetManager()
 {
@@ -184,6 +185,18 @@ TObjectPtr<UCY_Widget> UCY_WidgetManager::CreateWidgetNotManagingBySOP(const FSo
 	}
 	
 	return Widget;
+}
+
+void UCY_WidgetManager::ShowToastMessage(const FString& Message) const
+{
+	if(const TObjectPtr<UCY_BuiltInWidgetTool> BuiltInWidgetTool = BuiltInTool.Get())
+	{
+		if(const TObjectPtr<UCY_Widget_Toast> ToastWidget = BuiltInWidgetTool->GetToastWidget())
+		{
+			ToastWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+			ToastWidget->ShowToast(Message);
+		}
+	}
 }
 
 void UCY_WidgetManager::OnNpcInteractionOverlap(int32 NpcUnitId, bool bBegin) const

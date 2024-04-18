@@ -51,6 +51,7 @@ void UCY_Widget_NpcInteractionItem::OnClickInteractionButton()
 	if(ItemType == ItemType::None)
 	{
 		// Show Toast Message
+		gWidgetMng.ShowToastMessage(TEXT("개발중에 있습니다."));
 	}
 	else if(ItemType == ItemType::FastMove)
 	{

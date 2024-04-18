@@ -28,8 +28,8 @@ public:
 
 	void ClearExclusiveLayer();
 
-	TObjectPtr<class UCY_Widget> CY_CreateWidget(const FName& TypeName);
-	TObjectPtr<class UCY_Widget> CY_CreateWidgetNotManaging(const FName& TypeName);
+	TObjectPtr<UCY_Widget> CY_CreateWidget(const FName& TypeName);
+	TObjectPtr<UCY_Widget> CY_CreateWidgetNotManaging(const FName& TypeName);
 	
 	void PreDestroyWidget(TObjectPtr<UCY_Widget> Widget);
 	bool DestroyWidget(const FName& TypeName);
@@ -37,6 +37,8 @@ public:
 	TObjectPtr<UCY_Widget> GetWidget(const FName& TypeName);
 	TObjectPtr<UCY_Widget> CreateWidgetNotManaging(const FString& Path) const;
 	TObjectPtr<UCY_Widget> CreateWidgetNotManagingBySOP(const FSoftObjectPath& SoftObjectPath) const;
+
+	void ShowToastMessage(const FString& Message) const;
 	
 	TObjectPtr<UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
 
