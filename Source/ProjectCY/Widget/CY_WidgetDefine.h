@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Framework/Application/IInputProcessor.h"
+#include "CommonButtonBase.h"
 #include "UObject/Object.h"
 #include "CY_WidgetDefine.generated.h"
 
@@ -74,4 +74,27 @@ struct FCY_ResourceWidgetInfo
 	
 	FORCEINLINE const FName& GetWidgetName() const { return TypeName; }
 	FORCEINLINE const ECY_ExclusiveGroup& GetExclusiveGroup() const { return ExclusiveGroup; }
+};
+
+UENUM()
+enum class ECY_SelectButtonState
+{
+	None = 0,
+	Ok,
+	Cancel,
+	OkCancel,
+};
+
+struct FCY_SystemPopupParameter
+{
+	FCY_SystemPopupParameter() {}
+
+	FString TitleText = FString();
+	bool bShowExitButton = false;
+	FString ContentsText = FString();
+	ECY_SelectButtonState SelectButtonState = ECY_SelectButtonState::OkCancel;
+
+	UCommonButtonBase::FCommonButtonEvent OnClickExitEvent;
+	UCommonButtonBase::FCommonButtonEvent OnClickConfirmEvent;
+	UCommonButtonBase::FCommonButtonEvent OnClickCancelEvent;
 };

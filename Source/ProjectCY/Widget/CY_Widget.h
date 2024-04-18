@@ -22,6 +22,9 @@ public:
 	virtual void InitWidget(const FName& TypeName, bool _bManaged, bool bActivate = true);
 	virtual void FinishWidget();
 
+	UFUNCTION()
+	virtual void CloseWidget();
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void Active(bool _bActive = true);
 	virtual void ActiveDirect(bool _bActive = true);

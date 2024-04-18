@@ -25,8 +25,8 @@ private:
 	void OnClickExitButton();
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UCY_DefaultButton> CPP_StartButton = nullptr;
+	TObjectPtr<class UCY_TitleButton> CPP_StartButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UCY_DefaultButton> CPP_ExitButton = nullptr;
+	TObjectPtr<class UCY_TitleButton> CPP_ExitButton = nullptr;
 };

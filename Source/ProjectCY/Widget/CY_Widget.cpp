@@ -2,11 +2,13 @@
 
 
 #include "CY_Widget.h"
-#include "CY_Button.h"
+
+#include "CY_WidgetManager.h"
 #include "MovieScene.h"
 #include "Animation/WidgetAnimation.h"
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/UserWidget.h"
+#include "Button/CY_Button.h"
 
 void UCY_Widget::NativeConstruct()
 {
@@ -43,6 +45,11 @@ void UCY_Widget::FinishWidget()
 	}
 
 	
+}
+
+void UCY_Widget::CloseWidget()
+{
+	gWidgetMng.DestroyWidget(GetResourceWidgetInfo().GetWidgetName());
 }
 
 void UCY_Widget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

@@ -5,7 +5,6 @@
 
 #include "CY_Actor_EaglePoint.h"
 #include "CY_BasicGameUtility.h"
-#include "CY_Button.h"
 #include "CY_TableManager.h"
 #include "CY_UnitBase.h"
 #include "CY_UnitManager.h"
@@ -13,6 +12,7 @@
 #include "CY_Widget_WorldMapIcon.h"
 #include "EngineUtils.h"
 #include "Landscape.h"
+#include "Button/CY_Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Components/NamedSlot.h"

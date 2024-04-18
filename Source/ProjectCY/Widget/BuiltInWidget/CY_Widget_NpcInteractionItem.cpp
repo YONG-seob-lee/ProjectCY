@@ -3,14 +3,17 @@
 
 #include "CY_Widget_NpcInteractionItem.h"
 
+#include "CommonButtonBase.h"
 #include "CY_BasePlayer.h"
 #include "CY_BasicGameUtility.h"
-#include "CY_Button.h"
 #include "CY_FadeCommand.h"
 #include "CY_FadeSceneTool.h"
 #include "CY_SceneManager.h"
 #include "CY_TableManager.h"
 #include "CY_WidgetManager.h"
+#include "Button/CY_Button.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
 
 namespace ItemType
 {
@@ -87,11 +90,11 @@ void UCY_Widget_NpcInteractionItem::SetInteractionItemImage(const int32 ImageTyp
 	const FString ImagePath = gTableMng.GetPath(ECY_TableDataType::BasePath_Img_File, ImageType);
 	if(const TObjectPtr<UTexture2D> ImageTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *ImagePath)))
 	{
-		CPP_InteractionButton->SetButtonImage(ImageTexture);
+		CPP_ButtonImage->SetBrushFromTexture(ImageTexture);
 	}
 }
 
 void UCY_Widget_NpcInteractionItem::SetInteractionItemName(const FString& ItemName) const
 {
-	CPP_InteractionButton->SetText(ItemName);
+	CPP_CommonText->SetText(FText::FromString(ItemName));
 }

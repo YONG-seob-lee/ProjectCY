@@ -3,11 +3,12 @@
 
 #include "CY_Widget_Title.h"
 
+#include "CommonButtonBase.h"
 #include "CY_BasicGameUtility.h"
-#include "CY_DefaultButton.h"
 #include "CY_FadeCommand.h"
 #include "CY_FadeSceneTool.h"
 #include "CY_SceneManager.h"
+#include "Button/CY_TitleButton.h"
 
 void UCY_Widget_Title::InitWidget(const FName& TypeName, bool _bManaged, bool bActivate)
 {

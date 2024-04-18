@@ -2,7 +2,8 @@
 
 
 #include "CY_Widget_WorldMapIcon.h"
-#include "CY_Button.h"
+
+#include "Button/CY_Button.h"
 #include "Components/Image.h"
 
 void UCY_Widget_WorldMapIcon::InitStaticPosition(TObjectPtr<UTexture2D> IconTexture, const FVector& _StaticPosition) const

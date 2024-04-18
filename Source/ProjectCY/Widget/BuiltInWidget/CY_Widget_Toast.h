@@ -14,7 +14,7 @@ class PROJECTCY_API UCY_Widget_Toast : public UCY_Widget
 {
 	GENERATED_BODY()
 public:
-	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath("/Game/Widget/BuiltInWidget/ToastWidget.ToastWidget"); }
+	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath("/Game/Widget/BuiltInWidget/SystemWidget/ToastWidget.ToastWidget"); }
 
 	void ShowToast(const FString& Message);
 

@@ -29,8 +29,14 @@ private:
 	void SetInteractionItemName(const FString& ItemName) const;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UCY_Button> CPP_InteractionButton = nullptr;
+	TObjectPtr<class UCY_Button> CPP_InteractionButton = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UImage> CPP_ButtonImage = nullptr;	
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UTextBlock> CPP_CommonText = nullptr;
+	
 	int32 ItemType = 0; 
 
 	TFunction<void(TObjectPtr<UCY_Widget_NpcInteractionItem>)> OnDisappearanceAnimFinishedCallback = nullptr;

@@ -3,8 +3,9 @@
 
 #include "CY_Widget_Logo.h"
 
-#include "CY_Button.h"
+#include "CommonButtonBase.h"
 #include "CY_SceneManager.h"
+#include "Button/CY_Button.h"
 
 void UCY_Widget_Logo::InitWidget(const FName& TypeName, bool _bManaged, bool bActivate)
 {
