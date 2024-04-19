@@ -27,8 +27,6 @@ public:
 	void SetButtonText(const FString& ButtonText) const;
 	
 	void SetText(const FString& ButtonString) const;
-	
-	void SetOnClickedDelegate(const UCommonButtonBase::FCommonButtonEvent& Event) const;
 
 protected:
 	void SetStyleChange(TSubclassOf<UCommonTextStyle> _TextStyle) const;

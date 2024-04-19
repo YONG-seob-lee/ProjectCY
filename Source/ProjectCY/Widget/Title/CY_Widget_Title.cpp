@@ -9,6 +9,7 @@
 #include "CY_FadeSceneTool.h"
 #include "CY_SceneManager.h"
 #include "Button/CY_TitleButtonBase.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void UCY_Widget_Title::InitWidget(const FName& TypeName, bool _bManaged, bool bActivate)
 {
@@ -17,14 +18,17 @@ void UCY_Widget_Title::InitWidget(const FName& TypeName, bool _bManaged, bool bA
 	if(CPP_StartButton)
 	{
 		CPP_StartButton->SetButtonText(TEXT("Game Start"));
-		UCommonButtonBase::FCommonButtonEvent Event;
-		Event.AddUObject(this , &UCY_Widget_Title::OnClickStartButton);
-		CPP_StartButton->SetOnClickEvent(Event);
+		UCommonButtonBase::FCommonButtonEvent StartEvent;
+		StartEvent.AddUObject(this , &UCY_Widget_Title::OnClickStartButton);
+		CPP_StartButton->SetOnClickEvent(StartEvent);
 	}
 
 	if(CPP_ExitButton)
 	{
 		CPP_ExitButton->SetButtonText(TEXT("Exit"));
+		UCommonButtonBase::FCommonButtonEvent ExitEvent;
+		ExitEvent.AddUObject(this, &UCY_Widget_Title::OnClickExitButton);
+		CPP_ExitButton->SetOnClickEvent(ExitEvent);
 	}
 }
 
@@ -51,4 +55,5 @@ void UCY_Widget_Title::OnClickStartButton()
 
 void UCY_Widget_Title::OnClickExitButton()
 {
+	UKismetSystemLibrary::QuitGame(this, UCY_BasicGameUtility::GetPlayerController() ,EQuitPreference::Quit, false);
 }

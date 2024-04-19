@@ -61,14 +61,6 @@ void UCY_TitleButtonBase::SetText(const FString& ButtonString) const
 	}
 }
 
-void UCY_TitleButtonBase::SetOnClickedDelegate(const UCommonButtonBase::FCommonButtonEvent& Event) const
-{
-	if(CPP_ButtonBase)
-	{
-		CPP_ButtonBase->SetOnClickedDelegate(Event);
-	}
-}
-
 void UCY_TitleButtonBase::SetStyleChange(TSubclassOf<UCommonTextStyle> _TextStyle) const
 {
 	if(CPP_CommonText)
