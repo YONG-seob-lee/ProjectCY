@@ -56,7 +56,6 @@ private:
 	TFunction<void()> OnFinishedWorldMapProcess;
 
 	TWeakObjectPtr<class UCY_UnitBase> PlayerUnit = nullptr;
-
 	
 	// Projection Variable
 	FVector2d WorldMapCenterVector = FVector2d::ZeroVector;

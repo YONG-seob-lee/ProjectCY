@@ -62,6 +62,8 @@ void UCY_Widget_WorldMap::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 
 void UCY_Widget_WorldMap::FinishWidget()
 {
+	PlayerUnit.Reset();
+	
 	Super::FinishWidget();
 }
 
@@ -186,11 +188,19 @@ void UCY_Widget_WorldMap::RePositionPlayerIcon() const
 	{
 		if(PlayerUnit.IsValid())
 		{
-			const FVector PlayerLocation = PlayerUnit->GetCharacterLocation();
-			const FVector2d PlayerIconLocation = FVector2d(PlayerLocation.X, PlayerLocation.Y) / WorldMapScale + WorldMapCenterVector;
-			CY_LOG(TEXT("PlayerIconLocation = %s "), *PlayerIconLocation.ToString());
-			const FVector2d Size = PlayerSlot->GetSize();
-			PlayerSlot->SetPosition(PlayerIconLocation - Size * 0.5f);
+			if(const TObjectPtr<ACY_CharacterBase> CharacterBase = PlayerUnit->GetCharacterBase())
+			{
+				// Step1. Set PlayerIcon Position
+				const FVector PlayerLocation = CharacterBase->GetCurrentLocation();
+				const FVector2d PlayerIconLocation = FVector2d(PlayerLocation.X, PlayerLocation.Y) / WorldMapScale + WorldMapCenterVector;
+				CY_LOG(TEXT("PlayerIconLocation = %s "), *PlayerIconLocation.ToString());
+				const FVector2d Size = PlayerSlot->GetSize();
+				PlayerSlot->SetPosition(PlayerIconLocation - Size * 0.5f);
+
+				// Step2. Set PlayIcon Angle
+				const FRotator PlayerRotator = CharacterBase->GetCurrentRotator();
+				CPP_PlayerNamedSlot->SetRenderTransformAngle(PlayerRotator.Yaw);
+			}
 		}
 	}
 }

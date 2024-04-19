@@ -34,6 +34,7 @@ public:
 	
 	FORCEINLINE TObjectPtr<USkeletalMeshComponent> GetRootSkeletalMeshComponent() const { return RootSkeletalMeshComponent; }
 	FORCEINLINE FVector GetCurrentLocation() const { return GetActorLocation(); }
+	FORCEINLINE FRotator GetCurrentRotator() const { return GetActorRotation(); }
 
 	FORCEINLINE bool IsMovePathFindingPoints() const { return PathFindingPoints >= 0; }
 
