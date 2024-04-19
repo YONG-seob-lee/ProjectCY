@@ -78,26 +78,7 @@ void UCY_Widget_WorldMap::RebuildWorldMap(bool _bActive /* = true */)
 
 void UCY_Widget_WorldMap::OnClickEaglePoint(TObjectPtr<UCY_Button> Button)
 {
-	// Step 1. 캐릭터 특정 위치로 이동
-
-	if(PlayerUnit.IsValid())
-	{
-		const FVector SpawnActorPosition = Button->GetCustomVector();
-
-		if(SpawnActorPosition == FVector::ZeroVector)
-		{
-			return;
-		}
-		
-		PlayerUnit->SetUnitPosition(SpawnActorPosition);
-
-		// Step 2. 월드맵 제거, 로드 컴플리트
-		if(OnFinishedWorldMapProcess)
-		{
-			RebuildWorldMap(false);
-			OnFinishedWorldMapProcess();
-		}
-	}	
+	
 }
 
 void UCY_Widget_WorldMap::SetProjectionVariable()
@@ -128,6 +109,36 @@ void UCY_Widget_WorldMap::SetProjectionVariable()
 	}
 }
 
+void UCY_Widget_WorldMap::SetTeleportInitialize()
+{
+	for(const auto& EagleIcon : EagleIcons)
+	{
+		EagleIcon.Key->InitializeIcon();
+
+		EagleIcon.Key->SetOnClickAcceptMoveFunction([this](const FVector& SpawnActorPosition)
+		{
+			// Step 1. 캐릭터 특정 위치로 이동하는 카메라 애니메이션 추가 하는게 좋아보임.
+
+			if(PlayerUnit.IsValid())
+			{
+				if(SpawnActorPosition == FVector::ZeroVector)
+				{
+					return;
+				}
+				
+				PlayerUnit->SetUnitPosition(SpawnActorPosition);
+		
+				// Step 2. 월드맵 제거, 로드 컴플리트
+				if(OnFinishedWorldMapProcess)
+				{
+					RebuildWorldMap(false);
+					OnFinishedWorldMapProcess();
+				}
+			}	
+		});
+	}
+}
+
 void UCY_Widget_WorldMap::SetTelePortPosition()
 {
 	if(WorldMapCenterVector == FVector2d::ZeroVector)
@@ -155,7 +166,10 @@ void UCY_Widget_WorldMap::SetTelePortPosition()
 					
 					if(const TObjectPtr<UCanvasPanelSlot> EagleSlot = Cast<UCanvasPanelSlot>(TargetEagleIcon->Slot))
 					{
+						// 플레이어가 이동해야할 위치 IconWidget 에 데이터 저장.
 						const FVector EagleLocation = EaglePoint->GetTargetLocation();
+						TargetEagleIcon->SetTargetVector(EaglePoint->GetTargetVector());
+						
 						const FVector2d EagleIconLocation = FVector2d(EagleLocation.X, EagleLocation.Y) / WorldMapScale + WorldMapCenterVector;
 						const FVector2d Size = EagleSlot->GetSize();
 						CY_LOG(TEXT("EagleIconLocation = %s "), *EagleIconLocation.ToString());
@@ -166,14 +180,6 @@ void UCY_Widget_WorldMap::SetTelePortPosition()
 				}
 			}
 		}	
-	}
-}
-
-void UCY_Widget_WorldMap::SetTeleportInitialize()
-{
-	for(const auto& EagleIcon : EagleIcons)
-	{
-		EagleIcon.Key->InitializeIcon();
 	}
 }
 

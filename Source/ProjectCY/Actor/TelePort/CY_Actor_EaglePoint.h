@@ -14,6 +14,8 @@ class PROJECTCY_API ACY_Actor_EaglePoint : public ACY_Actor_TeleportPoint
 public:
 	ACY_Actor_EaglePoint(const FObjectInitializer& ObjectInitializer);
 
+	FORCEINLINE FVector GetTargetVector() const { return TargetVector; }
+
 	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 NpcUnitId = 0;
 	
@@ -27,7 +29,7 @@ public:
 	FString Tag;
 
 	UPROPERTY(Category = ACY_Actor_WayPoint, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UArrowComponent> TalkArrowComponent = nullptr;
+	TObjectPtr<class UArrowComponent> TargetArrowComponent = nullptr;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -37,4 +39,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AActor> SpawnedActor = nullptr;
+
+	FVector TargetVector = FVector::ZeroVector;
 };

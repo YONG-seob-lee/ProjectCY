@@ -6,12 +6,14 @@
 #include "CommonButtonBase.h"
 #include "CY_BasePlayer.h"
 #include "CY_BasicGameUtility.h"
+#include "CY_CameraManager.h"
 #include "CY_FadeCommand.h"
 #include "CY_FadeSceneTool.h"
 #include "CY_SceneManager.h"
 #include "CY_TableManager.h"
 #include "CY_WidgetManager.h"
 #include "Button/CY_Button.h"
+#include "Camera/CY_CameraDefine.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 
@@ -69,7 +71,7 @@ void UCY_Widget_NpcInteractionItem::OnClickInteractionButton()
 		{
 			NpcInteractionWidget->Active(false);
 		}
-
+		
 		// Play Fade & Change Scene
 		CREATE_FADE_COMMAND(Command);
 		Command->SetFadeStyle(ECY_FadeStyle::Drone);
@@ -80,7 +82,12 @@ void UCY_Widget_NpcInteractionItem::OnClickInteractionButton()
 			// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
 			return gWidgetMng.IsFinishedWorldMapProcess();
 		});
-			            
+		Command->OnFadeInComplete = FCY_FadeEventDelegate::CreateWeakLambda(this, [this]
+		{
+			UCY_BasicGameUtility::GetGameWorld()->GetTimerManager().SetTimer(ReturnMainCameraTimeHandler, [this]()
+			{ gCameraMng.ActiveCamera(ECY_GameCameraType::PalWorld, CameraSubType::Main); } ,1.f, false, -1.f);
+		});
+		
 		gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);	
 	}
 }

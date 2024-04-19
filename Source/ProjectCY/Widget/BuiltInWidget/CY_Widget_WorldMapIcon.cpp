@@ -3,7 +3,12 @@
 
 #include "CY_Widget_WorldMapIcon.h"
 
+#include "CY_CameraManager.h"
+#include "CY_FadeCommand.h"
+#include "CY_FadeSceneTool.h"
+#include "CY_SceneManager.h"
 #include "CY_WidgetManager.h"
+#include "CY_Widget_SystemPopup.h"
 #include "Button/CY_Button.h"
 #include "Components/Image.h"
 
@@ -34,11 +39,15 @@ void UCY_Widget_WorldMapIcon::SetOnReleaseIcon()
 	FCY_SystemPopupParameter Parameter;
 	Parameter.TitleText = TEXT("확인");
 	Parameter.bShowExitButton = true;
-	Parameter.ContentsText = TEXT("");
+	Parameter.ContentsText = TEXT("해당 위치로 \'빠른이동\' 하시겠습니까?");
 	Parameter.SelectButtonState = ECY_SelectButtonState::OkCancel;
-	Parameter.OnClickConfirmDelegate.AddWeakLambda(this, []()
+	Parameter.OnClickConfirmDelegate.AddWeakLambda(this, [this]()
 	{
-		// 드론 거꾸로 Fade 작동 및 해당 위치로 텔레포트
+		if(OnClickAcceptMoveCallback)
+		{
+			OnClickAcceptMoveCallback(TargetVector);
+			gWidgetMng.DestroyWidget(UCY_Widget_SystemPopup::GetWidgetName());
+		}
 	});
 	gWidgetMng.ShowSystemPopup(Parameter);
 }

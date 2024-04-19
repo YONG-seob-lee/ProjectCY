@@ -5,6 +5,7 @@
 
 #include "CY_AnimInstance.h"
 #include "CY_BasicGameUtility.h"
+#include "CY_CameraManager.h"
 #include "CY_FadeCommand.h"
 #include "CY_FadeSceneTool.h"
 #include "CY_SceneManager.h"
@@ -12,6 +13,7 @@
 #include "CY_StateMachine.h"
 #include "CY_UnitManager.h"
 #include "CY_WidgetManager.h"
+#include "Camera/CY_CameraDefine.h"
 #include "Character/CY_CharacterBase.h"
 #include "UnitState/CY_State_PlayerNormal.h"
 
@@ -161,6 +163,10 @@ void UCY_BasePlayer::BindInteractionEvent()
 			{
 				// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
 				return gWidgetMng.IsFinishedWorldMapProcess();
+			});
+			Command->OnFadeInComplete = FCY_FadeEventDelegate::CreateWeakLambda(this, []
+			{
+				gCameraMng.ActiveCamera(ECY_GameCameraType::PalWorld, CameraSubType::Main);
 			});
 			            
 			gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);

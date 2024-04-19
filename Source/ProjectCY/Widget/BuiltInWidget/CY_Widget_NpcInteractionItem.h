@@ -39,5 +39,6 @@ private:
 	
 	int32 ItemType = 0; 
 
+	FTimerHandle ReturnMainCameraTimeHandler;
 	TFunction<void(TObjectPtr<UCY_Widget_NpcInteractionItem>)> OnDisappearanceAnimFinishedCallback = nullptr;
 };

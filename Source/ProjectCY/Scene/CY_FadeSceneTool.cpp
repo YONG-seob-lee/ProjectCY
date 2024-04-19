@@ -9,7 +9,6 @@
 #include "CY_CameraManager.h"
 #include "CY_FadeCommand.h"
 #include "CY_Mapper_Common.h"
-#include "CY_StateMachine.h"
 #include "CY_TableManager.h"
 #include "CY_WidgetManager.h"
 #include "CY_Widget_DialogScreenFader.h"
@@ -143,7 +142,7 @@ void UCY_FadeSceneTool::StartFadeOut()
 
 	if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Drone)
 	{
-		PlayDrone();
+		PlayDrone(true);
 	}
 	else
 	{
@@ -163,7 +162,14 @@ void UCY_FadeSceneTool::StartFadeIn()
 
 	if(FadeWidgetCommand)
 	{
-		PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), false , false);
+		if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Drone)
+		{
+			PlayDrone(false);
+		}
+		else
+		{
+			PlayFadeAnimation(FadeWidgetCommand->GetFadeType(), false , false);
+		}
 	}
 }
 
@@ -190,12 +196,12 @@ void UCY_FadeSceneTool::PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, 
 	}
 }
 
-void UCY_FadeSceneTool::PlayDrone()
+void UCY_FadeSceneTool::PlayDrone(bool bIsFadeOut /* = true */)
 {
-	gCameraMng.ShowCameraFadeStep(ECY_GameCameraType::PalWorld, [this]()
+	gCameraMng.ShowCameraFadeStep([this, bIsFadeOut]()
 	{
-		OnCameraFadeOutFinished();
-	});
+		bIsFadeOut ? OnCameraFadeOutFinished() : OnCameraFadeInFinished();
+	}, bIsFadeOut);
 }
 
 void UCY_FadeSceneTool::OnWidgetFadeOutFinished()
@@ -265,7 +271,7 @@ void UCY_FadeSceneTool::OnCameraFadeOutFinished()
 					{
 						PlayerUnit->SetActionState(ECY_UnitActionState::Player_Normal);
 					}
-					bLoadStart = true;
+					bLoadComplete = true;
 				});
 			}		
 		}
@@ -274,4 +280,19 @@ void UCY_FadeSceneTool::OnCameraFadeOutFinished()
 
 void UCY_FadeSceneTool::OnCameraFadeInFinished()
 {
+	if(CurrentStep == ECY_FadeStep::EnterFadeIn)
+	{
+		CurrentStep = ECY_FadeStep::ExitFadeIn;
+
+		// 메인카메라로 다시 전환
+		for(const TObjectPtr<UCY_FadeCommand> Command : Commands)
+		{
+			if(Command->OnFadeInComplete.IsBound())
+			{
+				Command->OnFadeInComplete.Execute();
+			}
+		}
+
+		FinishRequest();
+	}
 }

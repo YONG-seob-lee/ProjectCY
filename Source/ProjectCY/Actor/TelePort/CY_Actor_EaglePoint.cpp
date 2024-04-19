@@ -71,6 +71,8 @@ void ACY_Actor_EaglePoint::BeginPlay()
 	if(SpawnedActor == nullptr)
 	{
 		SpawnedActor = SpawnStatue();
+
+		TargetVector = SpawnedActor->GetActorLocation() + SpawnedActor->GetActorForwardVector() * 300.f;
 	}
 }
 

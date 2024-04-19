@@ -30,7 +30,7 @@ private:
 	void StartFadeIn();
 
 	void PlayFadeAnimation(ECY_FadeStyle FadeType, bool bFadeIn, bool bDirectFadeIn);
-	void PlayDrone();
+	void PlayDrone(bool bIsFadeOut = true);
 	void OnWidgetFadeOutFinished();
 	void OnWidgetFadeInFinished();
 

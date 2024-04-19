@@ -51,7 +51,7 @@ public:
 
 	FORCEINLINE bool IsCompleteDroneFadeStep() const { return bCompleteDroneProcess; }
 
-	void ShowCameraFadeStep(ECY_GameCameraType CameraType, const TFunction<void()>& StepFinishedCallback, float BlendTime = 1.f);
+	void ShowCameraFadeStep(const TFunction<void()>& StepFinishedCallback, bool bIsFadeOut /* = true */, float BlendTime = 1.f);
 private:
 	void RegistCameraState(uint8 Index, const FName& Name, TSubclassOf<UCY_StateBase> SceneType);
 
@@ -59,7 +59,7 @@ private:
 
 	void ShowCameraFadeStep_Internal(float BlendTime = 1.f);
 	
-	void SettingFadeDrone();
+	void SettingFadeDrone(bool bIsFadeOut = true);
 	
 	UPROPERTY()
 	TObjectPtr<class UCY_StateMachine> CameraStateMachine = nullptr;

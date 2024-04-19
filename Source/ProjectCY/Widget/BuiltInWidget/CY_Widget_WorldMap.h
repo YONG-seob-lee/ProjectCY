@@ -29,8 +29,8 @@ public:
 
 private:
 	void SetProjectionVariable();
-	void SetTelePortPosition();
 	void SetTeleportInitialize();
+	void SetTelePortPosition();
 	
 	void RePositionPlayerIcon() const;
 
