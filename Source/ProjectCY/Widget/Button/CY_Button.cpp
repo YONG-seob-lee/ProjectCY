@@ -65,16 +65,37 @@ void UCY_Button::OnClick()
 
 void UCY_Button::OnPress()
 {
+	if(IsUseLongPressedEvent())
+	{
+		FTimerManager& TimerManager = UCY_BasicGameUtility::GetGameWorld()->GetTimerManager();
+		TimerManager.SetTimer(PressTimerHandle, FTimerDelegate::CreateWeakLambda(this, [this]()
+		{
+			CY_OnLongPressedDelegate.Broadcast();
+		}), LongPressedTime, false);
+	}
+	CY_OnPressedDelegate.Broadcast();
 }
 
 void UCY_Button::OnRelease()
 {
+	CY_OnReleasedDelegate.Broadcast();
+
+	if(IsUseLongPressedEvent())
+	{
+		FTimerManager& TimerManager = UCY_BasicGameUtility::GetGameWorld()->GetTimerManager();
+		if(TimerManager.IsTimerActive(PressTimerHandle))
+		{
+			TimerManager.ClearTimer(PressTimerHandle);
+		}
+	}
 }
 
 void UCY_Button::OnHover()
 {
+	CY_OnHoveredDelegate.Broadcast();
 }
 
 void UCY_Button::OnUnhover()
 {
+	CY_OnUnhoveredDelegate.Broadcast();
 }

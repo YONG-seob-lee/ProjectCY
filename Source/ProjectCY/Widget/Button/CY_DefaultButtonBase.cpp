@@ -1,23 +1,23 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CY_DefaultButton.h"
+#include "CY_DefaultButtonBase.h"
 
 #include "CY_Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 
-void UCY_DefaultButton::NativeConstruct()
+void UCY_DefaultButtonBase::NativeConstruct()
 {
 	Super::NativeConstruct();
 }
 
-void UCY_DefaultButton::NativeDestruct()
+void UCY_DefaultButtonBase::NativeDestruct()
 {
 	Super::NativeDestruct();
 }
 
-void UCY_DefaultButton::SetData(const FLinearColor& BGColor, const FString& _ButtonText) const
+void UCY_DefaultButtonBase::SetData(const FLinearColor& BGColor, const FString& _ButtonText) const
 {
 	if(CPP_BGImage)
 	{
@@ -30,7 +30,7 @@ void UCY_DefaultButton::SetData(const FLinearColor& BGColor, const FString& _But
 	}
 }
 
-void UCY_DefaultButton::SetOnClickButton(const UCommonButtonBase::FCommonButtonEvent& CommonButtonEvent) const
+void UCY_DefaultButtonBase::SetOnClickButton(const UCommonButtonBase::FCommonButtonEvent& CommonButtonEvent) const
 {
 	if(CPP_DefaultButton)
 	{

@@ -3,12 +3,14 @@
 
 #include "CY_Widget_SystemPopup.h"
 
-#include "Button/CY_DefaultButton.h"
+#include "Button/CY_DefaultButtonBase.h"
 #include "Button/CY_ImageButton.h"
 #include "Components/TextBlock.h"
 
 void UCY_Widget_SystemPopup::ShowSystemPopup(const FCY_SystemPopupParameter& SystemPopupParam)
 {
+	SetVisibility(ESlateVisibility::Visible);
+	
 	if(CPP_PopupTitleText)
 	{
 		CPP_PopupTitleText->SetText(FText::FromString(SystemPopupParam.TitleText));
@@ -47,27 +49,18 @@ void UCY_Widget_SystemPopup::ShowSystemPopup(const FCY_SystemPopupParameter& Sys
 		}	
 	}
 
-	if(SystemPopupParam.OnClickExitEvent.IsBound() == false)
+	if(CPP_ExitButton->IsVisible() && SystemPopupParam.OnClickExitDelegate.IsBound())
 	{
-		UCommonButtonBase::FCommonButtonEvent ExitEvent;
-		ExitEvent.AddWeakLambda(this, [this]()
-		{
-			CloseWidget();
-		});
-		CPP_ExitButton->SetOnClickExitButton(ExitEvent);
-	}
-	else
-	{
-		CPP_ExitButton->SetOnClickExitButton(SystemPopupParam.OnClickExitEvent);
+		CPP_ExitButton->SetOnClickExitButton(SystemPopupParam.OnClickExitDelegate);
 	}
 
-	if(CPP_ConfirmButton->IsVisible() && SystemPopupParam.OnClickConfirmEvent.IsBound())
+	if(CPP_ConfirmButton->IsVisible() && SystemPopupParam.OnClickConfirmDelegate.IsBound())
 	{
-		CPP_ConfirmButton->SetOnClickButton(SystemPopupParam.OnClickConfirmEvent);
+		CPP_ConfirmButton->SetOnClickButton(SystemPopupParam.OnClickConfirmDelegate);
 	}
 
-	if(CPP_CancelButton->IsVisible() && SystemPopupParam.OnClickCancelEvent.IsBound())
+	if(CPP_CancelButton->IsVisible() && SystemPopupParam.OnClickCancelDelegate.IsBound())
 	{
-		CPP_CancelButton->SetOnClickButton(SystemPopupParam.OnClickCancelEvent);
+		CPP_CancelButton->SetOnClickButton(SystemPopupParam.OnClickCancelDelegate);
 	}
 }

@@ -11,6 +11,7 @@
 #include "CY_Utility.h"
 #include "CY_Widget.h"
 #include "CY_WidgetDefine.h"
+#include "CY_Widget_SystemPopup.h"
 #include "CY_Widget_Toast.h"
 
 UCY_WidgetManager::UCY_WidgetManager()
@@ -143,7 +144,7 @@ void UCY_WidgetManager::PreDestroyWidget(TObjectPtr<UCY_Widget> Widget)
 
 bool UCY_WidgetManager::DestroyWidget(const FName& TypeName)
 {
-	const TObjectPtr<UCY_Widget> Widget = GetWidget(TypeName);
+	TObjectPtr<UCY_Widget> Widget = GetWidget(TypeName);
 	if(Widget == nullptr)
 	{
 		return false;
@@ -151,6 +152,9 @@ bool UCY_WidgetManager::DestroyWidget(const FName& TypeName)
 
 	PreDestroyWidget(Widget);
 	Widget->FinishWidget();
+
+	ManagedWidgets.Remove(TypeName);
+	Widget = nullptr;
 	PostDestroyWidget(TypeName);	
 	return true;
 }
@@ -196,6 +200,33 @@ void UCY_WidgetManager::ShowToastMessage(const FString& Message) const
 			ToastWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 			ToastWidget->ShowToast(Message);
 		}
+	}
+}
+
+void UCY_WidgetManager::ShowSystemPopup(FCY_SystemPopupParameter& Parameter)
+{
+	if(const TObjectPtr<UCY_Widget_SystemPopup> SystemPopup = Cast<UCY_Widget_SystemPopup>(CY_CreateWidget(UCY_Widget_SystemPopup::GetWidgetName())))
+	{
+		if(Parameter.OnClickExitDelegate.IsBound() == false)
+		{
+			UCommonButtonBase::FCommonButtonEvent ExitEvent;
+			ExitEvent.AddWeakLambda(this, [SystemPopup]()
+			{
+				SystemPopup->CloseWidget();
+			});
+			Parameter.OnClickExitDelegate = ExitEvent;
+		}
+
+		if(Parameter.OnClickCancelDelegate.IsBound() == false)
+		{
+			UCommonButtonBase::FCommonButtonEvent ExitEvent;
+			ExitEvent.AddWeakLambda(this, [SystemPopup]()
+			{
+				SystemPopup->CloseWidget();
+			});
+			Parameter.OnClickCancelDelegate = ExitEvent;
+		}
+		SystemPopup->ShowSystemPopup(Parameter);
 	}
 }
 

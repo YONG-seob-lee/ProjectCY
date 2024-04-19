@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
 #include "CY_Widget.h"
-#include "CY_TitleButton.generated.h"
+#include "CY_TitleButtonBase.generated.h"
 
 /**
  *
  */
 UCLASS()
-class PROJECTCY_API UCY_TitleButton : public UCY_Widget
+class PROJECTCY_API UCY_TitleButtonBase : public UCY_Widget
 {
 	GENERATED_BODY()
 

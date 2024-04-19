@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CommonButtonBase.h"
-#include "CY_TitleButton.h"
+#include "CY_TitleButtonBase.h"
 #include "CY_Button.generated.h"
 
 /**
@@ -86,6 +86,8 @@ protected:
 	FCommonButtonEvent CY_WillCloseWidgetDelegate;
 	FCommonButtonEvent CY_WillCreateSceneDelegate;
 
+	FTimerHandle PressTimerHandle;
+	
 	float LastClickedTime = 0.f;
 	float LastReleasedTime = 0.f;
 

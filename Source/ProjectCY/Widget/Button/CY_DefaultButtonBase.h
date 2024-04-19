@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "CY_Widget.h"
-#include "CY_DefaultButton.generated.h"
+#include "CY_DefaultButtonBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTCY_API UCY_DefaultButton : public UCY_Widget
+class PROJECTCY_API UCY_DefaultButtonBase : public UCY_Widget
 {
 	GENERATED_BODY()
 public:

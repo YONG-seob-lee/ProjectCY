@@ -26,6 +26,7 @@ public:
 	virtual void CloseWidget();
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void DeActive(bool bImmediately = false);
 	virtual void Active(bool _bActive = true);
 	virtual void ActiveDirect(bool _bActive = true);
 

@@ -4,8 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "CY_Widget.h"
+#include "GenericWidget/CY_WidgetSwitcher.h"
 #include "CY_Widget_WorldMapIcon.generated.h"
 
+enum ECY_IconSelectState
+{
+	UnSelect = 0,
+	Select = 1,
+};
 /**
  * 
  */
@@ -15,13 +21,20 @@ class PROJECTCY_API UCY_Widget_WorldMapIcon : public UCY_Widget
 	GENERATED_BODY()
 public:
 	FORCEINLINE static FName GetWidgetName() { return TEXT("WorldMapIcon"); }
+	FORCEINLINE void SetSwitchIcon(ECY_IconSelectState SelectState) const { CPP_WidgetSwitcher->SetActiveWidgetIndex(static_cast<int32>(SelectState)); } 
 	
-	void InitStaticPosition(TObjectPtr<UTexture2D> IconTexture, const FVector& _StaticPosition) const;
+	void InitializeIcon();
 	void SetIconTexture(TObjectPtr<UTexture2D> Texture) const;
+
+	void SetOnPressIcon();
+	void SetOnReleaseIcon();
 private:
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UImage> CPP_IconImage = nullptr;
+	TObjectPtr<class UCY_WidgetSwitcher> CPP_WidgetSwitcher = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UImage> CPP_IconImage = nullptr;
+	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UCY_Button> CPP_Button = nullptr;
 };

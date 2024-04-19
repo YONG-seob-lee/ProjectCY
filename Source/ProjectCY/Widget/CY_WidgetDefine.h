@@ -94,7 +94,7 @@ struct FCY_SystemPopupParameter
 	FString ContentsText = FString();
 	ECY_SelectButtonState SelectButtonState = ECY_SelectButtonState::OkCancel;
 
-	UCommonButtonBase::FCommonButtonEvent OnClickExitEvent;
-	UCommonButtonBase::FCommonButtonEvent OnClickConfirmEvent;
-	UCommonButtonBase::FCommonButtonEvent OnClickCancelEvent;
+	UCommonButtonBase::FCommonButtonEvent OnClickExitDelegate;
+	UCommonButtonBase::FCommonButtonEvent OnClickConfirmDelegate;
+	UCommonButtonBase::FCommonButtonEvent OnClickCancelDelegate;
 };

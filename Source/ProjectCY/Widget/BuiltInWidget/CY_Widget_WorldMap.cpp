@@ -54,6 +54,7 @@ void UCY_Widget_WorldMap::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	{
 		SetProjectionVariable();
 		SetTelePortPosition();
+		SetTeleportInitialize();
 	}
 
 	RePositionPlayerIcon();
@@ -163,6 +164,14 @@ void UCY_Widget_WorldMap::SetTelePortPosition()
 				}
 			}
 		}	
+	}
+}
+
+void UCY_Widget_WorldMap::SetTeleportInitialize()
+{
+	for(const auto& EagleIcon : EagleIcons)
+	{
+		EagleIcon.Key->InitializeIcon();
 	}
 }
 

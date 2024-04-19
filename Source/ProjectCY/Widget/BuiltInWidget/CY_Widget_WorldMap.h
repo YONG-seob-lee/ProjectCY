@@ -26,10 +26,11 @@ public:
 	void RebuildWorldMap(bool _bActive = true);
 
 	void OnClickEaglePoint(TObjectPtr<UCY_Button> Button);
-	
+
 private:
 	void SetProjectionVariable();
 	void SetTelePortPosition();
+	void SetTeleportInitialize();
 	
 	void RePositionPlayerIcon() const;
 

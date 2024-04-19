@@ -44,12 +44,16 @@ void UCY_Widget::FinishWidget()
 		return;
 	}
 
-	
+	StopAllAnimations();
+	DeActive();
 }
 
 void UCY_Widget::CloseWidget()
 {
-	gWidgetMng.DestroyWidget(GetResourceWidgetInfo().GetWidgetName());
+	if(bManaged)
+	{
+		gWidgetMng.DestroyWidget(GetResourceWidgetInfo().GetWidgetName());
+	}
 }
 
 void UCY_Widget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -78,6 +82,25 @@ void UCY_Widget::Active(bool _bActive /* = true */)
 	}
 	bActive = _bActive;
 }
+
+void UCY_Widget::DeActive(bool bImmediately /* = false */)
+{
+	if(bImmediately == false)
+	{
+		SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+
+	if(IsExistAnim(DefaultWidgetAnimation::DisAppearance) && bImmediately == false)
+	{
+		PlayAnimationByName(DefaultWidgetAnimation::DisAppearance);
+	}
+	else
+	{
+		RemoveFromParent();
+	}
+	bActive = false;
+}
+
 
 void UCY_Widget::ActiveDirect(bool _bActive /* = true */)
 {

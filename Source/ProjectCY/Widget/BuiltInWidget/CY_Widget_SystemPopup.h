@@ -14,7 +14,7 @@ class PROJECTCY_API UCY_Widget_SystemPopup : public UCY_Widget
 {
 	GENERATED_BODY()
 public:
-	static FSoftObjectPath GetWidgetPath() { return FSoftObjectPath(TEXT("/Game/Widget/BuiltInWidget/CompassWidget.CompassWidget")); }
+	static FName GetWidgetName() { return TEXT("SystemPopup"); }
 
 	void ShowSystemPopup(const FCY_SystemPopupParameter& SystemPopupParam);
 private:
@@ -28,8 +28,8 @@ private:
 	TObjectPtr<class UTextBlock> CPP_ContentsText = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UCY_DefaultButton> CPP_ConfirmButton = nullptr;
+	TObjectPtr<class UCY_DefaultButtonBase> CPP_ConfirmButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<class UCY_DefaultButton> CPP_CancelButton = nullptr;
+	TObjectPtr<class UCY_DefaultButtonBase> CPP_CancelButton = nullptr;
 };

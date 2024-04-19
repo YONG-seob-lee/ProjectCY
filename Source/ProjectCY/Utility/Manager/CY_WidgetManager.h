@@ -39,6 +39,7 @@ public:
 	TObjectPtr<UCY_Widget> CreateWidgetNotManagingBySOP(const FSoftObjectPath& SoftObjectPath) const;
 
 	void ShowToastMessage(const FString& Message) const;
+	void ShowSystemPopup(FCY_SystemPopupParameter& Parameter);
 	
 	TObjectPtr<UCY_BuiltInWidgetTool> GetBuiltInWidgetTool() const { return BuiltInTool; }
 

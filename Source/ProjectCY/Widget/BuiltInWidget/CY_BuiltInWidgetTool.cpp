@@ -8,6 +8,7 @@
 #include "CY_WidgetManager.h"
 #include "CY_Widget_Compass.h"
 #include "CY_Widget_DialogScreenFader.h"
+#include "CY_Widget_SystemPopup.h"
 #include "CY_Widget_Toast.h"
 #include "CY_Widget_WorldMap.h"
 #include "Input/CY_PreTouchProcessor.h"
