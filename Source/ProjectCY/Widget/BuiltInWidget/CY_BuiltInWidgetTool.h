@@ -32,6 +32,8 @@ public:
 	void Initialize();
 	void Finalize();
 	void Tick(float DeltaTime);
+	
+	void UpdatePreTouchProcessor() const;
 
 private:
 	void ProcessBuiltInCompass() const;

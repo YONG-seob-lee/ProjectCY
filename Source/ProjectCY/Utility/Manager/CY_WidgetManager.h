@@ -26,6 +26,7 @@ public:
 	virtual void BuiltInFinalize() override;
 	virtual void Tick(float DeltaTime) override;
 
+	void UpdatePreTouchProcessor() const;
 	void ClearExclusiveLayer();
 
 	TObjectPtr<UCY_Widget> CY_CreateWidget(const FName& TypeName);

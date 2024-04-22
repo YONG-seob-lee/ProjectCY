@@ -68,6 +68,17 @@ bool FCY_PreTouchProcessor::HandleMouseButtonUpEvent(FSlateApplication& SlateApp
 	return false;
 }
 
+void FCY_PreTouchProcessor::UpdateTouchWidget()
+{
+	for(const auto& TouchEffect : TouchOverlapEffect)
+	{
+		if(IsValid(TouchEffect))
+		{
+			TouchEffect->RebuildTouchWidget();
+		}
+	}
+}
+
 void FCY_PreTouchProcessor::CreateTouchEffect(const FString& TouchEffectWidgetPath)
 {
 	if(TouchOverlapEffect.Num() > 0)
@@ -82,6 +93,7 @@ void FCY_PreTouchProcessor::CreateTouchEffect(const FString& TouchEffectWidgetPa
 		{
 			EffectWidget->InitWidget(FName(TouchEffectWidgetPath), false, false);
 			EffectWidget->AddToViewport(99999);
+			EffectWidget->Active(true);
 			TouchOverlapEffect.Emplace(EffectWidget);
 		}
 	}
@@ -120,11 +132,10 @@ void FCY_PreTouchProcessor::Touch(const FVector2d& ScreenPosition)
 
 	const FGeometry CachedGeometry = UCY_BasicGameUtility::GetGameViewport()->GetCachedGeometry();
 	const FVector2d AbsoluteScreenPosition = CachedGeometry.AbsoluteToLocal(ScreenPosition);
-	
-	//USlateBlueprintLibrary::AbsoluteToLocal(localposition)
-	
+
+	TouchOverlapEffect[TouchEffectIndex]->AddToViewport(99999);
 	TouchOverlapEffect[TouchEffectIndex]->SetPositionInViewport(AbsoluteScreenPosition);
-	TouchOverlapEffect[TouchEffectIndex]->TouchEvent();
+	TouchOverlapEffect[TouchEffectIndex]->PlayTouch();
 	TouchEffectIndex = (TouchEffectIndex + 1) % EffectThings::EffectOverlapMaxCount;
 
 #if WITH_EDITOR

@@ -63,6 +63,14 @@ void UCY_WidgetManager::Tick(float DeltaTime)
 	}
 }
 
+void UCY_WidgetManager::UpdatePreTouchProcessor() const
+{
+	if(IsValid(BuiltInTool))
+	{
+		BuiltInTool->UpdatePreTouchProcessor();
+	}
+}
+
 void UCY_WidgetManager::ClearExclusiveLayer()
 {
 	constexpr uint8 Top = static_cast<uint8>(ECY_ExclusiveGroup::TopMenu);

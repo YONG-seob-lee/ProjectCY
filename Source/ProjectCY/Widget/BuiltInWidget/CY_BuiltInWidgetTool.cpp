@@ -71,6 +71,16 @@ void UCY_BuiltInWidgetTool::Tick(float DeltaTime)
 	ProcessBuiltInCompass();
 }
 
+void UCY_BuiltInWidgetTool::UpdatePreTouchProcessor() const
+{
+	if(PreTouchProcessor == nullptr)
+	{
+		return;
+	}
+
+	PreTouchProcessor->UpdateTouchWidget();
+}
+
 void UCY_BuiltInWidgetTool::ProcessBuiltInCompass() const
 {
 	if(const TObjectPtr<ACY_CameraActor> CameraActor = gCameraMng.GetCurrentActiveCameraActor())

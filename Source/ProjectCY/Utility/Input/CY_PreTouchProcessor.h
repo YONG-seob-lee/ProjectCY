@@ -30,6 +30,7 @@ public:
 	virtual bool HandleMouseMoveEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent) override;
 	virtual bool HandleMouseButtonUpEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent) override;
 
+	void UpdateTouchWidget();
 private:
 	void CreateTouchEffect(const FString& TouchEffectWidgetPath);
 	void ChangeTouchEffect(int32 TouchEffectId = EffectThings::DefaultEffectId);
