@@ -66,6 +66,8 @@ ACY_Actor_EaglePoint::ACY_Actor_EaglePoint(const FObjectInitializer& ObjectIniti
 
 void ACY_Actor_EaglePoint::BeginPlay()
 {
+	Super::BeginPlay();
+	
 	ACY_ActorBase::SetInteractionType(ECY_InteractionType::Teleport_Map);
 
 	if(SpawnedActor == nullptr)
@@ -74,6 +76,12 @@ void ACY_Actor_EaglePoint::BeginPlay()
 
 		TargetVector = SpawnedActor->GetActorLocation() + SpawnedActor->GetActorForwardVector() * 300.f;
 	}
+}
+
+void ACY_Actor_EaglePoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	SpawnedActor->Destroy();
+	Super::EndPlay(EndPlayReason);
 }
 
 TObjectPtr<AActor> ACY_Actor_EaglePoint::SpawnStatue() const

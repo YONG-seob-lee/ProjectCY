@@ -42,6 +42,8 @@ void UCY_Widget_NpcInteraction::AddNpcInteractionItem(int32 NpcUnitId)
 	{
 		return;
 	}
+	
+	SetVisibility(ESlateVisibility::Visible);
 
 	TMap<FString, int32> ContentDatas;
 	NpcContentsMapper->GetNpcContentDatas(NpcUnitId, ContentDatas);
@@ -73,6 +75,8 @@ void UCY_Widget_NpcInteraction::RemoveNpcInteractionItem(int32 NpcUnitId)
 		return;
 	}
 
+	SetVisibility(ESlateVisibility::HitTestInvisible);
+	
 	for(const auto& InteractionItem : InteractionItems)
 	{
 		if(InteractionItem.Value == NpcUnitId)

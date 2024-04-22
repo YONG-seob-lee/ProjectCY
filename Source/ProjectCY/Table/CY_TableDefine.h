@@ -29,6 +29,7 @@ enum class ECY_TableDataType : uint8
 	Camera							UMETA(DisplayName = "Camera"),
 	Npc								UMETA(DisplayName = "Npc"),
 	Npc_Contents					UMETA(DisplayName = "Npc_Contents"),
+	Hud_TopExpander					UMETA(DisplayName = "Hud_TopExpander"),
 };
 
 namespace CommonContents

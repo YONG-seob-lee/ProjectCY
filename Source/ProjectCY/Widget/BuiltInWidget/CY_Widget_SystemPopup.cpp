@@ -51,7 +51,7 @@ void UCY_Widget_SystemPopup::ShowSystemPopup(const FCY_SystemPopupParameter& Sys
 
 	if(CPP_ExitButton->IsVisible() && SystemPopupParam.OnClickExitDelegate.IsBound())
 	{
-		CPP_ExitButton->SetOnClickExitButton(SystemPopupParam.OnClickExitDelegate);
+		CPP_ExitButton->SetOnClickImageButton(SystemPopupParam.OnClickExitDelegate);
 	}
 
 	if(CPP_ConfirmButton->IsVisible() && SystemPopupParam.OnClickConfirmDelegate.IsBound())

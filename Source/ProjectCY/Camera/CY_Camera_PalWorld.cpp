@@ -88,7 +88,9 @@ void UCY_Camera_PalWorld::Exit()
 	}
 
 	Cameras.Reset();
-
+	
+	bChanged = false;
+	
 	const TObjectPtr<ACY_PlayerController> PlayerController = Cast<ACY_PlayerController>(UCY_BasicGameUtility::GetPlayerController());
 	if(PlayerController != nullptr)
 	{

@@ -3,3 +3,5 @@ Id,Directory_Table_Id,Img_File_Name,Img_File_Local
 2,103,EagleIcon,False
 3,105,MessageIcon,False
 4,105,TeleportIcon,False
+10,111,BlankImage,False
+11,111,ExitImage,False

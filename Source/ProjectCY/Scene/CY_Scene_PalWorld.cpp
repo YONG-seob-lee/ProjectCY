@@ -13,6 +13,7 @@
 #include "CY_SceneDefine.h"
 #include "CY_WidgetManager.h"
 #include "CY_Widget_Compass.h"
+#include "CY_Widget_MainHud.h"
 #include "EngineUtils.h"
 #include "Character/CY_CharacterBase.h"
 
@@ -56,14 +57,20 @@ void UCY_Scene_PalWorld::Begin()
 	}
 	if(const TObjectPtr<UCY_Widget_NpcInteraction> NpcInteractionWidget = gWidgetMng.GetBuiltInWidgetTool()->GetNpcInteractionWidget())
 	{
-		NpcInteractionWidget->SetVisibility(ESlateVisibility::Visible);
+		NpcInteractionWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 		NpcInteractionWidget->Active();
 	}
-	
+
+	gWidgetMng.CY_CreateWidget(UCY_Widget_MainHud::GetWidgetName());
 }
 
 void UCY_Scene_PalWorld::Exit()
 {
+	Player.Reset();
+	NewPlayerHandle = InvalidUnitHandle;
+	PlayerSpawnPoint = nullptr;
+	TeleportPoints.Empty();
+	
 	Super::Exit();
 }
 

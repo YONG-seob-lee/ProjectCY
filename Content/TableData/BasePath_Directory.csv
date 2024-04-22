@@ -5,6 +5,8 @@ Id,Directory
 103,Widget/BuiltInWidget/WorldMap/Textures
 104,Widget/BuiltInWidget/Interaction
 105,Widget/BuiltInWidget/Interaction/Textures
+110,Widget/MainHud
+111,Widget/MainHud/Textures
 999,Widget/BuiltInWidget/SystemWidget
 1000,Maps
 10000,Unit/BasePlayer/Blueprints

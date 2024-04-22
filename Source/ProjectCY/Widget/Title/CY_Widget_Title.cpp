@@ -45,7 +45,7 @@ void UCY_Widget_Title::OnClickStartButton()
 	Command->SetFadeStyle(ECY_FadeStyle::Dialog);
 	Command->SetIsDirectFadeOut(false);
 	Command->SetLoadingPageType(ECY_LoadingPageType::None);
-	Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateLambda([]()
+	Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
 	{
 		return gSceneMng.IsCompleteChangeScene();
 	}) ;

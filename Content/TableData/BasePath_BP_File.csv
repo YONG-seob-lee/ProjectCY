@@ -5,6 +5,7 @@ Id,Directory_Table_Id,BP_File_Name
 4,102,WorldMapIconWidget
 5,104,NpcInteractionWidget
 6,104,NpcInteractionItemWidget
+100,110,MainHudWidget
 301,10001,BP_Base_Npc
 1000,999,SystemPopup
 10001,10000,BP_BaseCharacter

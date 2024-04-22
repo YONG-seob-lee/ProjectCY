@@ -15,6 +15,7 @@
 #include "CY_Define.h"
 #include "CY_Mapper_Camera.h"
 #include "CY_Mapper_Common.h"
+#include "CY_Mapper_Hud_TopExpander.h"
 #include "CY_Mapper_NpcContents.h"
 #include "CY_Mapper_Resource_Unit.h"
 #include "CY_Mapper_Resource_Widget.h"
@@ -230,6 +231,7 @@ void UCY_TableManager::MakeTableStructData()
 	CreateTableData(ECY_TableDataType::Pal_Character, "/Game/TableData/Pal_Character.Pal_Character", UCY_Mapper_PalCharacter::StaticClass());
 	CreateTableData(ECY_TableDataType::Npc, "/Game/TableData/Npc.Npc");
 	CreateTableData(ECY_TableDataType::Npc_Contents, "/Game/TableData/Npc_Contents.Npc_Contents", UCY_Mapper_NpcContents::StaticClass());
+	CreateTableData(ECY_TableDataType::Hud_TopExpander, "/Game/TableData/Hud_TopExpander.Hud_TopExpander", UCY_Mapper_Hud_TopExpander::StaticClass());
 }
 
 void UCY_TableManager::LoadComplete(const FString& TableName, TObjectPtr<UObject> TableData)

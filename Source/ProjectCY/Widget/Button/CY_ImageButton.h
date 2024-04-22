@@ -14,9 +14,14 @@ class PROJECTCY_API UCY_ImageButton : public UCY_Widget
 {
 	GENERATED_BODY()
 public:
-	void SetOnClickExitButton(const UCommonButtonBase::FCommonButtonEvent& Event) const;
+	virtual void SynchronizeProperties() override;
+	
+	void SetOnClickImageButton(const UCommonButtonBase::FCommonButtonEvent& Event) const;
 	
 private:
+	UPROPERTY(Category = UCY_ImageButton, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UTexture2D> Texture2D = nullptr;
+	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UCY_Button> CPP_Button = nullptr;
 
