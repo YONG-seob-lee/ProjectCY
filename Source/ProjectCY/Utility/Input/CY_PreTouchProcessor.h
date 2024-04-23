@@ -11,7 +11,7 @@ namespace EffectThings
 	inline FString DefaultTouchEffectPath = TEXT("/Game/Widget/BuiltInWidget/TouchWidget.TouchWidget");
 
 	constexpr int32 DefaultEffectId = 0;
-	constexpr int32 EffectOverlapMaxCount = 1;
+	constexpr int32 EffectOverlapMaxCount = 3;
 }
 
 /**
@@ -32,7 +32,7 @@ public:
 
 	void UpdateTouchWidget();
 private:
-	void CreateTouchEffect(const FString& TouchEffectWidgetPath);
+	void CreateTouchEffect();
 	void ChangeTouchEffect(int32 TouchEffectId = EffectThings::DefaultEffectId);
 	void ClearTouchEffect();
 
@@ -41,7 +41,7 @@ private:
 	int32 TouchEffectIndex = 0;
 	int32 CurrentTouchEffectId = EffectThings::DefaultEffectId;
 	int32 FingerTouchIndex = -1;
-	TArray<TObjectPtr<class UCY_Widget_Touch>> TouchOverlapEffect;
+	TMap<int32, TObjectPtr<class UCY_Widget_Touch>> TouchOverlapEffect;
 
 	TQueue<int32> TouchEffectQueue;
 };
