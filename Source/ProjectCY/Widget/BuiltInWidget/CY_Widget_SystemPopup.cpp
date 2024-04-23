@@ -54,13 +54,29 @@ void UCY_Widget_SystemPopup::ShowSystemPopup(const FCY_SystemPopupParameter& Sys
 		CPP_ExitButton->SetOnClickImageButton(SystemPopupParam.OnClickExitDelegate);
 	}
 
-	if(CPP_ConfirmButton->IsVisible() && SystemPopupParam.OnClickConfirmDelegate.IsBound())
+	if(CPP_ConfirmButton->IsVisible())
 	{
-		CPP_ConfirmButton->SetOnClickButton(SystemPopupParam.OnClickConfirmDelegate);
+		if(SystemPopupParam.OnClickConfirmDelegate.IsBound())
+		{
+			CPP_ConfirmButton->SetOnClickButton(SystemPopupParam.OnClickConfirmDelegate);
+		}
+
+		if(SystemPopupParam.ConfirmButtonText.Len() == 0)
+		{
+			CPP_ConfirmButton->SetButtonText(TEXT("확인"));
+		}
 	}
 
-	if(CPP_CancelButton->IsVisible() && SystemPopupParam.OnClickCancelDelegate.IsBound())
+	if(CPP_CancelButton->IsVisible())
 	{
-		CPP_CancelButton->SetOnClickButton(SystemPopupParam.OnClickCancelDelegate);
+		if(SystemPopupParam.OnClickCancelDelegate.IsBound())
+		{
+			CPP_CancelButton->SetOnClickButton(SystemPopupParam.OnClickCancelDelegate);
+		}
+		
+		if(SystemPopupParam.CancelButtonText.Len() == 0)
+		{
+			CPP_CancelButton->SetButtonText(TEXT("취소"));
+		}
 	}
 }

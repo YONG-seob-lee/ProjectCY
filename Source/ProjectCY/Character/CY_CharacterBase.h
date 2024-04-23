@@ -79,6 +79,12 @@ private:
 
 	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USphereComponent> CollisionSphereComponent = nullptr;
+
+	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USpringArmComponent> SceneCaptureSpringArm = nullptr;
+
+	UPROPERTY(Category = ACY_CharacterBase, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USceneCaptureComponent2D> SceneCaptureComponent = nullptr;
 	
 	UPROPERTY()
 	TObjectPtr<UCY_AnimInstance> AnimInstance = nullptr;

@@ -198,6 +198,8 @@ void UCY_State_PlayerNormal::OnClickWorldMap()
 {
 	if(const TObjectPtr<UCY_Widget_WorldMap> WorldMapWidget = gWidgetMng.GetBuiltInWidgetTool()->GetWorldMapWidget())
 	{
+		WorldMapWidget->EnableMoveFast(false);
+		
 		if(WorldMapWidget->IsVisible())
 		{
 			WorldMapWidget->ActiveDirect(false);

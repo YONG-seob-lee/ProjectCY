@@ -38,6 +38,8 @@ private:
 
 	void Touch(const FVector2d& ScreenPosition);
 
+	int32 FingerCount = 0;
+	
 	int32 TouchEffectIndex = 0;
 	int32 CurrentTouchEffectId = EffectThings::DefaultEffectId;
 	int32 FingerTouchIndex = -1;

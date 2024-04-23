@@ -41,7 +41,10 @@ void FCY_PreTouchProcessor::Tick(const float DeltaTime, FSlateApplication& Slate
 
 bool FCY_PreTouchProcessor::HandleMouseButtonDownEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent)
 {
+	FingerCount++;
+	
 	FingerTouchIndex = MouseEvent.GetPointerIndex();
+	CY_LOG(TEXT("FingerTouchIndex = %d"), FingerTouchIndex);	
 	
 	Touch(MouseEvent.GetScreenSpacePosition());
 	return false;
@@ -49,11 +52,18 @@ bool FCY_PreTouchProcessor::HandleMouseButtonDownEvent(FSlateApplication& SlateA
 
 bool FCY_PreTouchProcessor::HandleMouseMoveEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent)
 {
+	if(FingerCount == 2)
+	{
+		// MiniMap Zoomin Process
+	}
+	
 	return IInputProcessor::HandleMouseMoveEvent(SlateApp, MouseEvent);
 }
 
 bool FCY_PreTouchProcessor::HandleMouseButtonUpEvent(FSlateApplication& SlateApp, const FPointerEvent& MouseEvent)
 {
+	FingerCount--;
+	
 	TouchOverlapEffect[TouchEffectIndex]->RemoveFromParent();
 	TouchOverlapEffect.Remove(TouchEffectIndex);
 	TouchOverlapEffect.Emplace(TouchEffectIndex, Cast<UCY_Widget_Touch>(gWidgetMng.CreateWidgetNotManagingBySOP(EffectThings::DefaultTouchEffectPath)));

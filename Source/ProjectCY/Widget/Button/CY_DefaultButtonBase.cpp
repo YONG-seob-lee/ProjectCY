@@ -24,6 +24,11 @@ void UCY_DefaultButtonBase::SetData(const FLinearColor& BGColor, const FString& 
 		CPP_BGImage->SetColorAndOpacity(BGColor);
 	}
 
+	SetButtonText(_ButtonText);
+}
+
+void UCY_DefaultButtonBase::SetButtonText(const FString& _ButtonText) const
+{
 	if(CPP_ButtonText)
 	{
 		CPP_ButtonText->SetText(FText::FromString(_ButtonText));

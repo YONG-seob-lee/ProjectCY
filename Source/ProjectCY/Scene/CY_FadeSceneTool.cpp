@@ -264,7 +264,10 @@ void UCY_FadeSceneTool::OnCameraFadeOutFinished()
 		{
 			if(const TObjectPtr<UCY_Widget_WorldMap> WorldMap = gWidgetMng.GetBuiltInWidgetTool()->GetWorldMapWidget())
 			{
+				
 				WorldMap->RebuildWorldMap();
+				WorldMap->EnableMoveFast(true);
+				
 				WorldMap->OnFinishedWorldMapFunc([this]()
 				{
 					if(const TObjectPtr<UCY_BasePlayer> PlayerUnit = Cast<UCY_BasePlayer>(UCY_BasicGameUtility::GetCurrentPlayerUnit()))

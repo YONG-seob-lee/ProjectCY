@@ -27,12 +27,18 @@ public:
 
 	void OnClickEaglePoint(TObjectPtr<UCY_Button> Button);
 
+	void EnableMoveFast(bool bEnableMoveFast);
+	
 private:
 	void SetProjectionVariable();
 	void SetTeleportInitialize();
 	void SetTelePortPosition();
 	
 	void RePositionPlayerIcon() const;
+
+	///// Zoom
+	UFUNCTION()
+	void SetWorldMapScale(float Value);
 
 	UPROPERTY(Category = CY_Widget_WorldMap, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	int32 IconPathId = 0;
@@ -51,7 +57,7 @@ private:
 	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCY_Widget_WorldMapIcon> CPP_EagleIcon_2 = nullptr;
-
+	
 	TMap<TObjectPtr<UCY_Widget_WorldMapIcon>, bool> EagleIcons;
 	TFunction<void()> OnFinishedWorldMapProcess;
 

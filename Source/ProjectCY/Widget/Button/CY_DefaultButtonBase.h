@@ -18,6 +18,7 @@ public:
 	virtual void NativeDestruct() override;
 
 	void SetData(const FLinearColor& BGColor, const FString& _ButtonText) const;
+	void SetButtonText(const FString& _ButtonText) const;
 	void SetOnClickButton(const UCommonButtonBase::FCommonButtonEvent& CommonButtonEvent) const;
 
 private:

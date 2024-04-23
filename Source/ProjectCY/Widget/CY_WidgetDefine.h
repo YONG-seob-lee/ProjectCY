@@ -93,6 +93,8 @@ struct FCY_SystemPopupParameter
 	bool bShowExitButton = false;
 	FString ContentsText = FString();
 	ECY_SelectButtonState SelectButtonState = ECY_SelectButtonState::OkCancel;
+	FString ConfirmButtonText = FString();
+	FString CancelButtonText = FString();
 
 	UCommonButtonBase::FCommonButtonEvent OnClickExitDelegate;
 	UCommonButtonBase::FCommonButtonEvent OnClickConfirmDelegate;

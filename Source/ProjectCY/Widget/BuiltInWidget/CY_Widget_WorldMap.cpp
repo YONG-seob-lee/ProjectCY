@@ -8,11 +8,13 @@
 #include "CY_TableManager.h"
 #include "CY_UnitBase.h"
 #include "CY_UnitManager.h"
+#include "CY_Utility.h"
 #include "CY_WidgetManager.h"
 #include "CY_Widget_WorldMapIcon.h"
 #include "EngineUtils.h"
 #include "Landscape.h"
 #include "Button/CY_Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 #include "Components/NamedSlot.h"
@@ -79,6 +81,14 @@ void UCY_Widget_WorldMap::RebuildWorldMap(bool _bActive /* = true */)
 void UCY_Widget_WorldMap::OnClickEaglePoint(TObjectPtr<UCY_Button> Button)
 {
 	
+}
+
+void UCY_Widget_WorldMap::EnableMoveFast(bool bEnableMoveFast)
+{
+	for(const auto& EagleIcon : EagleIcons)
+	{
+		EagleIcon.Key->SetVisibility(bEnableMoveFast ? ESlateVisibility::Visible : ESlateVisibility::HitTestInvisible);
+	}
 }
 
 void UCY_Widget_WorldMap::SetProjectionVariable()
@@ -199,7 +209,7 @@ void UCY_Widget_WorldMap::RePositionPlayerIcon() const
 				// Step1. Set PlayerIcon Position
 				const FVector PlayerLocation = CharacterBase->GetCurrentLocation();
 				const FVector2d PlayerIconLocation = FVector2d(PlayerLocation.X, PlayerLocation.Y) / WorldMapScale + WorldMapCenterVector;
-				CY_LOG(TEXT("PlayerIconLocation = %s "), *PlayerIconLocation.ToString());
+				//CY_LOG(TEXT("PlayerIconLocation = %s "), *PlayerIconLocation.ToString());
 				const FVector2d Size = PlayerSlot->GetSize();
 				PlayerSlot->SetPosition(PlayerIconLocation - Size * 0.5f);
 
@@ -207,6 +217,16 @@ void UCY_Widget_WorldMap::RePositionPlayerIcon() const
 				const FRotator PlayerRotator = CharacterBase->GetCurrentRotator();
 				CPP_PlayerNamedSlot->SetRenderTransformAngle(PlayerRotator.Yaw);
 			}
+		}
+	}
+}
+
+void UCY_Widget_WorldMap::SetWorldMapScale(float Value)
+{
+	if(CPP_WorldMapImage)
+	{
+		if(CPP_WorldMapImage)
+		{
 		}
 	}
 }

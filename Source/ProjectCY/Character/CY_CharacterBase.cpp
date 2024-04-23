@@ -6,8 +6,10 @@
 #include "AnimInstance/CY_AnimInstance.h"
 #include "Components/CY_MontageComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SceneCaptureComponent2D.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 
 // Sets default values
@@ -65,6 +67,21 @@ ACY_CharacterBase::ACY_CharacterBase()
 		//CollisionSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		//CollisionSphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECR_Block);
 		CollisionSphereComponent->SetupAttachment(RootComponent);
+	}
+
+	// Add Render Target 2D
+	SceneCaptureSpringArm = CreateDefaultSubobject<USpringArmComponent>("CaptureSpringArm");
+	if(SceneCaptureSpringArm)
+	{
+		SceneCaptureSpringArm->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
+		SceneCaptureSpringArm->TargetArmLength = 600.f;
+		SceneCaptureSpringArm->SetupAttachment(RootComponent);
+	}
+
+	SceneCaptureComponent = CreateDefaultSubobject<USceneCaptureComponent2D>("SceneCaptureComponent");
+	if(SceneCaptureComponent)
+	{
+		SceneCaptureComponent->SetupAttachment(SceneCaptureSpringArm);
 	}
 	
 	CreateTestSphere();
