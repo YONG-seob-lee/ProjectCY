@@ -80,7 +80,7 @@ void ACY_Actor_EaglePoint::BeginPlay()
 
 void ACY_Actor_EaglePoint::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	SpawnedActor->Destroy();
+	//SpawnedActor->Destroy();
 	Super::EndPlay(EndPlayReason);
 }
 
