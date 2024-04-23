@@ -39,6 +39,14 @@ void UCY_FadeSceneTool::Request(UCY_FadeCommand* Command)
 {
 	Commands.Emplace(Command);
 
+	if(Command->GetFadeType() == ECY_FadeStyle::ForceDroneFadeIn)
+	{
+		FadeWidgetCommand = Command;
+		CurrentStep = ECY_FadeStep::EnterFadeIn;
+		StartFadeIn();
+		return;
+	}
+	
 	if(CurrentStep == ECY_FadeStep::Ready)
 	{
 		StartFadeOut();
@@ -52,12 +60,13 @@ void UCY_FadeSceneTool::FinishRequest()
 	bLoadComplete = false;
 	LoadingMinimumTime = 0.f;
 	LoadElapsedTime = 0.f;
-	
-	for(int32 i = 0 ; i < Commands.Num(); i++)
+
+	const int32 CommandsNum = Commands.Num();
+	for(int32 i = 0 ; i < CommandsNum; i++)
 	{
-		Commands[i]->RemoveFromRoot();
-		CY_DeleteObject(Commands[i]);
-		Commands.RemoveAt(i);
+		Commands[0]->RemoveFromRoot();
+		CY_DeleteObject(Commands[0]);
+		Commands.RemoveAt(0);
 	}
 }
 
@@ -162,7 +171,7 @@ void UCY_FadeSceneTool::StartFadeIn()
 
 	if(FadeWidgetCommand)
 	{
-		if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Drone)
+		if(FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::Drone || FadeWidgetCommand->GetFadeType() == ECY_FadeStyle::ForceDroneFadeIn)
 		{
 			PlayDrone(false);
 		}

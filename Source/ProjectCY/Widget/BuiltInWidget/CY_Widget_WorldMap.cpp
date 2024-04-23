@@ -5,6 +5,10 @@
 
 #include "CY_Actor_EaglePoint.h"
 #include "CY_BasicGameUtility.h"
+#include "CY_CameraManager.h"
+#include "CY_FadeCommand.h"
+#include "CY_FadeSceneTool.h"
+#include "CY_SceneManager.h"
 #include "CY_TableManager.h"
 #include "CY_UnitBase.h"
 #include "CY_UnitManager.h"
@@ -14,6 +18,8 @@
 #include "EngineUtils.h"
 #include "Landscape.h"
 #include "Button/CY_Button.h"
+#include "Button/CY_ImageButton.h"
+#include "Camera/CY_CameraDefine.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
@@ -40,6 +46,13 @@ void UCY_Widget_WorldMap::InitWidget(const FName& TypeName, bool _bManaged, bool
 	EagleIcons.Emplace(CPP_EagleIcon_1, false);
 	EagleIcons.Emplace(CPP_EagleIcon_2, false);
 
+	if(CPP_ExitButton)
+	{
+		UCommonButtonBase::FCommonButtonEvent Event;
+		Event.AddUObject(this, &UCY_Widget_WorldMap::FadeInDroneProcess);
+		CPP_ExitButton->SetOnClickImageButton(Event);
+	}
+	
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -83,11 +96,12 @@ void UCY_Widget_WorldMap::OnClickEaglePoint(TObjectPtr<UCY_Button> Button)
 	
 }
 
-void UCY_Widget_WorldMap::EnableMoveFast(bool bEnableMoveFast)
+void UCY_Widget_WorldMap::EnableMoveFast(bool _bEnableMoveFast)
 {
+	bEnableMoveFast = _bEnableMoveFast;
 	for(const auto& EagleIcon : EagleIcons)
 	{
-		EagleIcon.Key->SetVisibility(bEnableMoveFast ? ESlateVisibility::Visible : ESlateVisibility::HitTestInvisible);
+		EagleIcon.Key->SetVisibility(_bEnableMoveFast ? ESlateVisibility::Visible : ESlateVisibility::HitTestInvisible);
 	}
 }
 
@@ -218,6 +232,33 @@ void UCY_Widget_WorldMap::RePositionPlayerIcon() const
 				CPP_PlayerNamedSlot->SetRenderTransformAngle(PlayerRotator.Yaw);
 			}
 		}
+	}
+}
+
+void UCY_Widget_WorldMap::FadeInDroneProcess()
+{
+	ActiveDirect(false);
+	SetVisibility(ESlateVisibility::Collapsed);
+	
+	if(bEnableMoveFast)
+	{
+		
+		CREATE_FADE_COMMAND(Command);
+		Command->SetFadeStyle(ECY_FadeStyle::ForceDroneFadeIn);
+		Command->SetIsDirectFadeOut(false);
+		Command->SetLoadingPageType(ECY_LoadingPageType::None);
+		Command->OnCheckLoadComplete = FCY_FadeCheckLoadDelegate::CreateWeakLambda(this, []()
+		{
+			// 월드맵이 DeActive 될 때 (Camera Fade In 이 끝날 때 월드맵이 활성화 되어있음 활성화가 끝나는 순간이 Fade Out 을 실행할 차례)
+			return true;
+		});
+		Command->OnFadeInComplete = FCY_FadeEventDelegate::CreateWeakLambda(this, [this]
+		{
+			UCY_BasicGameUtility::GetGameWorld()->GetTimerManager().SetTimer(ReturnMainCameraTimeHandler, [this]()
+			{ gCameraMng.ActiveCamera(ECY_GameCameraType::PalWorld, CameraSubType::Main); } ,1.f, false, -1.f);
+		});
+		
+		gSceneMng.ChangeScene(ECY_GameSceneType::WorldMap, Command);	
 	}
 }
 

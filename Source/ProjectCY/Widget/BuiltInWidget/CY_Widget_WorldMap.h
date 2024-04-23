@@ -27,7 +27,7 @@ public:
 
 	void OnClickEaglePoint(TObjectPtr<UCY_Button> Button);
 
-	void EnableMoveFast(bool bEnableMoveFast);
+	void EnableMoveFast(bool _bEnableMoveFast);
 	
 private:
 	void SetProjectionVariable();
@@ -36,6 +36,8 @@ private:
 	
 	void RePositionPlayerIcon() const;
 
+	void FadeInDroneProcess();
+	
 	///// Zoom
 	UFUNCTION()
 	void SetWorldMapScale(float Value);
@@ -57,11 +59,17 @@ private:
 	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCY_Widget_WorldMapIcon> CPP_EagleIcon_2 = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UCY_ImageButton> CPP_ExitButton = nullptr;
 	
 	TMap<TObjectPtr<UCY_Widget_WorldMapIcon>, bool> EagleIcons;
 	TFunction<void()> OnFinishedWorldMapProcess;
 
 	TWeakObjectPtr<class UCY_UnitBase> PlayerUnit = nullptr;
+
+	bool bEnableMoveFast = false;
+	FTimerHandle ReturnMainCameraTimeHandler;
 	
 	// Projection Variable
 	FVector2d WorldMapCenterVector = FVector2d::ZeroVector;

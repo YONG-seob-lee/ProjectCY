@@ -60,6 +60,7 @@ enum class ECY_FadeStyle
 	None = 0,
 	Dialog,
 	Drone,
+	ForceDroneFadeIn,
 };
 
 enum class ECY_LoadingPageType
